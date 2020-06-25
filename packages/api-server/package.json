@@ -6,10 +6,10 @@
     "node": ">12.0.0"
   },
   "scripts": {
-    "db:undo:dev": "sequelize-cli db:migrate:undo:all",
-    "db:seed:dev": "sequelize-cli db:seed:all",
-    "db:migrate:dev": "sequelize-cli db:migrate",
-    "db:create:dev": "sequelize-cli db:create",
+    "db:undo": "sequelize-cli db:migrate:undo:all",
+    "db:seed": "sequelize-cli db:seed:all",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:create": "sequelize-cli db:create",
     "dev": "nodemon index.js --ext js, ejs --exec babel-node",
     "start": "nodemon index.js --ext js, ejs --exec babel-node"
   },
