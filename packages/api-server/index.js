@@ -3,7 +3,9 @@ import bodyParser from 'body-parser';
 import models from './models';
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 
 app.use((err, req, res, next) => {
@@ -14,5 +16,6 @@ app.listen(process.env.PORT || 3000, async () => {
   models.sequelize.authenticate().then(() => {
     console.log('Database connected!');
     console.log('Server is up!');
+    console.log(models.sequelize.connectionManager.sequelize.config)
   });
 });
