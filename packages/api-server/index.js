@@ -16,6 +16,5 @@ app.listen(process.env.PORT || 3000, async () => {
   models.sequelize.authenticate().then(() => {
     console.log('Database connected!');
     console.log('Server is up!');
-    console.log(models.sequelize.connectionManager.sequelize.config)
   });
 });
