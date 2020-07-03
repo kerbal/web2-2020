@@ -1,6 +1,6 @@
 import Home from '../components/Home/Home.vue';
 import Login from '../components/Login/Login.vue';
-import store from '../../../store/index';
+import store from '../../../store/store';
 
 export default [{
   path: '/dashboard',

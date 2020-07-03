@@ -10,5 +10,8 @@ export default [{
   },
 }, {
   path: '/about',
-  component: About,
+  components: {
+    default: About,
+    header: Header,
+  },
 }];

@@ -14,9 +14,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-a.router-link-active {
-  color: red;
-}
 .fade-enter {
   opacity: 0;
 }

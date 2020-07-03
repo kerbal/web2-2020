@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import ladingRoutes from '../pages/Landing/router/index';
-import dashBoardRoutes from '../pages/Dashboard/router/index';
+import ladingRoutes from './pages/Landing/router/index';
+import dashBoardRoutes from './pages/Dashboard/router/index';
 
 // Register all routers and sub-routers from each specific pages.
 

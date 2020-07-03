@@ -22,3 +22,9 @@
     </div>
   </nav>
 </template>
+
+<style scoped>
+a.router-link-active {
+  color: red;
+}
+</style>
