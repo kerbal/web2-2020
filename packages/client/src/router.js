@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+// Register all routers and sub-routers from each specific pages.
+
 Vue.use(VueRouter);
 
 const routes = [
