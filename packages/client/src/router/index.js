@@ -1,14 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import ladingRoutes from '../pages/Landing/router/index';
+import dashBoardRoutes from '../pages/Dashboard/router/index';
 
 Vue.use(VueRouter);
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home,
-  // },
+  ...dashBoardRoutes,
+  ...ladingRoutes,
+  {
+    path: '*',
+    redirect: '/',
+  },
 ];
 
 const router = new VueRouter({
