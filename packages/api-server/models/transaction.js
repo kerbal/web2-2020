@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.associate = function (models) {
     // associations can be defined here
     Transaction.belongsTo(models.Account, {
-      as: 'source',
+      as: 'source_account',
       foreignKey: 'source_account_id',
     });
     Transaction.belongsTo(models.Account, {
-      as: 'destination',
+      as: 'destination_account',
       foreignKey: 'destination_account_id',
     });
   };
