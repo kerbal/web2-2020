@@ -1,23 +1,16 @@
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('DepositTypes', {
+    return queryInterface.createTable('Logs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      interest_rate: {
-        type: Sequelize.FLOAT,
+      data: {
+        type: Sequelize.JSON,
         allowNull: false,
-      },
-      expiry_time: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      removed: {
-        defaultValue: false,
-        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +25,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('DepositTypes');
+    return queryInterface.dropTable('Logs');
   },
 };

@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Transaction = sequelize.define('Transaction', {
     bank_id: DataTypes.INTEGER,
@@ -9,18 +8,18 @@ module.exports = (sequelize, DataTypes) => {
     amount: DataTypes.FLOAT,
     note: DataTypes.STRING,
     status: DataTypes.STRING,
-    error_message: DataTypes.STRING
+    error_message: DataTypes.STRING,
   }, {});
   Transaction.associate = function (models) {
     // associations can be defined here
     Transaction.belongsTo(models.Account, {
-      as: "source",
-      foreignKey: "source_account_id"
-    })
+      as: 'source',
+      foreignKey: 'source_account_id',
+    });
     Transaction.belongsTo(models.Account, {
-      as: "destination",
-      foreignKey: "destination_account_id"
-    })
+      as: 'destination',
+      foreignKey: 'destination_account_id',
+    });
   };
   return Transaction;
 };
