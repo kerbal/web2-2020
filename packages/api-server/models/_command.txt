@@ -1,0 +1,12 @@
+Diagram: https://dbdiagram.io/d/5eed98b29ea313663b3ad132
+
+sequelize-cli model:generate --name Admin           --attributes fullname:string,birthday:date,phone_number:string,password:string,email:string,closed:boolean
+
+sequelize-cli model:generate --name Customer        --attributes fullname:string,birthday:date,phone_number:string,password:string,email:string,address:string
+sequelize-cli model:generate --name Identity        --attributes customer_id:integer,pid:string,create_date:date,location:string,front_image:string,back_image:string,status:string
+
+sequelize-cli model:generate --name Account         --attributes customer_id:integer,type:string,account_number:string,balance:float,currency_unit:string,created_date:date,closed_date:date,status:string
+sequelize-cli model:generate --name DepositType     --attributes interest_rate:float,expiry_time:integer,closed:boolean
+sequelize-cli model:generate --name DepositAccount  --attributes account_id:integer,type_id:integer,deposit_date:date
+
+sequelize-cli model:generate --name Transaction     --attributes bank_id:integer,bank_name:string,source_account_id:integer,destination_account_id:integer,balance:float,amount:float,note:string,status:string,error_message:string

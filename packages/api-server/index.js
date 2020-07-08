@@ -3,7 +3,9 @@ import bodyParser from 'body-parser';
 import models from './models';
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 
 app.use((err, req, res, next) => {
