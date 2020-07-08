@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Account = sequelize.define('Account', {
     customer_id: DataTypes.INTEGER,
@@ -8,13 +7,13 @@ module.exports = (sequelize, DataTypes) => {
     currency_unit: DataTypes.STRING,
     created_date: DataTypes.DATE,
     closed_date: DataTypes.DATE,
-    status: DataTypes.STRING
+    status: DataTypes.STRING,
   }, {});
   Account.associate = function (models) {
     // associations can be defined here
     Account.belongsTo(models.Customer, {
-      foreignKey: "customer_id"
-    })
+      foreignKey: 'customer_id',
+    });
   };
   return Account;
 };
