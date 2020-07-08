@@ -12,24 +12,18 @@ const app = express();
 app.use(bodyParser.urlencoded({
   extended: false,
 }));
-
-
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
 
-
 //route
 app.use('/api/auth', authRoute);
 
-
 app.use((err, req, res) => {
-  console.log(err.message);
-  if (err.name === 'UnauthorizedError') {
-    res.status(401).json({
-      error: 'Unauthenticate',
-    });
-  }
+  console.log(err);
+  res.status(500).send({
+    message: 'Something went wrong!',
+  });
 });
 
 app.listen(process.env.PORT || 3000, async () => {
