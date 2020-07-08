@@ -24,8 +24,15 @@
     "build:css": "postcss src/styles/global.css -o src/styles/main.css",
     "watch:css": "postcss src/styles/global.css -o src/styles/main.css"
   },
+  "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^5.16.0",
+    "eslint-config-universe": "^1.0.7",
+    "eslint-plugin-react-hooks": "^1.6.1",
+    "prettier": "^1.18.0"
+  },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "universe/native"
   },
   "browserslist": {
     "production": [

@@ -1,0 +1,21 @@
+{
+  "extends": "universe/native",
+  "globals": {
+    "__DEV__": true
+  },
+  "settings": {
+    "react": {
+      "version": "16.6.3"
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  },
+  "plugins": ["react-hooks"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
