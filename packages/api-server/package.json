@@ -8,6 +8,7 @@
   "scripts": {
     "db:undo": "sequelize-cli db:migrate:undo:all",
     "db:seed": "sequelize-cli db:seed:all",
+    "db:seed:new": "sequelize-cli seed:generate --name",
     "db:migrate": "sequelize-cli db:migrate",
     "db:create": "sequelize-cli db:create",
     "dev": "nodemon index.js --ext js, ejs --exec babel-node",
