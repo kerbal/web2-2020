@@ -20,13 +20,13 @@ app.use(cookieParser());
 //route
 app.use('/api/auth', authRoute);
 
-app.use((err, req, res) => {
-  console.log(err.message);
+app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({
-      error: 'Unauthenticate',
+      error: 'Unauthenticated',
     });
   }
+
 });
 
 app.listen(process.env.PORT || 3000, async () => {
