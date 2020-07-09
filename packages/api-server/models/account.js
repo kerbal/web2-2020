@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     Account.belongsTo(models.Customer, {
       foreignKey: 'customer_id',
     });
+    Account.hasOne(models.DepositAccount, {
+      foreignKey: 'account_id',
+      as: 'depositAccountDetail',
+    });
   };
   return Account;
 };
