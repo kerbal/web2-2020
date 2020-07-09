@@ -1,6 +1,6 @@
-const TYPE = {
+const ACCOUNT_TYPE = {
   DEFAULT: 'DEFAULT',
   CHECKING: 'CHECKING',
   DEPOSIT: 'DEPOSIT',
 };
-module.exports = TYPE;
+module.exports = ACCOUNT_TYPE;

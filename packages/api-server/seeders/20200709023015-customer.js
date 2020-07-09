@@ -1,4 +1,4 @@
-const STATUS = require('../utils/statusDict');
+const STATUS = require('../constants/customerStatus');
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert('Customers', [{
