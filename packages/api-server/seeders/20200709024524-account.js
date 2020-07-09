@@ -1,5 +1,5 @@
-import STATUS from '../utils/statusDict';
-import TYPE from '../utils/typeAccountDict';
+const STATUS = require('../utils/statusDict');
+const TYPE = require('../utils/typeAccountDict');
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert('Accounts', [{

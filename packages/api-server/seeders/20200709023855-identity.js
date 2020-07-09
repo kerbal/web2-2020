@@ -1,4 +1,4 @@
-import STATUS from '../utils/statusDict';
+const STATUS = require('../utils/statusDict');
 module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert('Identities', [{

@@ -1,5 +1,6 @@
-export default {
-  PENDING: 'PENDING',
+const STATUS = {
+  UNVERIFIED: 'UNVERIFIED',
   VERIFIED: 'VERIFIED',
   NORMAL: 'NORMAL',
 };
+module.exports = STATUS;
