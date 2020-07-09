@@ -9,11 +9,9 @@ import cookieParser from 'cookie-parser';
 import authRoute from './routes/auth';
 
 const app = express();
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  })
-);
+app.use(bodyParser.urlencoded({
+  extended: false,
+}));
 
 app.use(bodyParser.json());
 app.use(expressValidator());
@@ -22,7 +20,8 @@ app.use(cookieParser());
 //route
 app.use('/api/auth', authRoute);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
+  console.log(err.message);
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({
       error: 'Unauthenticate',
