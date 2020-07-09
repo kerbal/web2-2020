@@ -13,15 +13,12 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
 
-
 //route
 app.use('/api/auth', authRoute);
-
 
 app.use((err, req, res) => {
   console.log(err.message);
