@@ -40,4 +40,27 @@ const customerValidator = (req, res, next) => {
   //process to next middleware
   next();
 };
-export { customerValidator };
+
+const resetPasswordValidator = (req, res, next)=>{
+  req.check('newPassword', 'Password is required.').notEmpty();
+  req
+    .check('newPassword')
+    .isLength({
+      min: 6,
+    })
+    .withMessage('Password must contain at least 6 characters')
+    .matches(/\d/)
+    .withMessage('Password must contain number');
+
+  //check for error
+  const errors = req.validationErrors();
+  if (errors) {
+    const firstError = errors.map((err) => err.msg)[0];
+    return res.status(400).json({
+      error: firstError,
+    });
+  }
+  //process to next middleware
+  next();
+};
+export { customerValidator, resetPasswordValidator };
