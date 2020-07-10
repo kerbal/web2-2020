@@ -1,6 +1,5 @@
 import AccountService from '../services/account';
-import ACCOUNT_TYPE from '../constants/accountType';
-export const createAccountByUser = async (req, res) => {
+export const userCreateAccount = async (req, res) => {
   const { id: customer_id } = req.auth;
   try {
     const {
@@ -10,18 +9,7 @@ export const createAccountByUser = async (req, res) => {
       amount,
       sourceAccountId,
     } = req.body;
-    //const checkBalance = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
-    if (
-      !accountType || (
-        accountType !== ACCOUNT_TYPE.CHECKING &&
-        accountType !== ACCOUNT_TYPE.DEPOSIT
-      )
-    ) throw new Error('Not valid account type');
-    if (
-      accountType === ACCOUNT_TYPE.DEPOSIT &&
-      !depositAccountTypeId
-    ) throw new Error('No deposit account info');
-
+    //const sourceAccount = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
     const account = await AccountService.createNewAccount({
       customer_id,
       account_type: accountType,
@@ -44,7 +32,7 @@ export const createAccountByUser = async (req, res) => {
     });
   }
 };
-export const getAccountByUser = async (req, res) => {
+export const userGetAccount = async (req, res) => {
   try {
     const { id: customerId } = req.auth;
     const accounts = await AccountService.getByCustomerId(customerId);

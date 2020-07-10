@@ -74,7 +74,7 @@ class AccountService {
       account.type !== ACCOUNT_TYPE.CHECKING &&
       account.type !== ACCOUNT_TYPE.DEFAULT
     ) throw new Error('Can not transfer money from source account');
-    return true;
+    return account;
   }
   static async createNewAccount(accountInfo) {
     const transaction = await sequelize.transaction({
