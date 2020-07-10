@@ -1,4 +1,6 @@
 const ACCOUNT_STATUS = {
   NORMAL: 'NORMAL',
+  LOCKED: 'LOCKED',
+  CLOSED: 'CLOSED',
 };
 module.exports = ACCOUNT_STATUS;

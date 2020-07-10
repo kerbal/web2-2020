@@ -1,13 +1,13 @@
 import AccountService from '../services/account';
 export const userCreateAccount = async (req, res) => {
-  const { id: customer_id } = req.auth;
   try {
+    const { id: customer_id } = req.auth;
     const {
       accountType,
       currencyUnit,
       depositAccountTypeId,
       amount,
-      sourceAccountId,
+      sourceAccountNumber,
     } = req.body;
     //const sourceAccount = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
     const account = await AccountService.createNewAccount({
@@ -18,16 +18,15 @@ export const userCreateAccount = async (req, res) => {
     });
     const transactionInfo = {
       amount,
-      sourceAccountId,
+      sourceAccountNumber,
     };
     console.log(transactionInfo);
     // Create transaction
     //  blah blah
-    return res.json(account);
+    return res.status(200).json(account);
   } catch (error) {
     console.log(error.message);
     return res.status(400).json({
-      customer_id,
       error: error.message,
     });
   }
@@ -36,7 +35,24 @@ export const userGetAccount = async (req, res) => {
   try {
     const { id: customerId } = req.auth;
     const accounts = await AccountService.getByCustomerId(customerId);
-    return res.json(accounts);
+    return res.status(200).json(accounts);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400).json({
+      error: 'Something went wrong.',
+    });
+  }
+};
+export const userChangeAccountStatus = async (req, res) => {
+  try {
+    const { id: customerId } = req.auth;
+    const { accountNumber, newStatus } = req.body;
+    const account = await AccountService.changeAccountStatus({
+      customerId,
+      accountNumber,
+      newStatus,
+    });
+    return res.status(200).json(account);
   } catch (error) {
     console.log(error.message);
     return res.status(400).json({

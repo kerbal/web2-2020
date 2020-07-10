@@ -128,5 +128,36 @@ class AccountService {
       throw error;
     }
   }
+  static async changeAccountStatus({ customerId, accountNumber, newStatus }, adminId) {
+    const transaction = await sequelize.transaction({
+      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+    });
+    try {
+      const account = await AccountService.getByAccountNumber(
+        accountNumber,
+        { customer_id: customerId },
+      );
+      if (
+        account.status !== ACCOUNT_STATUS.CLOSED &&
+        account.status !== newStatus
+      ) {
+        throw new Error(`Account status is ${newStatus}`);
+      }
+      account.status = newStatus;
+      if(adminId) {
+        //log,email
+      }
+      await transaction.commit();
+      return {
+        account_number: account.account_number,
+        status: account.status,
+        updatedAt: account.updatedAt,
+      };
+    } catch (error) {
+      await transaction.rollback();
+      console.log('Service Error');
+      throw error;
+    }
+  }
 }
 export default AccountService;

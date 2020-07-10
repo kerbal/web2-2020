@@ -1,4 +1,14 @@
 import ACCOUNT_TYPE from '../constants/accountType';
+import ACCOUNT_STATUS from '../constants/accountStatus';
+const sourceAccountNumber = {
+  isString: {
+    errorMessage: 'Source account id must be a string.',
+  },
+  isLength: {
+    options: { max: 16, min:16 },
+    errorMessage: 'Source account id must contain 16 numbers.',
+  },
+};
 const userCreateAccountValidator = (req, res, next) => {
   req.checkBody({
     accountType: {
@@ -21,15 +31,7 @@ const userCreateAccountValidator = (req, res, next) => {
       },
       toFloat: true,
     },
-    sourceAccountId: {
-      isString: {
-        errorMessage: 'Source account id must be a string.',
-      },
-      isLength: {
-        options: { max: 16, min:16 },
-        errorMessage: 'Source account id must contain 16 numbers.',
-      },
-    },
+    sourceAccountNumber,
   });
   if(req.body.accountType === ACCOUNT_TYPE.DEPOSIT) {
     req.checkBody({
@@ -44,7 +46,6 @@ const userCreateAccountValidator = (req, res, next) => {
     });
   }
   const errors = req.validationErrors();
-  console.log(errors);
   if (errors) {
     const firstError = errors.map((err) => err.msg)[0];
     return res.status(400).json({
@@ -53,4 +54,28 @@ const userCreateAccountValidator = (req, res, next) => {
   }
   next();
 };
-export { userCreateAccountValidator };
+const userChangeAccountStatusValidator = (req, res, next) => {
+  req.checkBody({
+    sourceAccountNumber,
+    newStatus: {
+      custom: {
+        options: (value) => {
+          return [ACCOUNT_STATUS.NORMAL, ACCOUNT_STATUS.LOCKED].includes(value);
+        },
+        errorMessage: 'Invalid account type.',
+      },
+    },
+  });
+  const errors = req.validationErrors();
+  if (errors) {
+    const firstError = errors.map((err) => err.msg)[0];
+    return res.status(400).json({
+      error: firstError,
+    });
+  }
+  next();
+};
+export {
+  userCreateAccountValidator,
+  userChangeAccountStatusValidator,
+};
