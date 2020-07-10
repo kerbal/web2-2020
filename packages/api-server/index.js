@@ -20,11 +20,18 @@ app.use(cookieParser());
 //route
 app.use('/api/auth', authRoute);
 
-app.use((err, req, res) => {
-  console.log(err.message);
+
+//catch 404 error
+app.use(function(req, res, next) {
+  res.status(404).json({
+    error: 'NotFound',
+  });
+});
+
+app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({
-      error: 'Unauthenticate',
+      error: 'Unauthenticated',
     });
   }
 });
