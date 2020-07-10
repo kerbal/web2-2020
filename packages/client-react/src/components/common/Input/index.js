@@ -12,8 +12,8 @@ export default memo(function Input(props) {
   }
 
   return (
-    <div class="flex flex-col pt-4">
-      <label for="email" class="text-lg text-left">
+    <div className="flex flex-col pt-4">
+      <label for="email" className="text-lg text-left">
         {label}
       </label>
       <input
@@ -22,7 +22,7 @@ export default memo(function Input(props) {
         type={type}
         id={id}
         placeholder={placeholder}
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
       />
     </div>
   );

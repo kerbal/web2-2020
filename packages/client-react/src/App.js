@@ -1,19 +1,14 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import routes from './routes';
-import './App.css';
 
-const generateRoutes = (routes) => {
-  var result = null;
+const generateRoutes = () => {
+  let result = null;
   if (routes.length > 0) {
-    result = routes.map((route, index) => {
+    result = routes.map(route => {
       return (
         <Route
-          key={index}
+          key={route.path}
           path={route.path}
           exact={route.exact}
           component={route.main}
@@ -22,15 +17,13 @@ const generateRoutes = (routes) => {
     });
   }
   return result;
-}
+};
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>
-          {generateRoutes(routes)}
-        </Switch>
+        <Switch>{generateRoutes(routes)}</Switch>
       </Router>
     </div>
   );
