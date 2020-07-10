@@ -24,9 +24,9 @@ const uploadImage = async (req, res, next) => {
   upload(req, res, (err) => {
     if (err) return res.json({ message: err.message });
     if (!req.files.front_image)
-      return res.json({ message: 'Please upload front image' });
+      return res.json({ message: 'Upload front image.' });
     if (!req.files.back_image)
-      return res.json({ message: 'Please upload back image' });
+      return res.json({ message: 'Upload back image.' });
 
     req.body.front_image = req.files.front_image;
     req.body.back_image = req.files.back_image;
@@ -87,7 +87,7 @@ const login = async (req, res) => {
     });
     if (!user) {
       return res.status(401).json({
-        error: 'User with that email does not exist. Please sign in again',
+        error: 'User with that email does not exist.',
       });
     }
     const isTruePassword = await comparePassword(password, user.password);
@@ -100,10 +100,23 @@ const login = async (req, res) => {
       { id: user.id },
       process.env.JWT_SECRET
     );
-    const { id, name } = user;
+    const { id, name, status } = user;
+    let message;
+    //check user is update identity
+    const identity = await Identity.findOne({
+      where:{
+        customer_id:id,
+      },
+    });
+    if (!identity){
+      message='Update your identity.';
+    } else if (status==='UNVERIFIED'){
+      message='Unverified';
+    }
     return res.json({
       token,
       user: { id, email, name },
+      message,
     });
   } catch (error) {
     return res.status(400).json({
