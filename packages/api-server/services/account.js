@@ -4,8 +4,11 @@ import ACCOUNT_TYPE from '../constants/accountType';
 import ACCOUNT_STATUS from '../constants/accountStatus';
 class AccountService {
   static async getNewAccountNumber(customerId) {
-    const nextAccountId = await Account.count() + 1;
-    return generateAccountNumber(customerId, nextAccountId);
+    const latestAccount = await Account.findAll({
+      limit: 1,
+      order: [[ 'id', 'DESC' ]],
+    });
+    return generateAccountNumber(customerId, latestAccount.id + 1);
   }
   static async getByCustomerId(id, options = {}) {
     const where = {
@@ -26,6 +29,19 @@ class AccountService {
   static async getByAccountId(id, options) {
     const where = {
       id,
+      ...options,
+    };
+    const account = await Account.findOne({
+      where, include: [{
+        model: DepositAccount,
+        as: 'depositAccountDetail',
+      }],
+    });
+    return account;
+  }
+  static async getByAccountNumber(account_number, options) {
+    const where = {
+      account_number,
       ...options,
     };
     const account = await Account.findOne({
