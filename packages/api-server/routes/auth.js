@@ -1,14 +1,17 @@
 import express from 'express';
 
-import { register, uploadImage, login, forgotPassword, resetPassword } from '../controllers/auth';
-import { customerValidator, resetPasswordValidator } from '../validator/auth';
-const router = express.Router();
+import { register, uploadImage, login, forgotPassword, resetPassword, updateIdentity } from '../controllers/auth';
+import { customerValidator, resetPasswordValidator, identityValidator } from '../validator/auth';
 import verifyUser from '../middleware/verifyUser';
 
-router.post('/register', uploadImage, customerValidator, register);
+const router = express.Router();
+
+
+router.post('/register', customerValidator, register);
 router.post('/login', login);
 router.post('/forgotPassword', forgotPassword);
 router.post('/resetPassword', resetPasswordValidator, resetPassword);
+router.post('/updateIdentity', verifyUser, uploadImage, identityValidator, updateIdentity);
 
 //test protect route
 router.get('/test', verifyUser, (req, res) => {

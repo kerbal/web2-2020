@@ -10,7 +10,6 @@ const customerValidator = (req, res, next) => {
       max: 32,
     })
     .normalizeEmail();
-
   req.check('birthday', 'Invalid birthday.').isISO8601().toDate();
   req.check('phone_number', 'Phone number is required.').notEmpty();
 
@@ -20,19 +19,31 @@ const customerValidator = (req, res, next) => {
     .isLength({
       min: 6,
     })
-    .withMessage('Password must containt at least 6 characters')
+    .withMessage('Password must contain at least 6 characters')
     .matches(/\d/)
     .withMessage('Password must contain number');
-
   req.check('address', 'Address is required.').notEmpty();
-  req.check('pid', 'PID is required.').notEmpty();
-  req.check('create_date', 'Invalid create date.').isISO8601().toDate();
-  req.check('location', 'Location is required.').notEmpty();
-
   //check for error
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0].msg;
+    return res.status(400).json({
+      error: firstError,
+    });
+  }
+  //process to next middleware
+  next();
+};
+
+const identityValidator = (req, res, next)=>{
+  req.check('pid', 'PID is required.').notEmpty();
+  req.check('create_date', 'Invalid create date.').isISO8601().toDate();
+  req.check('location', 'Location is required.').notEmpty();
+  req.check('customer_id', 'Customer id is required.').notEmpty();
+  //check for error
+  const errors = req.validationErrors();
+  if (errors) {
+    const firstError = errors[0].msg;
     return res.status(400).json({
       error: firstError,
     });
@@ -55,7 +66,7 @@ const resetPasswordValidator = (req, res, next)=>{
   //check for error
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0].msg;
     return res.status(400).json({
       error: firstError,
     });
@@ -63,4 +74,4 @@ const resetPasswordValidator = (req, res, next)=>{
   //process to next middleware
   next();
 };
-export { customerValidator, resetPasswordValidator };
+export { customerValidator, resetPasswordValidator, identityValidator };
