@@ -1,18 +1,23 @@
 import express from 'express';
 const router = express.Router();
-import verifyUser from '../middleware/verifyUser';
+import verifyCustomer from '../middleware/verifyUser';
 import * as AccountController from '../controllers/account';
-import { userCreateAccountValidator, userChangeAccountStatusValidator } from '../validator/account';
+import { userCreate, userLock, userUnlock } from '../validator/account';
+//route for customer /customer
+router.get('/customer/account', verifyCustomer,
+  AccountController.userGet);
 
-router.post('/', verifyUser,
-  userCreateAccountValidator,
-  AccountController.userCreateAccount);
-router.put('/status', verifyUser,
-  userChangeAccountStatusValidator,
+router.post('/customer/account-new', verifyCustomer,
+  userCreate,
+  AccountController.userCreate);
+
+router.put('/customer/account-lock', verifyCustomer,
+  userLock,
   AccountController.userChangeAccountStatus);
-router.get('/', verifyUser, AccountController.userGetAccount);
-router.post('/test', verifyUser, (req, res) => {
-  res.json('Hello World');
-});
+
+router.put('/customer/account-unlock', verifyCustomer,
+  userUnlock,
+  AccountController.userChangeAccountStatus);
+//route for admin /admin
 
 export default router;

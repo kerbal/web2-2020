@@ -4,7 +4,7 @@ import ACCOUNT_TYPE from '../constants/accountType';
 import ACCOUNT_STATUS from '../constants/accountStatus';
 class AccountService {
   static async getNewAccountNumber(customerId) {
-    const latestAccount = await Account.findAll({
+    const [latestAccount] = await Account.findAll({
       limit: 1,
       order: [[ 'id', 'DESC' ]],
     });
@@ -128,7 +128,7 @@ class AccountService {
       throw error;
     }
   }
-  static async changeAccountStatus({ customerId, accountNumber, newStatus }, adminId) {
+  static async userChangeAccountStatus({ customerId, accountNumber, newStatus }) {
     const transaction = await sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     });
@@ -137,16 +137,15 @@ class AccountService {
         accountNumber,
         { customer_id: customerId },
       );
+      if (account.type === ACCOUNT_TYPE.DEPOSIT)
+        throw new Error('Deposit account can not be change status');
       if (
-        account.status !== ACCOUNT_STATUS.CLOSED &&
-        account.status !== newStatus
+        account.status === ACCOUNT_STATUS.CLOSED ||
+        account.status === newStatus
       ) {
         throw new Error(`Account status is ${newStatus}`);
       }
       account.status = newStatus;
-      if(adminId) {
-        //log,email
-      }
       await transaction.commit();
       return {
         account_number: account.account_number,

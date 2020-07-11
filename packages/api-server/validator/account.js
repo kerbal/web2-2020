@@ -1,6 +1,9 @@
 import ACCOUNT_TYPE from '../constants/accountType';
 import ACCOUNT_STATUS from '../constants/accountStatus';
-const sourceAccountNumber = {
+const accountNumber = {
+  notEmpty: {
+    errorMessage: 'Account number is required.',
+  },
   isString: {
     errorMessage: 'Source account id must be a string.',
   },
@@ -9,7 +12,7 @@ const sourceAccountNumber = {
     errorMessage: 'Source account id must contain 16 numbers.',
   },
 };
-const userCreateAccountValidator = (req, res, next) => {
+const userCreate = (req, res, next) => {
   req.checkBody({
     accountType: {
       notEmpty: {
@@ -31,7 +34,7 @@ const userCreateAccountValidator = (req, res, next) => {
       },
       toFloat: true,
     },
-    sourceAccountNumber,
+    sourceAccountNumber: accountNumber,
   });
   if(req.body.accountType === ACCOUNT_TYPE.DEPOSIT) {
     req.checkBody({
@@ -54,17 +57,9 @@ const userCreateAccountValidator = (req, res, next) => {
   }
   next();
 };
-const userChangeAccountStatusValidator = (req, res, next) => {
+const userLock = (req, res, next) => {
   req.checkBody({
-    sourceAccountNumber,
-    newStatus: {
-      custom: {
-        options: (value) => {
-          return [ACCOUNT_STATUS.NORMAL, ACCOUNT_STATUS.LOCKED].includes(value);
-        },
-        errorMessage: 'Invalid account type.',
-      },
-    },
+    accountNumber,
   });
   const errors = req.validationErrors();
   if (errors) {
@@ -73,9 +68,25 @@ const userChangeAccountStatusValidator = (req, res, next) => {
       error: firstError,
     });
   }
+  res.locals.newStatus = ACCOUNT_STATUS.LOCKED;
+  next();
+};
+const userUnlock = (req, res, next) => {
+  req.checkBody({
+    accountNumber,
+  });
+  const errors = req.validationErrors();
+  if (errors) {
+    const firstError = errors.map((err) => err.msg)[0];
+    return res.status(400).json({
+      error: firstError,
+    });
+  }
+  res.locals.newStatus = ACCOUNT_STATUS.NORMAL;
   next();
 };
 export {
-  userCreateAccountValidator,
-  userChangeAccountStatusValidator,
+  userCreate,
+  userLock,
+  userUnlock,
 };

@@ -1,5 +1,5 @@
 import AccountService from '../services/account';
-export const userCreateAccount = async (req, res) => {
+export const userCreate = async (req, res) => {
   try {
     const { id: customer_id } = req.auth;
     const {
@@ -31,7 +31,7 @@ export const userCreateAccount = async (req, res) => {
     });
   }
 };
-export const userGetAccount = async (req, res) => {
+export const userGet = async (req, res) => {
   try {
     const { id: customerId } = req.auth;
     const accounts = await AccountService.getByCustomerId(customerId);
@@ -46,8 +46,9 @@ export const userGetAccount = async (req, res) => {
 export const userChangeAccountStatus = async (req, res) => {
   try {
     const { id: customerId } = req.auth;
-    const { accountNumber, newStatus } = req.body;
-    const account = await AccountService.changeAccountStatus({
+    const { accountNumber } = req.body;
+    const { newStatus } = res.locals;
+    const account = await AccountService.userChangeAccountStatus({
       customerId,
       accountNumber,
       newStatus,
