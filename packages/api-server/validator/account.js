@@ -51,9 +51,9 @@ const customerCreateValidator = (req, res, next) => {
   }
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0];
     return res.status(400).json({
-      error: firstError,
+      error: firstError.msg,
     });
   }
   next();
@@ -64,9 +64,9 @@ const customerLockValidator = (req, res, next) => {
   });
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0];
     return res.status(400).json({
-      error: firstError,
+      error: firstError.msg,
     });
   }
   res.locals.newStatus = ACCOUNT_STATUS.LOCKED;
@@ -78,9 +78,9 @@ const customerUnlockValidator = (req, res, next) => {
   });
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0];
     return res.status(400).json({
-      error: firstError,
+      error: firstError.msg,
     });
   }
   res.locals.newStatus = ACCOUNT_STATUS.NORMAL;

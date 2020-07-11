@@ -25,10 +25,14 @@ app.use('/api', accountRoute);
 app.use((err, req, res) => {
   console.log(err.message);
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({
+    return res.status(401).json({
       error: 'Unauthenticated',
     });
   }
+
+  res.status(500).send({
+    message: 'Something went wrong!',
+  });
 });
 
 app.listen(process.env.PORT || 3000, async () => {

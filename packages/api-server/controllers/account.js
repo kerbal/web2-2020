@@ -1,6 +1,6 @@
 import AccountService from '../services/account';
 
-export const userCreate = async (req, res) => {
+export const userCreate = async (req, res, next) => {
   try {
     const { id: customer_id } = req.auth;
     const {
@@ -26,25 +26,19 @@ export const userCreate = async (req, res) => {
     //  blah blah
     return res.status(200).json(account);
   } catch (error) {
-    console.log(error.message);
-    return res.status(400).json({
-      error: error.message,
-    });
+    next(error);
   }
 };
-export const userGet = async (req, res) => {
+export const userGet = async (req, res, next) => {
   try {
     const { id: customerId } = req.auth;
     const accounts = await AccountService.getByCustomerId(customerId);
     return res.status(200).json(accounts);
   } catch (error) {
-    console.log(error.message);
-    return res.status(400).json({
-      error: 'Something went wrong.',
-    });
+    next(error);
   }
 };
-export const userChangeAccountStatus = async (req, res) => {
+export const userChangeAccountStatus = async (req, res, next) => {
   try {
     const { id: customerId } = req.auth;
     const { accountNumber } = req.body;
@@ -56,9 +50,6 @@ export const userChangeAccountStatus = async (req, res) => {
     });
     return res.status(200).json(account);
   } catch (error) {
-    console.log(error.message);
-    return res.status(400).json({
-      error: 'Something went wrong.',
-    });
+    next(error);
   }
 };
