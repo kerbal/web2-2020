@@ -12,7 +12,7 @@ const accountNumber = {
     errorMessage: 'Source account id must contain 16 numbers.',
   },
 };
-const userCreate = (req, res, next) => {
+const customerCreateValidator = (req, res, next) => {
   req.checkBody({
     accountType: {
       notEmpty: {
@@ -57,7 +57,7 @@ const userCreate = (req, res, next) => {
   }
   next();
 };
-const userLock = (req, res, next) => {
+const customerLockValidator = (req, res, next) => {
   req.checkBody({
     accountNumber,
   });
@@ -71,7 +71,7 @@ const userLock = (req, res, next) => {
   res.locals.newStatus = ACCOUNT_STATUS.LOCKED;
   next();
 };
-const userUnlock = (req, res, next) => {
+const customerUnlockValidator = (req, res, next) => {
   req.checkBody({
     accountNumber,
   });
