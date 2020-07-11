@@ -7,26 +7,30 @@ import expressValidator from 'express-validator';
 import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
+import accountRoute from './routes/account';
 
 const app = express();
 app.use(bodyParser.urlencoded({
   extended: false,
 }));
-
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
 
 //route
 app.use('/api/auth', authRoute);
+app.use('/api', accountRoute);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
+  console.log(err);
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({
+    return res.status(401).json({
       error: 'Unauthenticated',
     });
   }
-
+  res.status(500).send({
+    message: 'Something went wrong!',
+  });
 });
 
 app.listen(process.env.PORT || 3000, async () => {
