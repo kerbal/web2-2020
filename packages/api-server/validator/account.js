@@ -1,5 +1,6 @@
 import ACCOUNT_TYPE from '../constants/accountType';
 import ACCOUNT_STATUS from '../constants/accountStatus';
+
 const accountNumber = {
   notEmpty: {
     errorMessage: 'Account number is required.',
@@ -86,7 +87,7 @@ const customerUnlockValidator = (req, res, next) => {
   next();
 };
 export {
-  userCreate,
-  userLock,
-  userUnlock,
+  customerCreateValidator,
+  customerLockValidator,
+  customerUnlockValidator,
 };

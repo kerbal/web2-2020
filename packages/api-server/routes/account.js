@@ -7,6 +7,7 @@ import {
   customerLockValidator,
   customerUnlockValidator,
 } from '../validator/account';
+
 //route for customer /customer
 router.get('/customer/account', verifyCustomer,
   AccountController.userGet);

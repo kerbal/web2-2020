@@ -2,6 +2,7 @@ import { Account, DepositAccount, sequelize, Sequelize } from '../models/index';
 import { generateAccountNumber } from '../utils/accountNumber';
 import ACCOUNT_TYPE from '../constants/accountType';
 import ACCOUNT_STATUS from '../constants/accountStatus';
+
 class AccountService {
   static async getNewAccountNumber(customerId) {
     const [latestAccount] = await Account.findAll({
@@ -10,6 +11,7 @@ class AccountService {
     });
     return generateAccountNumber(customerId, latestAccount.id + 1);
   }
+
   static async getByCustomerId(id, options = {}) {
     const where = {
       customer_id: id,
@@ -26,6 +28,7 @@ class AccountService {
     });
     return accounts;
   }
+
   static async getByAccountId(id, options) {
     const where = {
       id,
@@ -39,6 +42,7 @@ class AccountService {
     });
     return account;
   }
+
   static async getByAccountNumber(account_number, options) {
     const where = {
       account_number,
@@ -52,6 +56,7 @@ class AccountService {
     });
     return account;
   }
+
   static async createDefaultAccount(customerId, currencyUnit) {
     const transaction = await sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -76,6 +81,7 @@ class AccountService {
       throw error;
     }
   }
+
   static async canTransferMoneyInsideUser(customerId, sourceAccountId, amount) {
     const account = await AccountService.getByAccountId(sourceAccountId);
     if (!account)
@@ -92,6 +98,7 @@ class AccountService {
     ) throw new Error('Can not transfer money from source account');
     return account;
   }
+
   static async createNewAccount(accountInfo) {
     const transaction = await sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
@@ -128,6 +135,7 @@ class AccountService {
       throw error;
     }
   }
+
   static async userChangeAccountStatus({ customerId, accountNumber, newStatus }) {
     const transaction = await sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,

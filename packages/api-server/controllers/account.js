@@ -1,4 +1,5 @@
 import AccountService from '../services/account';
+
 export const userCreate = async (req, res) => {
   try {
     const { id: customer_id } = req.auth;
