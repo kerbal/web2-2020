@@ -22,11 +22,11 @@ var upload = multer({ storage }).fields([
 
 const uploadImage = async (req, res, next) => {
   upload(req, res, (err) => {
-    if (err) return res.json({ message: err.message });
+    if (err) return res.json({ error: err.message });
     if (!req.files.front_image)
-      return res.json({ message: 'Upload front image.' });
+      return res.json({ error : 'Missing front image.' });
     if (!req.files.back_image)
-      return res.json({ message: 'Upload back image.' });
+      return res.json({ error : 'Missing back image.' });
 
     req.body.front_image = req.files.front_image;
     req.body.back_image = req.files.back_image;
@@ -72,7 +72,6 @@ const register = async (req, res) => {
       res.status(400).json({ error: 'Fail' });
     }
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ error: 'Fail' });
   }
 };

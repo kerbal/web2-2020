@@ -26,7 +26,7 @@ const customerValidator = (req, res, next) => {
   //check for error
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0].msg;
     return res.status(400).json({
       error: firstError,
     });
@@ -43,7 +43,7 @@ const identityValidator = (req, res, next)=>{
   //check for error
   const errors = req.validationErrors();
   if (errors) {
-    const firstError = errors.map((err) => err.msg)[0];
+    const firstError = errors[0].msg;
     return res.status(400).json({
       error: firstError,
     });
