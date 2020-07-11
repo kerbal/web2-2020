@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Customer, Identity } from '../models';
 import { comparePassword, getHashedPassword } from '../utils/password';
 import multer from 'multer';
-import { sendEmail } from '../utils/send-email';
+import MailService from '../services/mail';
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -100,7 +100,7 @@ const login = async (req, res) => {
     });
     if (!user) {
       return res.status(401).json({
-        error: 'User with that email does not exist. Please sign in again',
+        error: 'Email does not exist',
       });
     }
     const isTruePassword = await comparePassword(password, user.password);
@@ -125,8 +125,8 @@ const login = async (req, res) => {
   }
 };
 const forgotPassword = async (req, res)=>{
-  if (!req.body) return res.status(400).json({ error:'No request body.' });
-  if (!req.body.email) return res.status(400).json({ error:'Email is required.' });
+  if (!req.body) return res.status(400).json({ error: 'No request body.' });
+  if (!req.body.email) return res.status(400).json({ error: 'Email is required.' });
   const { email } = req.body;
   try {
     const user = await Customer.findOne({
@@ -135,16 +135,17 @@ const forgotPassword = async (req, res)=>{
       },
     });
     if (!user){
-      return res.status(401).json({ error:'User with that email does not exist!' });
+      return res.status(401).json({ error: 'Email does not exist.' });
     }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-    const text = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-    'http://' + process.env.HOST + '/reset/' + token + '\n\n' +
-    'If you did not request this, please ignore this email and your password will remain unchanged.\n\n'+
-    'Thanks,\n'+
-    'The Piggy team';
-    await sendEmail(email, 'Piggy bank account password reset ', text);
+    const text = `You are receiving this because you (or someone else) have requested the reset of the password for your account.
+    Please click on the following link, or paste this into your browser to complete the process: 
+    ${process.env.HOST}/reset/${token} 
+    If you did not request this, please ignore this email and your password will remain unchanged.
+    Thanks, 
+    The Piggy team`;
+    console.log(text);
+    await MailService.sendMail(email, 'Piggy bank account password reset ', text);
     user.resetPasswordToken = token;
     await user.save();
     return res.json({ message: 'Success' });
@@ -173,7 +174,7 @@ const resetPassword = async (req, res)=>{
   }
   catch(error){
     return res.status(400).json({
-      error,
+      error:'Something went wrong.',
     });
   }
 };

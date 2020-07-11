@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      resetPasswordToken :{
+      resetPasswordToken: {
         type: Sequelize.STRING,
         allowNull: true,
       },
