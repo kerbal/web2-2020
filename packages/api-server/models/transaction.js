@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     note: DataTypes.STRING,
     status: DataTypes.STRING,
     error_message: DataTypes.STRING,
+    otp_id: DataTypes.UUID,
   }, {});
   Transaction.associate = function (models) {
     // associations can be defined here

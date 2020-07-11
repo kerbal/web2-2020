@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
 import accountRoute from './routes/account';
+import Redis from './services/redis';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -33,9 +34,17 @@ app.use((err, req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 3000, async () => {
-  models.sequelize.authenticate().then(() => {
+const port = process.env.PORT || 3000;
+app.listen(port, async () => {
+  try {
+    models.sequelize.authenticate();
     console.log('Database connected!');
-    console.log('Server is up!');
-  });
+    await Redis.ping();
+    console.log('Redis connected!');
+    console.log(`Server is listening on port ${port}!`);
+  }
+  catch (error) {
+    console.log('Failed to start server!');
+    console.log(error);
+  }
 });
