@@ -21,6 +21,11 @@ app.use('/api/auth', authRoute);
 
 app.use((err, req, res) => {
   console.log(err);
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({
+      error: 'Unauthenticated',
+    });
+  }
   res.status(500).send({
     message: 'Something went wrong!',
   });

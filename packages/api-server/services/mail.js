@@ -29,9 +29,10 @@ export default class MailService {
     }
     catch (err)  {
       console.log(err);
-      transporter.close();
       throw err;
     }
-    transporter.close();
+    finally {
+      transporter.close();
+    }
   }
 }
