@@ -7,6 +7,7 @@ import expressValidator from 'express-validator';
 import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
+import accountRoute from './routes/account';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 //route
 app.use('/api/auth', authRoute);
+app.use('/api', accountRoute);
 
 app.use((err, req, res) => {
   console.log(err);

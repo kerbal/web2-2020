@@ -21,6 +21,7 @@ module.exports = {
         allowNull: false,
       },
       account_number: {
+        unique: true,
         type: Sequelize.STRING,
         allowNull: false,
       },
