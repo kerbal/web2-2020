@@ -61,6 +61,17 @@ const customerCreateValidator = (req, res, next) => {
 const customerLockValidator = (req, res, next) => {
   req.checkBody({
     accountNumber,
+    accountStatus: {
+      notEmpty: {
+        errorMessage: 'Account current status is required.',
+      },
+      custom: {
+        options: (value) => {
+          return ACCOUNT_STATUS.NORMAL === value;
+        },
+        errorMessage: 'Invalid account status.',
+      },
+    },
   });
   const errors = req.validationErrors();
   if (errors) {
@@ -75,6 +86,17 @@ const customerLockValidator = (req, res, next) => {
 const customerUnlockValidator = (req, res, next) => {
   req.checkBody({
     accountNumber,
+    accountStatus: {
+      notEmpty: {
+        errorMessage: 'Account current status is required.',
+      },
+      custom: {
+        options: (value) => {
+          return ACCOUNT_STATUS.LOCKED === value;
+        },
+        errorMessage: 'Invalid account status.',
+      },
+    },
   });
   const errors = req.validationErrors();
   if (errors) {
