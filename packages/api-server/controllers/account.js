@@ -1,4 +1,6 @@
 import AccountService from '../services/account';
+import MailService from '../services/mail';
+import { Customer } from '../models';
 
 export const userCreate = async (req, res, next) => {
   try {
@@ -10,7 +12,7 @@ export const userCreate = async (req, res, next) => {
       amount,
       sourceAccountNumber,
     } = req.body;
-    //const sourceAccount = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
+
     const account = await AccountService.createNewAccount({
       customer_id,
       account_type: accountType,
@@ -21,11 +23,20 @@ export const userCreate = async (req, res, next) => {
       amount,
       sourceAccountNumber,
     };
+    //send email
+    const customer = await Customer.findOne({
+      where: {
+        id: customer_id,
+      },
+    });
+    MailService.sendMailNewAccount(customer, account);
     console.log(transactionInfo);
+    // const [sourceAccount,desAccount] = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
     // Create transaction
     //  blah blah
     return res.status(200).json(account);
   } catch (error) {
+    console.log(error.message);
     next(error);
   }
 };

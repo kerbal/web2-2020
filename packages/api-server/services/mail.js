@@ -2,8 +2,9 @@ import emailer from 'nodemailer';
 import { markdown } from 'nodemailer-markdown';
 
 const config = {
-  host: 'smtp-mail.outlook.com',
+  host: process.env.EMAIL_HOST || 'smtp-mail.outlook.com',
   secureConnection: false,
+  secure: false,
   port: 587,
   auth: {
     user: process.env.EMAIL_ACC,
@@ -33,6 +34,28 @@ export default class MailService {
     }
     finally {
       transporter.close();
+    }
+  }
+
+  static async sendMailNewAccount({ fullname, email }, { type, account_number, created_date }) {
+    try {
+      const content = `
+      # Hello ${fullname},
+      ## Thank you for creating a new ${type} account at Piggy bank 
+      ## The account have been successfully created. 
+
+      More about your account details below:
+      Account number: ${account_number}
+      Account type: ${type}
+      Date issued ${created_date}
+
+      If you did not request this, please contact to our support as fast as possible.
+      The Piggy Support Team, 
+      `;
+      await MailService.sendMail(email, `Piggy bank: new ${type} created`, content);
+      console.log('Mail successful');
+    } catch(error) {
+      console.log('sendMailNewAccount error: ', error.message);
     }
   }
 }
