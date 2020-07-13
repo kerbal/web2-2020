@@ -82,21 +82,30 @@ class AccountService {
     }
   }
 
-  static async canTransferMoneyInsideUser(customerId, sourceAccountId, amount) {
-    const account = await AccountService.getByAccountId(sourceAccountId);
-    if (!account)
-      throw new Error('Can not transfer money from source account');
-    if (account.customer_id !== customerId)
-      throw new Error('Can not transfer money from source account');
-    if (account.balance < amount)
-      throw new Error('Can not transfer money from source account');
-    if (account.status !== ACCOUNT_STATUS.NORMAL)
-      throw new Error('Can not transfer money from source account');
+  static async canTransferMoneyInsideUser(customerId, sourceAccountId, desAccountId, amount) {
+    const sourceAccount = await AccountService.getByAccountId(sourceAccountId, {
+      customer_id: customerId,
+    });
+    const desAccount = await AccountService.getByAccountId(desAccountId, {
+      customer_id: customerId,
+    });
+    if (!sourceAccount)
+      throw new Error('Source account not found');
+    if (sourceAccount.balance < amount)
+      throw new Error('Source account not have enough money');
+    if (sourceAccount.status !== ACCOUNT_STATUS.NORMAL)
+      throw new Error('Source account is locked or closed');
     if (
-      account.type !== ACCOUNT_TYPE.CHECKING &&
-      account.type !== ACCOUNT_TYPE.DEFAULT
-    ) throw new Error('Can not transfer money from source account');
-    return account;
+      sourceAccount.type !== ACCOUNT_TYPE.CHECKING &&
+      sourceAccount.type !== ACCOUNT_TYPE.DEFAULT
+    ) throw new Error('Source account is deposit account');
+    if (!desAccount)
+      throw new Error('Destination account not found');
+    if (desAccount.status !== ACCOUNT_STATUS.NORMAL)
+      throw new Error('Destination account is locked or closed');
+    if (desAccount.depositAccountDetail && desAccount.depositAccountDetail.deposit_date)
+      throw new Error('Destination account is deposited');
+    return [sourceAccount, desAccount];
   }
 
   static async createNewAccount(accountInfo) {
@@ -121,7 +130,6 @@ class AccountService {
         depositAccountDetail = await DepositAccount.create({
           account_id: account.id,
           type_id: deposit_account_type_id,
-          deposit_date: new Date(),
         }, { transaction });
       }
       await transaction.commit();
@@ -146,12 +154,12 @@ class AccountService {
         { customer_id: customerId },
       );
       if (account.type === ACCOUNT_TYPE.DEPOSIT)
-        throw new Error('Deposit account can not be change status');
+        throw new Error('Deposit account can not change status by user');
       if (
         account.status === ACCOUNT_STATUS.CLOSED ||
         account.status === newStatus
       ) {
-        throw new Error(`Account status is ${newStatus}`);
+        throw new Error(`Account status is ${account.status}`);
       }
       account.status = newStatus;
       await transaction.commit();
@@ -161,6 +169,29 @@ class AccountService {
         updatedAt: account.updatedAt,
       };
     } catch (error) {
+      await transaction.rollback();
+      console.log('Service Error');
+      throw error;
+    }
+  }
+
+  static async adminChangeAccountStatus({ accountNumber, newStatus }, adminId) {
+    const transaction = await sequelize.transaction({
+      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+    });
+    try {
+      const account = await AccountService.getByAccountNumber(
+        accountNumber,
+      );
+      account.status = newStatus;
+      await transaction.commit();
+      return {
+        account_number: account.account_number,
+        status: account.status,
+        updatedAt: account.updatedAt,
+        adminId,
+      };
+    }catch (error) {
       await transaction.rollback();
       console.log('Service Error');
       throw error;
