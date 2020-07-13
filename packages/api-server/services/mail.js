@@ -43,7 +43,7 @@ export default class MailService {
       # Hello ${fullname},
 
       ## Thank you for creating a new ${type} account at Piggy bank 
-      
+
       ## The account have been successfully created. 
 
       More about your account below:
@@ -55,7 +55,7 @@ export default class MailService {
       If you did not request this, please contact to our support as fast as possible.
       The Piggy Support Team, 
       `;
-      await MailService.sendMail(email, `Piggy bank: new ${type} created`, content);
+      await MailService.sendMail(email, `Piggy bank: new ${type} account created`, content);
       console.log('Mail successful');
     } catch(error) {
       console.log('sendMailNewAccount error: ', error.message);
