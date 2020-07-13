@@ -37,7 +37,7 @@ export default class MailService {
     }
   }
 
-  static async sendMailNewAccount({ fullname, email }, { type, account_number, created_date }) {
+  static async sendMailNewAccount({ fullname, email }, { type, balance, account_number, created_date }) {
     try {
       const content = `
       # Hello ${fullname},
@@ -47,6 +47,7 @@ export default class MailService {
       More about your account details below:
       Account number: ${account_number}
       Account type: ${type}
+      Balance: ${balance}
       Date issued ${created_date}
 
       If you did not request this, please contact to our support as fast as possible.
