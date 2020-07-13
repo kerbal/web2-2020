@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
 import accountRoute from './routes/account';
+import adminAuthRoute from './routes/auth.admin';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -20,6 +21,7 @@ app.use(cookieParser());
 //route
 app.use('/api/auth', authRoute);
 app.use('/api', accountRoute);
+app.use('/api/admin/auth', adminAuthRoute);
 
 app.use((err, req, res) => {
   console.log(err);
