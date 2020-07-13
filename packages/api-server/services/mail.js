@@ -44,7 +44,7 @@ export default class MailService {
       ## Thank you for creating a new ${type} account at Piggy bank 
       ## The account have been successfully created. 
 
-      More about your account details below:
+      More about your account below:
       Account number: ${account_number}
       Account type: ${type}
       Balance: ${balance}
