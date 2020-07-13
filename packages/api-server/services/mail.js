@@ -41,7 +41,9 @@ export default class MailService {
     try {
       const content = `
       # Hello ${fullname},
+
       ## Thank you for creating a new ${type} account at Piggy bank 
+      
       ## The account have been successfully created. 
 
       More about your account below:
