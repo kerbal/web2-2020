@@ -14,16 +14,9 @@ export default class TransactionService {
     page,
   }) {
     const query = {
-      attributes: [
-        'source_bank_name',
-        'destination_bank_name',
-        'source_account_name',
-        'destination_bank_name',
-        'amount',
-        'note',
-        'status',
-        'error_message',
-      ],
+      attributes: {
+        exclude: ['updatedAt', 'error_message', 'otp_id'],
+      },
       where: {
         [Op.or]: [
           { destination_account_id: account_id },
@@ -34,7 +27,7 @@ export default class TransactionService {
       offset: (page - 1) * 20,
     };
     const t = await Transaction.findAll(query);
-    return t.rows;
+    return t;
   }
 
   static async one({
@@ -89,8 +82,10 @@ export default class TransactionService {
         destination_bank_name,
         source_account_id,
         source_account_name: sourceAccount.Customer.fullname,
+        source_account_number: sourceAccount.account_number,
         destination_account_id,
         destination_account_name: destinationAccount.Customer.fullname,
+        destination_account_number: destinationAccount.account_number,
         balance: remaining_balance,
         amount,
         note,
@@ -164,6 +159,10 @@ export default class TransactionService {
         transaction.status = TRANSACTION_STATUS.SUCCESS;
         await transaction.save({ transaction: t });
         await t.commit();
+        return {
+          sourceAccount,
+          destinationAccount,
+        };
       }
       catch (error) {
         transaction.status = TRANSACTION_STATUS.ERROR;

@@ -7,6 +7,8 @@ module.exports = {
       queryInterface.addColumn('Transactions', 'destination_bank_name', { type: Sequelize.STRING }),
       queryInterface.addColumn('Transactions', 'source_account_name', { type: Sequelize.STRING }),
       queryInterface.addColumn('Transactions', 'destination_account_name', { type: Sequelize.STRING }),
+      queryInterface.addColumn('Transactions', 'source_account_number', { type: Sequelize.STRING }),
+      queryInterface.addColumn('Transactions', 'destination_account_number', { type: Sequelize.STRING }),
     ]);
   },
 
@@ -18,6 +20,8 @@ module.exports = {
       queryInterface.dropColumn('Transactions', 'destination_bank_name', { type: Sequelize.STRING }),
       queryInterface.dropColumn('Transactions', 'source_account_name', { type: Sequelize.STRING }),
       queryInterface.dropColumn('Transactions', 'destination_account_name', { type: Sequelize.STRING }),
+      queryInterface.dropColumn('Transactions', 'source_account_number', { type: Sequelize.STRING }),
+      queryInterface.dropColumn('Transactions', 'destination_account_number', { type: Sequelize.STRING }),
     ]);
   },
 };
