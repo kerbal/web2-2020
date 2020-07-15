@@ -8,7 +8,10 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
 import accountRoute from './routes/account';
+import transactionRoute from './routes/transaction';
 import Redis from './services/redis';
+
+import verifyCustomer from './middleware/verifyUser';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -20,9 +23,10 @@ app.use(cookieParser());
 
 //route
 app.use('/api/auth', authRoute);
+app.use('/api/transaction', verifyCustomer, transactionRoute);
 app.use('/api', accountRoute);
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.log(err);
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({

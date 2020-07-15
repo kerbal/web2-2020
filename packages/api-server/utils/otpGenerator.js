@@ -1,9 +1,9 @@
 import totpGenerator from 'totp-generator';
-import uuid from 'uuid';
+import { v4 } from 'uuid';
 
 export const generateOTP = () => {
-  const id = uuid();
-  const value = totpGenerator(id);
+  const id = v4();
+  const value = totpGenerator(new Date().getTime());
   return ({
     id,
     value,

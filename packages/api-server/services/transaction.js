@@ -4,12 +4,54 @@ import AccountService from './account';
 import { TRANSACTION_STATUS } from '../constants/transactionStatus';
 import { generateOTP } from '../utils/otpGenerator';
 import Redis from './redis';
+import { Op } from 'sequelize';
 
 const { sequelize, Sequelize, Transaction } = models;
 
 export default class TransactionService {
+  static async all({
+    account_id,
+    page,
+  }) {
+    const query = {
+      attributes: [
+        'source_bank_name',
+        'destination_bank_name',
+        'source_account_name',
+        'destination_bank_name',
+        'amount',
+        'note',
+        'status',
+        'error_message',
+      ],
+      where: {
+        [Op.or]: [
+          { destination_account_id: account_id },
+          { destination_account_id: account_id },
+        ],
+      },
+      limit: 20,
+      offset: (page - 1) * 20,
+    };
+    const t = await Transaction.findAll(query);
+    return t.rows;
+  }
+
+  static async one({
+    transaction_id,
+  }) {
+    const query = {
+      where: {
+        id: transaction_id,
+      },
+    };
+    const t = await Transaction.findOne(query);
+    return t;
+  }
+
   static async create({
-    bank_id,
+    source_bank_id,
+    destination_bank_id,
     source_account_id,
     destination_account_id,
     amount,
@@ -20,29 +62,36 @@ export default class TransactionService {
     });
 
     try {
-      const bank_name = BankService.getBankInfo(bank_id);
-      if (!bank_name) {
+      const source_bank_name = (await BankService.getBankInfo(source_bank_id)).name;
+      if (!source_bank_name) {
+        throw new Error('Bank not found');
+      }
+      const destination_bank_name = await (await BankService.getBankInfo(destination_bank_id)).name;
+      if (!destination_bank_name) {
         throw new Error('Bank not found');
       }
       const sourceAccount = await AccountService.getByAccountId(source_account_id);
       if (!sourceAccount) {
-        throw new Error(`Source account id ${source_account_id}`);
+        throw new Error(`Source account id ${source_account_id} not found`);
       }
       const destinationAccount = await AccountService.getByAccountId(destination_account_id);
       if (!destinationAccount) {
-        throw new Error(`Destination account id ${source_account_id}`);
+        throw new Error(`Destination account id ${source_account_id} not found`);
       }
-      const remaining_balance = sourceAccount.remaining_balance;
+      const remaining_balance = sourceAccount.balance;
       if (amount > remaining_balance) {
         throw new Error('Remaining balance is not enough');
       }
-
       const transaction = await Transaction.create({
-        bank_id,
-        bank_name,
+        source_bank_id,
+        source_bank_name,
+        destination_bank_id,
+        destination_bank_name,
         source_account_id,
+        source_account_name: sourceAccount.Customer.fullname,
         destination_account_id,
-        remaining_balance,
+        destination_account_name: destinationAccount.Customer.fullname,
+        balance: remaining_balance,
         amount,
         note,
         status: TRANSACTION_STATUS.CREATED,
@@ -52,7 +101,7 @@ export default class TransactionService {
 
       await t.commit();
 
-      return transaction.id;
+      return transaction;
     }
     catch (err) {
       await t.rollback;
@@ -69,9 +118,12 @@ export default class TransactionService {
   }
 
   static async verifyOTP(transaction, otp) {
-    const generated_otp = await Redis.getString(transaction.otp_id);
+    const key = 'otp-' + transaction.otp_id;
+    const generated_otp = await Redis.getString(key);
     if (generated_otp === otp) {
       transaction.status = TRANSACTION_STATUS.VERIFIED;
+      await transaction.save();
+      await Redis.removeString(key);
     }
     else if (generated_otp === null) {
       throw new Error('OTP expired');
@@ -87,21 +139,26 @@ export default class TransactionService {
     });
 
     try {
-      if (transaction.status !== TRANSACTION_STATUS.VERIFIED) {
-        throw new Error('Transaction is unverified');
+      switch (transaction.status) {
+        case TRANSACTION_STATUS.UNVERIFIED:
+          throw new Error('Transaction is unverified');
+        case TRANSACTION_STATUS.SUCCESS:
+          throw new Error('Transaction has already executed');
       }
 
       try {
         const sourceAccount = await AccountService.getByAccountId(transaction.source_account_id);
         const destinationAccount = await AccountService.getByAccountId(transaction.destination_account_id);
 
-        sourceAccount.remaining_balance -= transaction.amount;
-        destinationAccount.remaining_balance += transaction.amount;
+        sourceAccount.balance -= transaction.amount;
+        destinationAccount.balance += transaction.amount;
 
-        sourceAccount.save({ transaction: t });
-        destinationAccount.save({ transaction: t });
+        await sourceAccount.save({ transaction: t });
+        await destinationAccount.save({ transaction: t });
 
         transaction.status = TRANSACTION_STATUS.SUCCESS;
+        await transaction.save({ transaction: t });
+        await t.commit();
       }
       catch (error) {
         transaction.status = TRANSACTION_STATUS.ERROR;

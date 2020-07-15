@@ -47,6 +47,19 @@ export default class Redis {
     });
   }
 
+  static removeString (key) {
+    return new Promise((resolve, reject) => {
+      redisClient.del(key, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(result);
+        }
+      });
+    });
+  }
+
   static setExpire (key, second) {
     return new Promise((resolve, reject) => {
       redisClient.expire(key, second, (err, result) => {
