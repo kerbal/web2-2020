@@ -101,7 +101,11 @@ export default class TransactionService {
 
       await t.commit();
 
-      return transaction;
+      return {
+        transaction,
+        sourceAccount,
+        destinationAccount,
+      };
     }
     catch (err) {
       await t.rollback;
@@ -115,6 +119,7 @@ export default class TransactionService {
     transaction.status = TRANSACTION_STATUS.UNVERIFIED;
     await Redis.setString('otp-' + token.id, token.value, 120);
     await transaction.save();
+    return token;
   }
 
   static async verifyOTP(transaction, otp) {
