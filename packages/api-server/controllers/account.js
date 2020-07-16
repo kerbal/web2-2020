@@ -2,7 +2,7 @@ import AccountService from '../services/account';
 import MailService from '../services/mail';
 import { Customer } from '../models';
 
-export const userCreate = async (req, res, next) => {
+export const customerCreate = async (req, res, next) => {
   try {
     const { id: customer_id } = req.auth;
     const {
@@ -24,7 +24,7 @@ export const userCreate = async (req, res, next) => {
     next(error);
   }
 };
-export const userGet = async (req, res, next) => {
+export const customerGet = async (req, res, next) => {
   try {
     const { id: customerId } = req.auth;
     const accounts = await AccountService.getByCustomerId(customerId);
@@ -33,16 +33,14 @@ export const userGet = async (req, res, next) => {
     next(error);
   }
 };
-export const userChangeAccountStatus = async (req, res, next) => {
+export const customerToggleStatus = async (req, res, next) => {
   try {
     const { id: customerId } = req.auth;
     const { accountNumber } = req.body;
-    const { newStatus } = res.locals;
-    const account = await AccountService.changeStatusByUser({
+    const account = await AccountService.toggleStatusByCustomer(
       customerId,
       accountNumber,
-      newStatus,
-    });
+    );
     return res.status(200).json(account);
   } catch (error) {
     next(error);

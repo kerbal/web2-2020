@@ -96,7 +96,14 @@ class AccountService {
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     });
     try {
-      account.status = newStatus;
+      if(!newStatus) throw new Error('Invalid status');
+      await Account.update({ status: newStatus },
+        {
+          where: {
+            id: account.id,
+          },
+        },
+      );
       await transaction.commit();
       return account;
     } catch (error) {
@@ -105,7 +112,7 @@ class AccountService {
     }
   }
 
-  static async changeStatusByUser({ customerId, accountNumber, newStatus }) {
+  static async toggleStatusByCustomer(customerId, accountNumber) {
     try {
       const account = await AccountService.getByAccountNumber(
         accountNumber,
@@ -114,11 +121,13 @@ class AccountService {
       if (!account) throw new Error('Account not found');
       if (account.type === ACCOUNT_TYPE.DEPOSIT)
         throw new Error('Deposit account can not change status by user');
-      if (
-        account.status === ACCOUNT_STATUS.CLOSED ||
-        account.status === newStatus
-      ) {
-        throw new Error(`Account status is ${account.status}`);
+
+      let newStatus = null;
+      if (account.status === ACCOUNT_STATUS.NORMAL) {
+        newStatus = ACCOUNT_STATUS.LOCKED;
+      }
+      if (account.status === ACCOUNT_STATUS.LOCKED) {
+        newStatus = ACCOUNT_STATUS.NORMAL;
       }
       return await AccountService.changeStatus(account, newStatus);
     } catch (error) {
@@ -133,13 +142,6 @@ class AccountService {
         accountNumber,
       );
       if (!account) throw new Error('Account not found');
-      if (
-        account.status === ACCOUNT_STATUS.CLOSED ||
-        account.status === newStatus
-      ) {
-        throw new Error(`Account status is ${account.status}`);
-      }
-      account.status = newStatus;
       return await AccountService.changeStatus(account, newStatus);
     } catch (error) {
       console.log('Service Error');
