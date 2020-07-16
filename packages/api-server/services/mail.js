@@ -39,23 +39,22 @@ export default class MailService {
 
   static async sendMailNewAccount({ fullname, email }, { type, balance, account_number, created_date }) {
     try {
-      const content = `
-      # Hello ${fullname},
-
-      ## Thank you for creating a new ${type} account at Piggy bank 
-
-      ## The account have been successfully created. 
-
-      More about your account below:
-      Account number: ${account_number}
-      Account type: ${type}
-      Balance: ${balance}
-      Date issued ${created_date}
-
-      If you did not request this, please contact to our support as fast as possible.
-      The Piggy Support Team, 
-      `;
-      await MailService.sendMail(email, `Piggy bank: new ${type} account created`, content);
+      const content = [
+        `# Hello ${fullname},`,
+        '',
+        `## You have successfully created a new ${type} account at Piggy bank.`,
+        '',
+        '### **Detail**',
+        `- Account number: ${account_number}`,
+        `- Account type: ${type}`,
+        `- Balance: ${balance}`,
+        `- Date created: ${created_date}`,
+        '',
+        '### If you did not request this, please contact to our support as fast as possible.',
+        '----------',
+        '**PIGGY BANK**',
+      ].join('\n');
+      await MailService.sendMail(email, `Piggy bank - New ${type} account created`, content);
       console.log('Mail successful');
     } catch(error) {
       console.log('sendMailNewAccount error: ', error.message);
