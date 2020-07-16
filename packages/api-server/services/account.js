@@ -12,13 +12,13 @@ class AccountService {
     return generateAccountNumber(customerId, latestAccount.id + 1);
   }
 
-  static async getByCustomerId(id, options = {}) {
+  static async getByCustomerId(id, where, order) {
     const accounts = await Account.findAll({
       where: {
         customer_id: id,
-        ...options.where,
+        ...where,
       },
-      order: options.order ? options.order : [
+      order: order || [
         ['id', 'DESC'],
       ],
       include: [{
@@ -29,11 +29,11 @@ class AccountService {
     return accounts;
   }
 
-  static async getByAccountId(id, options) {
+  static async getByAccountId(id, where) {
     const account = await Account.findOne({
       where: {
         id,
-        ...options,
+        ...where,
       },
       include: [{
         model: DepositAccount,
@@ -43,11 +43,11 @@ class AccountService {
     return account;
   }
 
-  static async getByAccountNumber(account_number, options) {
+  static async getByAccountNumber(account_number, where) {
     const account = await Account.findOne({
       where: {
         account_number,
-        ...options,
+        ...where,
       },
       include: [{
         model: DepositAccount,
@@ -91,27 +91,6 @@ class AccountService {
     }
   }
 
-  static async changeStatus(account, newStatus) {
-    const transaction = await sequelize.transaction({
-      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-    });
-    try {
-      if(!newStatus) throw new Error('Invalid status');
-      await Account.update({ status: newStatus },
-        {
-          where: {
-            id: account.id,
-          },
-        },
-      );
-      await transaction.commit();
-      return account;
-    } catch (error) {
-      await transaction.rollback();
-      throw error;
-    }
-  }
-
   static async toggleStatusByCustomer(customerId, accountNumber) {
     try {
       const account = await AccountService.getByAccountNumber(
@@ -122,27 +101,26 @@ class AccountService {
       if (account.type === ACCOUNT_TYPE.DEPOSIT)
         throw new Error('Deposit account can not change status by user');
 
-      let newStatus = null;
-      if (account.status === ACCOUNT_STATUS.NORMAL) {
-        newStatus = ACCOUNT_STATUS.LOCKED;
-      }
-      if (account.status === ACCOUNT_STATUS.LOCKED) {
-        newStatus = ACCOUNT_STATUS.NORMAL;
-      }
-      return await AccountService.changeStatus(account, newStatus);
+      const newStatus = {
+        [ACCOUNT_STATUS.NORMAL]: ACCOUNT_STATUS.LOCKED,
+        [ACCOUNT_STATUS.LOCKED]: ACCOUNT_STATUS.NORMAL,
+      };
+      return await account.update({
+        status: newStatus[account.status],
+      });
     } catch (error) {
       console.log('Service Error');
       throw error;
     }
   }
 
-  static async changeStatusByAdmin({ accountNumber, newStatus }) {
+  static async forceChangeStatus(accountNumber, newStatus) {
     try {
       const account = await AccountService.getByAccountNumber(
         accountNumber,
       );
       if (!account) throw new Error('Account not found');
-      return await AccountService.changeStatus(account, newStatus);
+      return await account.update({ status: newStatus });
     } catch (error) {
       console.log('Service Error');
       throw error;

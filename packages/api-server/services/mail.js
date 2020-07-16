@@ -1,6 +1,6 @@
 import emailer from 'nodemailer';
 import { markdown } from 'nodemailer-markdown';
-
+import newAccountMailContent from '../assets/mail-content/new-account';
 const config = {
   host: process.env.EMAIL_HOST || 'smtp-mail.outlook.com',
   secureConnection: false,
@@ -39,22 +39,10 @@ export default class MailService {
 
   static async sendMailNewAccount({ fullname, email }, { type, balance, account_number, created_date }) {
     try {
-      const content = [
-        `# Hello ${fullname},`,
-        '',
-        `## You have successfully created a new ${type} account at Piggy bank.`,
-        '',
-        '### **Detail**',
-        `- Account number: ${account_number}`,
-        `- Account type: ${type}`,
-        `- Balance: ${balance}`,
-        `- Date created: ${created_date}`,
-        '',
-        '### If you did not request this, please contact to our support as fast as possible.',
-        '----------',
-        '**PIGGY BANK**',
-      ].join('\n');
-      await MailService.sendMail(email, `Piggy bank - New ${type} account created`, content);
+      const content = {
+        fullname, type, balance, account_number, created_date,
+      };
+      await MailService.sendMail(email, `Piggy bank - New ${type} account created`, newAccountMailContent(content));
       console.log('Mail successful');
     } catch(error) {
       console.log('sendMailNewAccount error: ', error.message);

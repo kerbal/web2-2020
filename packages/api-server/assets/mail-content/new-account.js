@@ -1,0 +1,15 @@
+export const newAccount = ({ fullname, type, balance, account_number, created_date }) => [
+  `# Hello ${fullname},`,
+  '',
+  `## You have successfully created a new ${type} account at Piggy bank.`,
+  '',
+  '### **Detail**',
+  `- Account number: ${account_number}`,
+  `- Account type: ${type}`,
+  `- Balance: ${balance}`,
+  `- Date created: ${created_date}`,
+  '',
+  '### If you did not request this, please contact to our support as fast as possible.',
+  '----------',
+  '**PIGGY BANK**',
+].join('\n');
