@@ -13,15 +13,15 @@ class AccountService {
   }
 
   static async getByCustomerId(id, options = {}) {
-    const where = {
-      customer_id: id,
-      ...options.where,
-    };
-    const order = options.order ? options.order : [
-      ['id', 'DESC'],
-    ];
     const accounts = await Account.findAll({
-      where, order, include: [{
+      where: {
+        customer_id: id,
+        ...options.where,
+      },
+      order: options.order ? options.order : [
+        ['id', 'DESC'],
+      ],
+      include: [{
         model: DepositAccount,
         as: 'depositAccountDetail',
       }],
@@ -30,12 +30,12 @@ class AccountService {
   }
 
   static async getByAccountId(id, options) {
-    const where = {
-      id,
-      ...options,
-    };
     const account = await Account.findOne({
-      where, include: [{
+      where: {
+        id,
+        ...options,
+      },
+      include: [{
         model: DepositAccount,
         as: 'depositAccountDetail',
       }],
@@ -44,12 +44,12 @@ class AccountService {
   }
 
   static async getByAccountNumber(account_number, options) {
-    const where = {
-      account_number,
-      ...options,
-    };
     const account = await Account.findOne({
-      where, include: [{
+      where: {
+        account_number,
+        ...options,
+      },
+      include: [{
         model: DepositAccount,
         as: 'depositAccountDetail',
       }],
@@ -57,7 +57,7 @@ class AccountService {
     return account;
   }
 
-  static async createDefaultAccount(customerId, currencyUnit) {
+  static async create(customerId, currencyUnit = 'VND', accountType = ACCOUNT_TYPE.DEFAULT, typeId) {
     const transaction = await sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     });
@@ -65,14 +65,23 @@ class AccountService {
       const account_number = await AccountService.getNewAccountNumber(customerId);
       const account = await Account.create({
         customer_id: customerId,
-        type: ACCOUNT_TYPE.DEFAULT,
+        type: accountType,
         account_number,
         balance: 0,
-        currency_unit: currencyUnit || 'VND',
+        currency_unit: currencyUnit,
         created_date: new Date(),
         closed_date: null,
         status: ACCOUNT_STATUS.NORMAL,
-      }, { transaction });
+        depositAccountDetail: accountType === ACCOUNT_TYPE.DEPOSIT ? {
+          type_id: typeId,
+        } : null,
+      }, {
+        include: [{
+          model: DepositAccount,
+          as: 'depositAccountDetail',
+        }],
+        transaction,
+      });
       await transaction.commit();
       return account;
     } catch(error) {
@@ -82,77 +91,27 @@ class AccountService {
     }
   }
 
-  static async canTransferMoneyInsideUser(customerId, sourceAccountId, desAccountId, amount) {
-    const sourceAccount = await AccountService.getByAccountId(sourceAccountId, {
-      customer_id: customerId,
-    });
-    const desAccount = await AccountService.getByAccountId(desAccountId, {
-      customer_id: customerId,
-    });
-    if (!sourceAccount)
-      throw new Error('Source account not found');
-    if (sourceAccount.balance < amount)
-      throw new Error('Source account not have enough money');
-    if (sourceAccount.status !== ACCOUNT_STATUS.NORMAL)
-      throw new Error('Source account is locked or closed');
-    if (
-      sourceAccount.type !== ACCOUNT_TYPE.CHECKING &&
-      sourceAccount.type !== ACCOUNT_TYPE.DEFAULT
-    ) throw new Error('Source account is deposit account');
-    if (!desAccount)
-      throw new Error('Destination account not found');
-    if (desAccount.status !== ACCOUNT_STATUS.NORMAL)
-      throw new Error('Destination account is locked or closed');
-    if (desAccount.depositAccountDetail && desAccount.depositAccountDetail.deposit_date)
-      throw new Error('Destination account is deposited');
-    return [sourceAccount, desAccount];
-  }
-
-  static async createNewAccount(accountInfo) {
+  static async changeStatus(account, newStatus) {
     const transaction = await sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     });
-    const { customer_id, account_type, currency_unit, deposit_account_type_id } = accountInfo;
     try {
-      const account_number = await AccountService.getNewAccountNumber(customer_id);
-      const account = await Account.create({
-        customer_id,
-        type: account_type,
-        account_number,
-        balance: 0,
-        currency_unit: currency_unit || 'VND',
-        created_date: new Date(),
-        closed_date: null,
-        status: ACCOUNT_STATUS.NORMAL,
-      }, { transaction });
-      let depositAccountDetail = null;
-      if(account_type === ACCOUNT_TYPE.DEPOSIT) {
-        depositAccountDetail = await DepositAccount.create({
-          account_id: account.id,
-          type_id: deposit_account_type_id,
-        }, { transaction });
-      }
+      account.status = newStatus;
       await transaction.commit();
-      return {
-        ...account.dataValues,
-        depositAccountDetail,
-      };
-    } catch(error) {
+      return account;
+    } catch (error) {
       await transaction.rollback();
-      console.log('Service Error');
       throw error;
     }
   }
 
-  static async userChangeAccountStatus({ customerId, accountNumber, newStatus }) {
-    const transaction = await sequelize.transaction({
-      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-    });
+  static async changeStatusByUser({ customerId, accountNumber, newStatus }) {
     try {
       const account = await AccountService.getByAccountNumber(
         accountNumber,
         { customer_id: customerId },
       );
+      if (!account) throw new Error('Account not found');
       if (account.type === ACCOUNT_TYPE.DEPOSIT)
         throw new Error('Deposit account can not change status by user');
       if (
@@ -161,38 +120,28 @@ class AccountService {
       ) {
         throw new Error(`Account status is ${account.status}`);
       }
-      account.status = newStatus;
-      await transaction.commit();
-      return {
-        account_number: account.account_number,
-        status: account.status,
-        updatedAt: account.updatedAt,
-      };
+      return await AccountService.changeStatus(account, newStatus);
     } catch (error) {
-      await transaction.rollback();
       console.log('Service Error');
       throw error;
     }
   }
 
-  static async adminChangeAccountStatus({ accountNumber, newStatus }, adminId) {
-    const transaction = await sequelize.transaction({
-      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-    });
+  static async changeStatusByAdmin({ accountNumber, newStatus }) {
     try {
       const account = await AccountService.getByAccountNumber(
         accountNumber,
       );
+      if (!account) throw new Error('Account not found');
+      if (
+        account.status === ACCOUNT_STATUS.CLOSED ||
+        account.status === newStatus
+      ) {
+        throw new Error(`Account status is ${account.status}`);
+      }
       account.status = newStatus;
-      await transaction.commit();
-      return {
-        account_number: account.account_number,
-        status: account.status,
-        updatedAt: account.updatedAt,
-        adminId,
-      };
-    }catch (error) {
-      await transaction.rollback();
+      return await AccountService.changeStatus(account, newStatus);
+    } catch (error) {
       console.log('Service Error');
       throw error;
     }

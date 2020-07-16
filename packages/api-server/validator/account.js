@@ -26,16 +26,6 @@ const customerCreateValidator = (req, res, next) => {
         errorMessage: 'Invalid account type.',
       },
     },
-    amount: {
-      notEmpty: {
-        errorMessage: 'Amount is required.',
-      },
-      isDecimal: {
-        errorMessage: 'Amount is decimal.',
-      },
-      toFloat: true,
-    },
-    sourceAccountNumber: accountNumber,
   });
   if(req.body.accountType === ACCOUNT_TYPE.DEPOSIT) {
     req.checkBody({

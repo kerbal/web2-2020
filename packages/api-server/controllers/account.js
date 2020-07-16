@@ -9,31 +9,15 @@ export const userCreate = async (req, res, next) => {
       accountType,
       currencyUnit,
       depositAccountTypeId,
-      amount,
-      sourceAccountNumber,
     } = req.body;
 
-    const account = await AccountService.createNewAccount({
-      customer_id,
-      account_type: accountType,
-      currency_unit: currencyUnit,
-      deposit_account_type_id: depositAccountTypeId,
-    });
-    const transactionInfo = {
-      amount,
-      sourceAccountNumber,
-    };
-    //send email
+    const account = await AccountService.create(customer_id, currencyUnit, accountType, depositAccountTypeId);
     const customer = await Customer.findOne({
       where: {
         id: customer_id,
       },
     });
     MailService.sendMailNewAccount(customer, account);
-    console.log(transactionInfo);
-    // const [sourceAccount,desAccount] = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
-    // Create transaction
-    //  blah blah
     return res.status(200).json(account);
   } catch (error) {
     console.log(error.message);
@@ -54,7 +38,7 @@ export const userChangeAccountStatus = async (req, res, next) => {
     const { id: customerId } = req.auth;
     const { accountNumber } = req.body;
     const { newStatus } = res.locals;
-    const account = await AccountService.userChangeAccountStatus({
+    const account = await AccountService.changeStatusByUser({
       customerId,
       accountNumber,
       newStatus,
