@@ -12,12 +12,9 @@ class AccountService {
     return generateAccountNumber(customerId, latestAccount.id + 1);
   }
 
-  static async getByCustomerId(id, where, order) {
+  static async findAll(where, order) {
     const accounts = await Account.findAll({
-      where: {
-        customer_id: id,
-        ...where,
-      },
+      where,
       order: order || [
         ['id', 'DESC'],
       ],
@@ -29,12 +26,9 @@ class AccountService {
     return accounts;
   }
 
-  static async getByAccountId(id, where) {
-    const account = await Account.findOne({
-      where: {
-        id,
-        ...where,
-      },
+  static async findByPk(id, where) {
+    const account = await Account.findByPk(id, {
+      where,
       include: [{
         model: DepositAccount,
         as: 'depositAccountDetail',
@@ -43,12 +37,9 @@ class AccountService {
     return account;
   }
 
-  static async getByAccountNumber(account_number, where) {
+  static async findOne(where) {
     const account = await Account.findOne({
-      where: {
-        account_number,
-        ...where,
-      },
+      where,
       include: [{
         model: DepositAccount,
         as: 'depositAccountDetail',
@@ -91,15 +82,15 @@ class AccountService {
     }
   }
 
-  static async toggleStatusByCustomer(customerId, accountNumber) {
+  static async toggleStatusByCustomer(customer_id, account_number) {
     try {
-      const account = await AccountService.getByAccountNumber(
-        accountNumber,
-        { customer_id: customerId },
-      );
+      const account = await AccountService.findOne({
+        account_number,
+        customer_id,
+      });
       if (!account) throw new Error('Account not found');
       if (account.type === ACCOUNT_TYPE.DEPOSIT)
-        throw new Error('Deposit account can not change status by user');
+        throw new Error('Deposit account can not be locked by user');
 
       const newStatus = {
         [ACCOUNT_STATUS.NORMAL]: ACCOUNT_STATUS.LOCKED,
@@ -114,11 +105,9 @@ class AccountService {
     }
   }
 
-  static async forceChangeStatus(accountNumber, newStatus) {
+  static async forceChangeStatus(account_number, newStatus) {
     try {
-      const account = await AccountService.getByAccountNumber(
-        accountNumber,
-      );
+      const account = await AccountService.findOne({ account_number });
       if (!account) throw new Error('Account not found');
       return await account.update({ status: newStatus });
     } catch (error) {

@@ -26,8 +26,8 @@ export const customerCreate = async (req, res, next) => {
 };
 export const customerGet = async (req, res, next) => {
   try {
-    const { id: customerId } = req.auth;
-    const accounts = await AccountService.getByCustomerId(customerId);
+    const { id: customer_id } = req.auth;
+    const accounts = await AccountService.findAll({ customer_id });
     return res.status(200).json(accounts);
   } catch (error) {
     next(error);
