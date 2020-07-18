@@ -16,33 +16,30 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
-
 //route
 app.use('/api/auth', authRoute);
 app.use('/api', accountRoute);
-
-
 //catch 404 error
-app.use((req, res)=> {
-  res.status(404).json({
+app.use('*', (req, res)=> {
+  res.status(404).send({
     error: 'NotFound',
   });
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({
-      error: 'Unauthenticated',
-    });
+    return res.status(401).send({ error: 'Unauthorized' });
   }
+  console.log(err);
   res.status(500).send({
-    message: 'Something went wrong!',
+    error: 'Something went wrong!',
   });
+  next();
 });
 
-app.listen(process.env.PORT || 3000, async () => {
-  models.sequelize.authenticate().then(() => {
-    console.log('Database connected!');
+models.sequelize.authenticate().then(() => {
+  console.log('Database connected!');
+  app.listen(process.env.PORT || 3000, () => {
     console.log('Server is up!');
   });
 });
