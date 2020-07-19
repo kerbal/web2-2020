@@ -26,7 +26,7 @@ class AccountService {
     return accounts;
   }
 
-  static async findByPk(id, where) {
+  static async findById(id, where) {
     const account = await Account.findByPk(id, {
       where,
       include: [{
@@ -84,10 +84,10 @@ class AccountService {
     }
   }
 
-  static async toggleStatusByCustomer(customer_id, account_number) {
+  static async toggleStatusByCustomer(customer_id, accountId) {
     try {
       const account = await AccountService.findOne({
-        account_number,
+        id: accountId,
         customer_id,
       });
       if (!account) throw new Error('Account not found');
@@ -107,9 +107,9 @@ class AccountService {
     }
   }
 
-  static async forceChangeStatus(account_number, newStatus) {
+  static async forceChangeStatus(accountId, newStatus) {
     try {
-      const account = await AccountService.findOne({ account_number });
+      const account = await AccountService.findById(accountId);
       if (!account) throw new Error('Account not found');
       return await account.update({ status: newStatus });
     } catch (error) {

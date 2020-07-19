@@ -1,14 +1,7 @@
 import ACCOUNT_TYPE from '../constants/accountType';
-const accountNumber = {
+const accountId = {
   notEmpty: {
-    errorMessage: 'Account number is required.',
-  },
-  isString: {
-    errorMessage: 'Source account id must be a string.',
-  },
-  isLength: {
-    options: { max: 16, min:16 },
-    errorMessage: 'Source account id must contain 16 numbers.',
+    errorMessage: 'Account ID is required.',
   },
 };
 const customerCreateValidator = (req, res, next) => {
@@ -48,7 +41,7 @@ const customerCreateValidator = (req, res, next) => {
 };
 const customerToggleStatusValidator = (req, res, next) => {
   req.checkBody({
-    accountNumber,
+    accountId,
   });
   const errors = req.validationErrors();
   if (errors) {

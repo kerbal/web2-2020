@@ -1,4 +1,4 @@
-export const newAccount = ({ fullname, type, balance, account_number, created_date }) => [
+export const newAccount = ({ fullname }, { type, balance, account_number, created_date }) => [
   `# Hello ${fullname},`,
   '',
   `## You have successfully created a new ${type} account at Piggy bank.`,

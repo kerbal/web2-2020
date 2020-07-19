@@ -1,5 +1,6 @@
 import AccountService from '../services/account';
 import MailService from '../services/mail';
+import { newAccount as newAccountMailContent } from '../assets/mail-content/new-account';
 import { Customer } from '../models';
 
 export const customerCreate = async (req, res, next) => {
@@ -12,12 +13,12 @@ export const customerCreate = async (req, res, next) => {
     } = req.body;
 
     const account = await AccountService.create(customer_id, currencyUnit, accountType, depositAccountTypeId);
-    const customer = await Customer.findOne({
-      where: {
-        id: customer_id,
-      },
-    });
-    MailService.sendMailNewAccount(customer, account);
+    const customer = await Customer.findByPk(customer_id);
+    MailService.sendMail(
+      customer.email,
+      `Piggy bank - New ${account.type} account created`,
+      newAccountMailContent(customer, account),
+    );
     return res.status(200).json(account);
   } catch (error) {
     console.log(error.message);
@@ -36,10 +37,10 @@ export const customerGet = async (req, res, next) => {
 export const customerToggleStatus = async (req, res, next) => {
   try {
     const { id: customerId } = req.auth;
-    const { accountNumber } = req.body;
+    const { accountId } = req.body;
     const account = await AccountService.toggleStatusByCustomer(
       customerId,
-      accountNumber,
+      accountId,
     );
     return res.status(200).json(account);
   } catch (error) {

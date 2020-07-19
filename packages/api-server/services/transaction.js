@@ -63,11 +63,11 @@ export default class TransactionService {
       if (!destination_bank_name) {
         throw new Error('Bank not found');
       }
-      const sourceAccount = await AccountService.getByAccountId(source_account_id);
+      const sourceAccount = await AccountService.findById(source_account_id);
       if (!sourceAccount) {
         throw new Error(`Source account id ${source_account_id} not found`);
       }
-      const destinationAccount = await AccountService.getByAccountId(destination_account_id);
+      const destinationAccount = await AccountService.findById(destination_account_id);
       if (!destinationAccount) {
         throw new Error(`Destination account id ${source_account_id} not found`);
       }
@@ -147,8 +147,8 @@ export default class TransactionService {
       }
 
       try {
-        const sourceAccount = await AccountService.getByAccountId(transaction.source_account_id);
-        const destinationAccount = await AccountService.getByAccountId(transaction.destination_account_id);
+        const sourceAccount = await AccountService.findById(transaction.source_account_id);
+        const destinationAccount = await AccountService.findById(transaction.destination_account_id);
 
         sourceAccount.balance -= transaction.amount;
         destinationAccount.balance += transaction.amount;

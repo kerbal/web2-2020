@@ -12,7 +12,7 @@ module.exports = {
     return Promise.all([
       queryInterface.changeColumn('DepositAccounts', 'deposit_date', {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       }),
     ]);
   },
