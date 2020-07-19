@@ -14,10 +14,12 @@
     "react-redux": "^7.1.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-slick": "^0.26.1",
+    "slick-carousel": "^1.8.1",
     "tailwindcss": "^1.4.6"
   },
   "scripts": {
-    "start": "npm run watch:css && react-scripts start",
+    "dev": "npm run watch:css && react-scripts start",
     "build": "npm run build:css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
