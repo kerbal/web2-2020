@@ -8,16 +8,11 @@ export class UserTransactionController {
     try {
       const { transaction, sourceAccount } = await TransactionService.create(req.body);
       const otp = await TransactionService.registerOTP(transaction);
-      try {
-        await MailService.sendMail(
-          sourceAccount.Customer.email,
-          'Money transfer confirmation',
-          transactionconfirmation(transaction, sourceAccount, otp),
-        );
-      }
-      catch (err) {
-        //
-      }
+      await MailService.sendMail(
+        sourceAccount.Customer.email,
+        'Money transfer confirmation',
+        transactionconfirmation(transaction, sourceAccount, otp),
+      );
       res.send({
         transaction_id: transaction.id,
       });
@@ -35,23 +30,18 @@ export class UserTransactionController {
       await TransactionService.verifyOTP(transaction, otp);
       const { sourceAccount, destinationAccount } = await TransactionService.execute(transaction);
 
-      try {
-        const spendEmail = spendMoneyEmail(transaction, sourceAccount.balance);
-        await MailService.sendMail(
-          sourceAccount.Customer.email,
-          spendEmail.subject,
-          spendEmail.content,
-        );
-        const receiveEmail = receiveMoneyEmail(transaction, destinationAccount.balance);
-        await MailService.sendMail(
-          destinationAccount.Customer.email,
-          receiveEmail.subject,
-          receiveEmail.content,
-        );
-      }
-      catch (err) {
-        //
-      }
+      const spendEmail = spendMoneyEmail(transaction, sourceAccount.balance);
+      await MailService.sendMail(
+        sourceAccount.Customer.email,
+        spendEmail.subject,
+        spendEmail.content,
+      );
+      const receiveEmail = receiveMoneyEmail(transaction, destinationAccount.balance);
+      await MailService.sendMail(
+        destinationAccount.Customer.email,
+        receiveEmail.subject,
+        receiveEmail.content,
+      );
 
       res.send({
         message: 'success',
