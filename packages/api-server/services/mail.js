@@ -27,10 +27,11 @@ export default class MailService {
       };
       transporter.use('compile', markdown());
       await transporter.sendMail(option);
+      return true;
     }
     catch (err)  {
       console.log(err);
-      throw err;
+      return false;
     }
     finally {
       transporter.close();
