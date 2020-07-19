@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
 import accountRoute from './routes/account';
+import userRoute from './routes/user';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -20,7 +21,7 @@ app.use(cookieParser());
 //route
 app.use('/api/auth', authRoute);
 app.use('/api', accountRoute);
-
+app.use('/api/user', userRoute);
 
 //catch 404 error
 app.use((req, res, next)=> {
