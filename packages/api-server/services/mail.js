@@ -8,6 +8,7 @@ const config = {
   port: 587,
   auth: {
     user: process.env.EMAIL_ACC,
+    password: process.env.EMAIL_PASSWORD,
     pass: process.env.EMAIL_PASSWORD,
   },
   tls: {
@@ -27,10 +28,11 @@ export default class MailService {
       };
       transporter.use('compile', markdown());
       await transporter.sendMail(option);
+      return true;
     }
     catch (err)  {
       console.log(err);
-      throw err;
+      return false;
     }
     finally {
       transporter.close();

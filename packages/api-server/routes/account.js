@@ -6,6 +6,7 @@ import {
   customerCreateValidator,
   customerToggleStatusValidator,
 } from '../validator/account';
+import { UserTransactionController } from '../controllers/transaction';
 
 //route for customer /customer
 router.get('/customer/account', verifyCustomer,
@@ -19,6 +20,7 @@ router.put('/customer/account-toggle-status', verifyCustomer,
   customerToggleStatusValidator,
   AccountController.customerToggleStatus);
 
+router.get('/customer/account/:account_id/transactions', verifyCustomer, UserTransactionController.getAll);
 //route for admin /admin
 
 export default router;

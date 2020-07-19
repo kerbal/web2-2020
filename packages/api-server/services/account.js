@@ -1,4 +1,4 @@
-import { Account, DepositAccount, sequelize, Sequelize } from '../models/index';
+import { Account, DepositAccount, sequelize, Sequelize, Customer } from '../models/index';
 import { generateAccountNumber } from '../utils/accountNumber';
 import ACCOUNT_TYPE from '../constants/accountType';
 import ACCOUNT_STATUS from '../constants/accountStatus';
@@ -32,6 +32,8 @@ class AccountService {
       include: [{
         model: DepositAccount,
         as: 'depositAccountDetail',
+      }, {
+        model: Customer,
       }],
     });
     return account;
