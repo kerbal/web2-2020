@@ -8,10 +8,12 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth';
 import accountRoute from './routes/account';
+import adminAuthRoute from './routes/auth.admin';
 import transactionRoute from './routes/transaction';
+
 import Redis from './services/redis';
 
-import verifyCustomer from './middleware/verifyUser';
+import verifyCustomer from './middleware/verifyUser'
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -24,13 +26,13 @@ app.use(cookieParser());
 app.use('/api/auth', authRoute);
 app.use('/api/transaction', verifyCustomer, transactionRoute);
 app.use('/api', accountRoute);
-//catch 404 error
+app.use('/api/admin/auth', adminAuthRoute);
+
 app.use('*', (req, res)=> {
   res.status(404).send({
     error: 'NotFound',
   });
 });
-
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).send({ error: 'Unauthorized' });
