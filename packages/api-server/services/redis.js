@@ -1,7 +1,7 @@
 import redis from 'redis';
 
 const redisClient = redis.createClient({
-  port: 6379,
+  url: process.env.NODE_ENV === 'production' ? process.env.REDIS_URL : 'redis://localhost:6379',
 });
 
 export default class Redis {
