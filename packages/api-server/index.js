@@ -10,6 +10,8 @@ import authRoute from './routes/auth';
 import accountRoute from './routes/account';
 import userRoute from './routes/user';
 
+import verifyCustomer from './middleware/verifyUser';
+
 const app = express();
 app.use(bodyParser.urlencoded({
   extended: false,
@@ -21,7 +23,7 @@ app.use(cookieParser());
 //route
 app.use('/api/auth', authRoute);
 app.use('/api', accountRoute);
-app.use('/api/user', userRoute);
+app.use('/api/user', verifyCustomer, userRoute);
 
 //catch 404 error
 app.use((req, res, next)=> {
