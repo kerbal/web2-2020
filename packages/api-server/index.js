@@ -9,8 +9,14 @@ import cookieParser from 'cookie-parser';
 import authRoute from './routes/auth';
 import accountRoute from './routes/account';
 import userRoute from './routes/user';
+import adminAuthRoute from './routes/auth.admin';
+import transactionRoute from './routes/transaction';
 
 import verifyCustomer from './middleware/verifyUser';
+
+import Redis from './services/redis';
+
+
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -19,33 +25,40 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
-
 //route
 app.use('/api/auth', authRoute);
+app.use('/api/transaction', verifyCustomer, transactionRoute);
 app.use('/api', accountRoute);
 app.use('/api/user', verifyCustomer, userRoute);
+app.use('/api/admin/auth', adminAuthRoute);
 
-//catch 404 error
-app.use((req, res, next)=> {
+app.use('*', (req, res)=> {
   res.status(404).json({
     error: 'NotFound',
   });
 });
-
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({
-      error: 'Unauthenticated',
-    });
+    return res.status(401).json({ error: 'Unauthorized', message: err.message });
   }
-  res.status(500).send({
-    message: 'Something went wrong!',
+  console.log(err);
+  res.status(500).json({
+    error: 'Something went wrong!',
   });
+  next();
 });
 
-app.listen(process.env.PORT || 3000, async () => {
-  models.sequelize.authenticate().then(() => {
+const port = process.env.PORT || 3000;
+app.listen(port, async () => {
+  try {
+    models.sequelize.authenticate();
     console.log('Database connected!');
-    console.log('Server is up!');
-  });
+    await Redis.ping();
+    console.log('Redis connected!');
+    console.log(`Server is listening on port ${port}!`);
+  }
+  catch (error) {
+    console.log('Failed to start server!');
+    console.log(error);
+  }
 });

@@ -1,16 +1,7 @@
 import ACCOUNT_TYPE from '../constants/accountType';
-import ACCOUNT_STATUS from '../constants/accountStatus';
-
-const accountNumber = {
+const accountId = {
   notEmpty: {
-    errorMessage: 'Account number is required.',
-  },
-  isString: {
-    errorMessage: 'Source account id must be a string.',
-  },
-  isLength: {
-    options: { max: 16, min:16 },
-    errorMessage: 'Source account id must contain 16 numbers.',
+    errorMessage: 'Account ID is required.',
   },
 };
 const customerCreateValidator = (req, res, next) => {
@@ -26,16 +17,6 @@ const customerCreateValidator = (req, res, next) => {
         errorMessage: 'Invalid account type.',
       },
     },
-    amount: {
-      notEmpty: {
-        errorMessage: 'Amount is required.',
-      },
-      isDecimal: {
-        errorMessage: 'Amount is decimal.',
-      },
-      toFloat: true,
-    },
-    sourceAccountNumber: accountNumber,
   });
   if(req.body.accountType === ACCOUNT_TYPE.DEPOSIT) {
     req.checkBody({
@@ -58,20 +39,9 @@ const customerCreateValidator = (req, res, next) => {
   }
   next();
 };
-const customerLockValidator = (req, res, next) => {
+const customerToggleStatusValidator = (req, res, next) => {
   req.checkBody({
-    accountNumber,
-    accountStatus: {
-      notEmpty: {
-        errorMessage: 'Account current status is required.',
-      },
-      custom: {
-        options: (value) => {
-          return ACCOUNT_STATUS.NORMAL === value;
-        },
-        errorMessage: 'Invalid account status.',
-      },
-    },
+    accountId,
   });
   const errors = req.validationErrors();
   if (errors) {
@@ -80,36 +50,9 @@ const customerLockValidator = (req, res, next) => {
       error: firstError.msg,
     });
   }
-  res.locals.newStatus = ACCOUNT_STATUS.LOCKED;
-  next();
-};
-const customerUnlockValidator = (req, res, next) => {
-  req.checkBody({
-    accountNumber,
-    accountStatus: {
-      notEmpty: {
-        errorMessage: 'Account current status is required.',
-      },
-      custom: {
-        options: (value) => {
-          return ACCOUNT_STATUS.LOCKED === value;
-        },
-        errorMessage: 'Invalid account status.',
-      },
-    },
-  });
-  const errors = req.validationErrors();
-  if (errors) {
-    const firstError = errors[0];
-    return res.status(400).json({
-      error: firstError.msg,
-    });
-  }
-  res.locals.newStatus = ACCOUNT_STATUS.NORMAL;
   next();
 };
 export {
   customerCreateValidator,
-  customerLockValidator,
-  customerUnlockValidator,
+  customerToggleStatusValidator,
 };
