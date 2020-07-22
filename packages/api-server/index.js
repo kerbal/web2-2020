@@ -18,6 +18,8 @@ import verifyCustomer from './middleware/verifyUser';
 import verifyAdmin from './middleware/verifyAdmin';
 import verifyUser from './middleware/verifyUser';
 
+import './jobs';
+
 const app = express();
 app.use(bodyParser.urlencoded({
   extended: false,
