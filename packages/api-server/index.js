@@ -13,7 +13,7 @@ import transactionRoute from './routes/transaction';
 
 import Redis from './services/redis';
 
-import verifyCustomer from './middleware/verifyUser'
+import verifyCustomer from './middleware/verifyUser';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -35,10 +35,10 @@ app.use('*', (req, res)=> {
 });
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).send({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized', message: 'Invalid Token' });
   }
   console.log(err);
-  res.status(500).send({
+  res.status(500).json({
     error: 'Something went wrong!',
   });
   next();
