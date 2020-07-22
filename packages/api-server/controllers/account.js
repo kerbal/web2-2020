@@ -9,7 +9,7 @@ export const userCreate = async (req, res, next) => {
       depositAccountTypeId,
       amount,
       sourceAccountNumber,
-    } = req.body;
+    } = req.body
     //const sourceAccount = await AccountService.canTransferMoneyInsideUser(customer_id, sourceAccountId, amount);
     const account = await AccountService.createNewAccount({
       customer_id,

@@ -1,5 +1,5 @@
+/* eslint-disable indent */
 import models from '../models';
-import BankService from './bank';
 import AccountService from './account';
 import { TRANSACTION_STATUS } from '../constants/transactionStatus';
 import { generateOTP } from '../utils/otpGenerator';
@@ -44,68 +44,34 @@ export default class TransactionService {
 
   static async create({
     source_bank_id,
+    source_bank_name,
+    destination_bank_name,
     destination_bank_id,
-    source_account_id,
-    destination_account_id,
+    source_account,
+    destination_account,
     amount,
     note,
   }) {
-    const t = await sequelize.transaction({
-      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+    const transaction = await Transaction.create({
+      source_bank_id,
+      source_bank_name,
+      destination_bank_id,
+      destination_bank_name,
+      source_account_id: source_account.id,
+      source_account_name: source_account.Customer.fullname,
+      source_account_number: source_account.account_number,
+      destination_account_id: destination_account.id,
+      destination_account_name: destination_account.Customer.fullname,
+      destination_account_number: destination_account.account_number,
+      balance: source_account.remaining_balance,
+      amount,
+      note,
+      status: TRANSACTION_STATUS.CREATED,
+      errorMessage: '',
+      otp_id: null,
     });
 
-    try {
-      const source_bank_name = (await BankService.getBankInfo(source_bank_id)).name;
-      if (!source_bank_name) {
-        throw new Error('Bank not found');
-      }
-      const destination_bank_name = await (await BankService.getBankInfo(destination_bank_id)).name;
-      if (!destination_bank_name) {
-        throw new Error('Bank not found');
-      }
-      const sourceAccount = await AccountService.getByAccountId(source_account_id);
-      if (!sourceAccount) {
-        throw new Error(`Source account id ${source_account_id} not found`);
-      }
-      const destinationAccount = await AccountService.getByAccountId(destination_account_id);
-      if (!destinationAccount) {
-        throw new Error(`Destination account id ${source_account_id} not found`);
-      }
-      const remaining_balance = sourceAccount.balance;
-      if (amount > remaining_balance) {
-        throw new Error('Remaining balance is not enough');
-      }
-      const transaction = await Transaction.create({
-        source_bank_id,
-        source_bank_name,
-        destination_bank_id,
-        destination_bank_name,
-        source_account_id,
-        source_account_name: sourceAccount.Customer.fullname,
-        source_account_number: sourceAccount.account_number,
-        destination_account_id,
-        destination_account_name: destinationAccount.Customer.fullname,
-        destination_account_number: destinationAccount.account_number,
-        balance: remaining_balance,
-        amount,
-        note,
-        status: TRANSACTION_STATUS.CREATED,
-        errorMessage: '',
-        otp_id: null,
-      });
-
-      await t.commit();
-
-      return {
-        transaction,
-        sourceAccount,
-        destinationAccount,
-      };
-    }
-    catch (err) {
-      await t.rollback;
-      throw err;
-    }
+    transaction;
   }
 
   static async registerOTP (transaction) {

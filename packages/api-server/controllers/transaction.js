@@ -2,11 +2,42 @@ import TransactionService from '../services/transaction';
 import MailService from '../services/mail';
 import { transactionconfirmation } from '../assets/mail-content/transaction-confirmation';
 import { spendMoneyEmail, receiveMoneyEmail } from '../assets/mail-content/transaction';
+import BankService from '../services/bank';
+import AccountService from '../services/account';
 
 export class UserTransactionController {
   static async create (req, res, next) {
     try {
-      const { transaction, sourceAccount } = await TransactionService.create(req.body);
+      const {
+        source_bank_id,
+        destination_bank_id,
+        source_account_id,
+        destination_account_id,
+        amount,
+      } = req.body;
+
+      const source_bank_name = (await BankService.getBankInfo(source_bank_id)).name;
+      if (!source_bank_name) {
+        return res.status(404).send({ message: 'Source bank not found' });
+      }
+      const destination_bank_name = (await BankService.getBankInfo(destination_bank_id)).name;
+      if (!destination_bank_name) {
+        return res.status(404).send({ message: 'Destination bank not found' });
+      }
+      const sourceAccount = await AccountService.getByAccountId(source_account_id);
+      if (!sourceAccount) {
+        return res.status(404).send({ message: `Source account id ${source_account_id} not found` });
+      }
+      const destinationAccount = await AccountService.getByAccountId(destination_account_id);
+      if (!destinationAccount) {
+        return res.status(404).send({ message: `Destination account id ${source_account_id} not found` });
+      }
+      const remaining_balance = sourceAccount.balance;
+      if (amount > remaining_balance) {
+        return res.status(400).send({ message: 'Remaining balance is not enough' });
+      }
+
+      const transaction = await TransactionService.create(req.body);
       const otp = await TransactionService.registerOTP(transaction);
       await MailService.sendMail(
         sourceAccount.Customer.email,
