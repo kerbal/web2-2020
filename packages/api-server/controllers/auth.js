@@ -98,7 +98,7 @@ const login = async (req, res) => {
       });
     }
     const token = jwt.sign(
-      { id: user.id },
+      { id: user.id, role: 'customer' },
       process.env.JWT_SECRET,
     );
     const { id, name, status } = user;
