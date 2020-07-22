@@ -63,7 +63,7 @@ export default class TransactionService {
       destination_account_id: destination_account.id,
       destination_account_name: destination_account.Customer.fullname,
       destination_account_number: destination_account.account_number,
-      balance: source_account.remaining_balance,
+      balance: source_account.balance,
       amount,
       note,
       status: TRANSACTION_STATUS.CREATED,

@@ -11,11 +11,11 @@ export default class AdminTransaction {
     });
 
     try {
-      const destination_account = await AccountService.getByAccountId(transaction.destination_account_id);
+      const destination_account = await AccountService.findById(transaction.destination_account_id);
       destination_account.balance += transaction.amount;
-      destination_account.save({ transaction: t });
+      await destination_account.save({ transaction: t });
       transaction.status = TRANSACTION_STATUS.SUCCESS;
-      transaction.save({ transaction: t });
+      await transaction.save({ transaction: t });
       await t.commit();
     }
     catch (error) {

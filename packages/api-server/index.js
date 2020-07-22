@@ -10,10 +10,13 @@ import authRoute from './routes/auth';
 import accountRoute from './routes/account';
 import adminAuthRoute from './routes/auth.admin';
 import transactionRoute from './routes/transaction';
+import adminTransactionRoute from './routes/transaction.admin';
 
 import Redis from './services/redis';
 
-import verifyCustomer from './middleware/verifyUser'
+import verifyCustomer from './middleware/verifyUser';
+import verifyAdmin from './middleware/verifyAdmin';
+import verifyUser from './middleware/verifyUser';
 
 const app = express();
 app.use(bodyParser.urlencoded({
@@ -27,6 +30,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/transaction', verifyCustomer, transactionRoute);
 app.use('/api', accountRoute);
 app.use('/api/admin/auth', adminAuthRoute);
+app.use('/api/admin/transaction', verifyUser, verifyAdmin, adminTransactionRoute);
 
 app.use('*', (req, res)=> {
   res.status(404).send({

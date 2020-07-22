@@ -24,25 +24,29 @@ export class UserTransactionController {
       if (!destination_bank_name) {
         return res.status(404).send({ message: 'Destination bank not found' });
       }
-      const sourceAccount = await AccountService.getByAccountId(source_account_id);
-      if (!sourceAccount) {
+      const source_account = await AccountService.findById(source_account_id);
+      if (!source_account) {
         return res.status(404).send({ message: `Source account id ${source_account_id} not found` });
       }
-      const destinationAccount = await AccountService.getByAccountId(destination_account_id);
-      if (!destinationAccount) {
+      const destination_account = await AccountService.findById(destination_account_id);
+      if (!destination_account) {
         return res.status(404).send({ message: `Destination account id ${source_account_id} not found` });
       }
-      const remaining_balance = sourceAccount.balance;
+      const remaining_balance = source_account.balance;
       if (amount > remaining_balance) {
         return res.status(400).send({ message: 'Remaining balance is not enough' });
       }
 
-      const transaction = await TransactionService.create(req.body);
+      const transaction = await TransactionService.create({
+        ...req.body,
+        source_account,
+        destination_account,
+      });
       const otp = await TransactionService.registerOTP(transaction);
       await MailService.sendMail(
-        sourceAccount.Customer.email,
+        source_account.Customer.email,
         'Money transfer confirmation',
-        transactionconfirmation(transaction, sourceAccount, otp),
+        transactionconfirmation(transaction, source_account, otp),
       );
       res.send({
         transaction_id: transaction.id,
@@ -104,6 +108,26 @@ export class UserTransactionController {
       const transactions = await TransactionService.all({ account_id, page });
       res.send({
         transactions,
+      });
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+
+  static async registerOTP(req, res, next) {
+    try {
+      const { transaction_id } = req.params;
+      const transaction = await TransactionService.one({ transaction_id });
+      const source_account = await AccountService.findById(transaction.source_account_id);
+      const otp = await TransactionService.registerOTP(transaction);
+      await MailService.sendMail(
+        source_account.Customer.email,
+        'Money transfer confirmation',
+        transactionconfirmation(transaction, source_account, otp),
+      );
+      res.send({
+        message: 'success',
       });
     }
     catch (error) {

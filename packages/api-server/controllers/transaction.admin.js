@@ -3,19 +3,20 @@ import TransactionService from '../services/transaction';
 import { BANK_ID, BANK_NAME } from '../constants/bank';
 import LogService from '../services/log';
 import AdminTransaction from '../services/transaction.admin';
+import MailService from '../services/mail';
+import { receiveMoneyEmail } from '../assets/mail-content/transaction';
 
 export default class AdminTransactionController {
   static async recharge (req, res, next) {
     try {
-      const { account_id } = req.params;
-      const { amount, note } = req.body;
+      const { account_id, amount, note } = req.body;
 
-      const destination_account = await AccountService.getByAccountId(account_id);
+      const destination_account = await AccountService.findById(account_id);
       if (!destination_account) {
-        res.status(404).send({ message: `Account id ${account_id} not found` });
+        return res.status(404).send({ message: `Account id ${account_id} not found` });
       }
       if (amount < 0) {
-        res.status(400).send({ message: 'Amount must be larger than 0' });
+        return res.status(400).send({ message: 'Amount must be larger than 0' });
       }
 
       const transaction = await TransactionService.create({
@@ -38,6 +39,17 @@ export default class AdminTransactionController {
       });
 
       await AdminTransaction.recharge(transaction);
+
+      const emailContent = receiveMoneyEmail(transaction, destination_account.balance);
+      await MailService.sendMail(
+        destination_account.Customer.email,
+        emailContent.subject,
+        emailContent.content,
+      );
+
+      res.status(200).send({
+        message: 'successful',
+      });
     }
     catch (error) {
       next(error);
