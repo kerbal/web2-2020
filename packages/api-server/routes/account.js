@@ -12,6 +12,9 @@ import { UserTransactionController } from '../controllers/transaction';
 router.get('/customer/account', verifyCustomer,
   AccountController.customerGet);
 
+router.get('/customer/account/:id', verifyCustomer,
+  AccountController.customerGet);
+
 router.post('/customer/account-new', verifyCustomer,
   customerCreateValidator,
   AccountController.customerCreate);
