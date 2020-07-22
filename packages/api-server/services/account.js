@@ -12,7 +12,7 @@ class AccountService {
     return generateAccountNumber(customerId, latestAccount.id + 1);
   }
 
-  static async findAll(where, order) {
+  static async findAll(where, order, limit, offset) {
     const accounts = await Account.findAll({
       where,
       order: order || [
@@ -22,6 +22,8 @@ class AccountService {
         model: DepositAccount,
         as: 'depositAccountDetail',
       }],
+      limit,
+      offset,
     });
     return accounts;
   }
@@ -92,7 +94,9 @@ class AccountService {
       });
       if (!account) throw new Error('Account not found');
       if (account.type === ACCOUNT_TYPE.DEPOSIT)
-        throw new Error('Deposit account can not be locked by user');
+        throw new Error('Deposit account can not be locked');
+      if (account.type === ACCOUNT_TYPE.DEFAULT)
+        throw new Error('Default account can not be locked');
 
       const newStatus = {
         [ACCOUNT_STATUS.NORMAL]: ACCOUNT_STATUS.LOCKED,
@@ -101,17 +105,6 @@ class AccountService {
       return await account.update({
         status: newStatus[account.status],
       });
-    } catch (error) {
-      console.log('Service Error');
-      throw error;
-    }
-  }
-
-  static async forceChangeStatus(accountId, newStatus) {
-    try {
-      const account = await AccountService.findById(accountId);
-      if (!account) throw new Error('Account not found');
-      return await account.update({ status: newStatus });
     } catch (error) {
       console.log('Service Error');
       throw error;

@@ -16,8 +16,6 @@ import verifyCustomer from './middleware/verifyUser';
 
 import Redis from './services/redis';
 
-
-
 const app = express();
 app.use(bodyParser.urlencoded({
   extended: false,
