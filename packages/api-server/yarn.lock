@@ -1216,6 +1216,13 @@ cli-color@^1.4.0:
     memoizee "^0.4.14"
     timers-ext "^0.1.5"
 
+cli-table@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/cli-table/-/cli-table-0.3.1.tgz#f53b05266a8b1a0b934b3d0821e6e2dc5914ae23"
+  integrity sha1-9TsFJmqLGguTSz0IIebi3FkUriM=
+  dependencies:
+    colors "1.0.3"
+
 cliui@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/cliui/-/cliui-5.0.0.tgz#deefcfdb2e800784aa34f46fa08e06851c7bbbc5"
@@ -1276,6 +1283,11 @@ color-name@~1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
+
+colors@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
+  integrity sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs=
 
 commander@^2.11.0, commander@^2.19.0:
   version "2.20.3"
@@ -1848,6 +1860,20 @@ express-jwt@^6.0.0:
     express-unless "^0.3.0"
     jsonwebtoken "^8.1.0"
     lodash.set "^4.0.0"
+
+express-list-endpoints@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/express-list-endpoints/-/express-list-endpoints-4.0.1.tgz#f83ec9de4df21b904cfba523bc913aee4c17e9db"
+  integrity sha512-KjY7frYk72/Jwk2VgqyvuXlTPslEkWkzjUXPUMCUguVmAWqd6fh60VHr+sEfqJgMAOE3hKhUjm/7tLASVaE2Qg==
+
+express-routemap@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/express-routemap/-/express-routemap-1.6.0.tgz#cf7acc8e2110cc00f5f91dc6a10b60bf97ebd68e"
+  integrity sha512-VqPt3BWfEdxgPC1aasvtGD4lBEDXTheNgb1mS6ugMSRpLAPBgxNfjqODlK7X6q9FbAtjRTpwi1SBbV6n97EgPg==
+  dependencies:
+    chalk "^3.0.0"
+    cli-table "^0.3.1"
+    express-list-endpoints "^4.0.1"
 
 express-unless@^0.3.0:
   version "0.3.1"

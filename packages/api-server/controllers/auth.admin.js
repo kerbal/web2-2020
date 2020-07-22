@@ -21,11 +21,7 @@ const login = async (req, res) => {
         error: 'Email and password do not match.',
       });
     }
-<<<<<<< HEAD
     const token = jwt.sign({ id: user.id, role: 'admin' }, process.env.JWT_SECRET);
-=======
-    const token = jwt.sign({ id: user.id, admin:true }, process.env.JWT_SECRET);
->>>>>>> bc999791dfba9f58dcd24d5d4e13f8f1c70e3676
     const { id, name } = user;
     return res.json({
       token,

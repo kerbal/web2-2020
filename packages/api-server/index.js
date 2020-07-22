@@ -2,18 +2,12 @@ require('dotenv').config();
 
 import express from 'express';
 import bodyParser from 'body-parser';
-import models from './models';
+import displayRoutes from 'express-routemap';
 import expressValidator from 'express-validator';
 import cookieParser from 'cookie-parser';
 
-import authRoute from './routes/auth';
-import accountRoute from './routes/account';
-import userRoute from './routes/user';
-import adminAuthRoute from './routes/auth.admin';
-import transactionRoute from './routes/transaction';
-
-import verifyCustomer from './middleware/verifyUser';
-
+import models from './models';
+import router from './routes/router';
 import Redis from './services/redis';
 
 const app = express();
@@ -24,11 +18,7 @@ app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
 //route
-app.use('/api/auth', authRoute);
-app.use('/api/transaction', verifyCustomer, transactionRoute);
-app.use('/api', accountRoute);
-app.use('/api/user', verifyCustomer, userRoute);
-app.use('/api/admin/auth', adminAuthRoute);
+app.use(router);
 
 app.use('*', (req, res)=> {
   res.status(404).json({
@@ -54,6 +44,7 @@ app.listen(port, async () => {
     await Redis.ping();
     console.log('Redis connected!');
     console.log(`Server is listening on port ${port}!`);
+    displayRoutes(app);
   }
   catch (error) {
     console.log('Failed to start server!');
