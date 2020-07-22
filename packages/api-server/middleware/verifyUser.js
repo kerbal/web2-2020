@@ -1,11 +1,11 @@
 require('dotenv').config();
 import expressJwt from 'express-jwt';
-import {  Admin, Customer } from '../models';
+import { Admin, Customer } from '../models';
 import customError from '../utils/customError';
 
 const roles = {
-  customer: Customer.findByPk,
-  admin: Admin.findByPk,
+  customer: Customer.findByPk.bind(Customer),
+  admin: Admin.findByPk.bind(Admin),
 };
 const verifyUser =  [
   expressJwt({
@@ -23,13 +23,12 @@ const verifyUser =  [
       if(!user) {
         throw customError('UnauthorizedError', 'Can not authorize');
       }
-      req.user = { user, role };
+      req[role] = user;
       next();
     } catch(error) {
       next(error);
     }
   },
 ];
-
 
 export default verifyUser;
