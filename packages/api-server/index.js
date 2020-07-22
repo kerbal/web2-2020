@@ -22,22 +22,26 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
-
 //route
 app.use('/api/auth', authRoute);
 app.use('/api/transaction', verifyCustomer, transactionRoute);
 app.use('/api', accountRoute);
 app.use('/api/admin/auth', adminAuthRoute);
 
+app.use('*', (req, res)=> {
+  res.status(404).send({
+    error: 'NotFound',
+  });
+});
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({
-      error: 'Unauthenticated',
-    });
+    return res.status(401).send({ error: 'Unauthorized' });
   }
+  console.log(err);
   res.status(500).send({
-    message: 'Something went wrong!',
+    error: 'Something went wrong!',
   });
+  next();
 });
 
 const port = process.env.PORT || 3000;

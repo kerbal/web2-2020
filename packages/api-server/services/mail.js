@@ -2,8 +2,9 @@ import emailer from 'nodemailer';
 import { markdown } from 'nodemailer-markdown';
 
 const config = {
-  host: 'smtp-mail.outlook.com',
+  host: process.env.EMAIL_HOST || 'smtp-mail.outlook.com',
   secureConnection: false,
+  secure: false,
   port: 587,
   auth: {
     user: process.env.EMAIL_ACC,

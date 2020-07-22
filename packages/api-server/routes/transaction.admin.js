@@ -5,3 +5,5 @@ const router = express.Router();
 
 router.post('/', AdminTransactionController.recharge);
 router.get('/account_id', UserTransactionController.getAll);
+
+export default router;

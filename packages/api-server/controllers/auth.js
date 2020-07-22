@@ -5,7 +5,7 @@ import { Customer, Identity } from '../models';
 import { comparePassword, getHashedPassword } from '../utils/password';
 import multer from 'multer';
 import MailService from '../services/mail';
-
+import AccountService from '../services/account';
 // SET STORAGE
 var storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -68,6 +68,7 @@ const register = async (req, res) => {
     });
 
     if (newCustomer) {
+      await AccountService.create(newCustomer.id);
       res.status(200).json({ message: 'Success' });
     } else {
       res.status(400).json({ error: 'Fail' });

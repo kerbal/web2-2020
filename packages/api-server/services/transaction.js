@@ -71,7 +71,7 @@ export default class TransactionService {
       otp_id: null,
     });
 
-    transaction;
+    return transaction;
   }
 
   static async registerOTP (transaction) {
@@ -106,15 +106,15 @@ export default class TransactionService {
 
     try {
       switch (transaction.status) {
-        case TRANSACTION_STATUS.UNVERIFIED:
-          throw new Error('Transaction is unverified');
-        case TRANSACTION_STATUS.SUCCESS:
-          throw new Error('Transaction has already executed');
+      case TRANSACTION_STATUS.UNVERIFIED:
+        throw new Error('Transaction is unverified');
+      case TRANSACTION_STATUS.SUCCESS:
+        throw new Error('Transaction has already executed');
       }
 
       try {
-        const sourceAccount = await AccountService.getByAccountId(transaction.source_account_id);
-        const destinationAccount = await AccountService.getByAccountId(transaction.destination_account_id);
+        const sourceAccount = await AccountService.findById(transaction.source_account_id);
+        const destinationAccount = await AccountService.findById(transaction.destination_account_id);
 
         sourceAccount.balance -= transaction.amount;
         destinationAccount.balance += transaction.amount;

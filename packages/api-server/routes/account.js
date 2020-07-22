@@ -4,26 +4,21 @@ import verifyCustomer from '../middleware/verifyUser';
 import * as AccountController from '../controllers/account';
 import {
   customerCreateValidator,
-  customerLockValidator,
-  customerUnlockValidator,
+  customerToggleStatusValidator,
 } from '../validator/account';
 import { UserTransactionController } from '../controllers/transaction';
 
 //route for customer /customer
 router.get('/customer/account', verifyCustomer,
-  AccountController.userGet);
+  AccountController.customerGet);
 
 router.post('/customer/account-new', verifyCustomer,
   customerCreateValidator,
-  AccountController.userCreate);
+  AccountController.customerCreate);
 
-router.put('/customer/account-lock', verifyCustomer,
-  customerLockValidator,
-  AccountController.userChangeAccountStatus);
-
-router.put('/customer/account-unlock', verifyCustomer,
-  customerUnlockValidator,
-  AccountController.userChangeAccountStatus);
+router.put('/customer/account-toggle-status', verifyCustomer,
+  customerToggleStatusValidator,
+  AccountController.customerToggleStatus);
 
 router.get('/customer/account/:account_id/transactions', verifyCustomer, UserTransactionController.getAll);
 //route for admin /admin
