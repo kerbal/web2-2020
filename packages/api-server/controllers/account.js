@@ -1,6 +1,7 @@
 import AccountService from '../services/account';
 import MailService from '../services/mail';
 import LogService from '../services/log';
+import TransactionService from '../services/transaction';
 import { adminChangeAccountStatus as adminChangeAccountStatusContent } from '../assets/mail-content/admin-change-account-status';
 import { newAccount as newAccountMailContent } from '../assets/mail-content/new-account';
 import { Customer, sequelize, Sequelize } from '../models';
@@ -109,8 +110,12 @@ export const adminChangeStatus = async (req, res, next) => {
     const account = await AccountService.findById(accountId);
     const oldStatus = account.status;
     const newStatus = status.toUpperCase();
+    const customer = account.Customer;
+    let transaction;
 
     if (!ACCOUNT_STATUS[newStatus])
+      throw new Error('Invalid status');
+    if (oldStatus === newStatus)
       throw new Error('Invalid status');
     if (!account)
       throw new Error('Account not found');
@@ -119,17 +124,33 @@ export const adminChangeStatus = async (req, res, next) => {
     if (oldStatus === ACCOUNT_STATUS.CLOSED)
       throw new Error('Closed account can not be changed');
 
+
     if(newStatus === ACCOUNT_STATUS.CLOSED) {
-      console.log('Create transfer money to default account');
+      const bank_id = 'PIGGY';
+      const defaultAccount = await AccountService.findOne({
+        customer_id: customer.id,
+        type: ACCOUNT_TYPE.DEFAULT,
+      });
+      transaction = (await TransactionService.create({
+        source_bank_id: bank_id,
+        destination_bank_id: bank_id,
+        source_account_id: account.id,
+        destination_account_id: defaultAccount.id,
+        amount: account.balance,
+        note: `Admin ${req.auth.id} closed ${account.id}`,
+      })).transaction;
+      await TransactionService.execute(transaction);
     }
 
     await account.update({ status: newStatus }, { transaction });
     await transaction.commit();
-    const { id: logId } = await LogService.write({
+    const { id: logId, createAt } = await LogService.write({
       adminId: req.auth.id,
       action: 'adminChangeStatus',
-      account,
+      accountId: account.id,
+      newStatus,
       oldStatus,
+      transactionId: transaction ? transaction.id : null,
     });
     MailService.sendMail(
       account.Customer.email,
@@ -140,9 +161,10 @@ export const adminChangeStatus = async (req, res, next) => {
           account_number: account.account_number,
           oldStatus,
           newStatus,
-          created_date: account.created_date,
+          created_date: createAt,
         },
         logId,
+        transaction ? transaction.id : null,
       ),
     );
     return res.status(200).json(account);
