@@ -9,9 +9,13 @@ import {
 import { UserTransactionController } from '../controllers/transaction';
 
 //route for customer /customer
-router.get(['/customer/account', '/customer/account/:accountId'],
+router.get('/customer/account',
   verifyCustomer,
-  AccountController.customerGet);
+  AccountController.customerGetAll);
+
+router.get('/customer/account/:accountId',
+  verifyCustomer,
+  AccountController.customerGetOne);
 
 router.post('/customer/account',
   verifyCustomer,
@@ -26,10 +30,15 @@ router.get('/customer/account/:account_id/transactions',
   verifyCustomer,
   UserTransactionController.getAll);
 
-router.get(['/admin/account', '/admin/account/:accountId'],
+router.get('/admin/account',
   verifyCustomer,
   verifyAdmin,
-  AccountController.adminGet);
+  AccountController.adminGetAll);
+
+router.get('/admin/account/:accountId',
+  verifyCustomer,
+  verifyAdmin,
+  AccountController.adminGetOne);
 
 router.put('/admin/account/:accountId/status',
   verifyCustomer,

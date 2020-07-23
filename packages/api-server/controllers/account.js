@@ -31,28 +31,32 @@ export const customerCreate = async (req, res, next) => {
   }
 };
 
-export const customerGet = async (req, res, next) => {
+export const customerGetAll = async (req, res, next) => {
+  try {
+    const { id: customer_id } = req.auth;
+    const { page, status, all } = req.query;
+    const where = { customer_id };
+    if (status) {
+      where.status = status.toUpperCase();
+    }
+    const accounts = await AccountService.findAll(
+      where,
+      null,
+      all === 'true' ? null : 20,
+      all === 'true' ? null : ((page - 1) * 20 || 0),
+    );
+    return res.status(200).json(accounts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const customerGetOne = async (req, res, next) => {
   try {
     const { id: customer_id } = req.auth;
     const { accountId } = req.params;
-    const { page, status } = req.query;
-
-    let data;
-    if(accountId) {
-      data = await AccountService.findOne({ id: accountId, customer_id });
-    } else {
-      const where = { customer_id };
-      if (status) {
-        where.status = status.toUpperCase();
-      }
-      data = await AccountService.findAll(
-        where,
-        null,
-        20,
-        (page - 1) * 20 || 0,
-      );
-    }
-    return res.status(200).json(data);
+    const account =  await AccountService.findOne({ id: accountId, customer_id });
+    return res.status(200).json(account);
   } catch (error) {
     next(error);
   }
@@ -72,29 +76,33 @@ export const customerToggleStatus = async (req, res, next) => {
   }
 };
 
-export const adminGet = async (req, res, next) => {
+export const adminGetAll = async (req, res, next) => {
+  try {
+    const { customerId, page, status } = req.query;
+    const where = {};
+    if(customerId) {
+      where.customer_id = customerId;
+    }
+    if (status) {
+      where.status = status.toUpperCase();
+    }
+    const accounts = await AccountService.findAll(
+      customerId || status ? where : null,
+      null,
+      20,
+      (page - 1) * 20 || 0,
+    );
+    return res.status(200).json(accounts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const adminGetOne = async (req, res, next) => {
   try {
     const { accountId } = req.params;
-    const { customerId, page, status } = req.query;
-    let data;
-    if(accountId) {
-      data = await AccountService.findById(accountId);
-    } else {
-      const where = {};
-      if(customerId) {
-        where.customer_id = customerId;
-      }
-      if (status) {
-        where.status = status.toUpperCase();
-      }
-      data = await AccountService.findAll(
-        customerId ? where : null,
-        null,
-        20,
-        (page - 1) * 20 || 0,
-      );
-    }
-    return res.status(200).json(data);
+    const account = await AccountService.findById(accountId);
+    return res.status(200).json(account);
   } catch (error) {
     next(error);
   }
@@ -123,7 +131,6 @@ export const adminChangeStatus = async (req, res, next) => {
       throw new Error('Default account can not be changed');
     if (oldStatus === ACCOUNT_STATUS.CLOSED)
       throw new Error('Closed account can not be changed');
-
 
     if(newStatus === ACCOUNT_STATUS.CLOSED) {
       const bank_id = 'PIGGY';
