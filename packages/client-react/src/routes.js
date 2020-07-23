@@ -1,7 +1,7 @@
 import React from 'react';
 import Landing from './components/pages/Landing';
 
-import Dashboard from './components/pages/Dashboard';
+import DashboardContainer from './components/pages/Dashboard/DashboardContainer';
 import LoginContainer from './components/pages/Dashboard/pages/Login/LoginContainer';
 import RegisterContainer from './components/pages/Dashboard/pages/Register/RegisterContainer';
 import Admin from './components/pages/Admin';
@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/dashboard',
     exact: true,
-    main: () => <Dashboard />,
+    main: () => <DashboardContainer />,
   },
   {
     path: '/dashboard/login',

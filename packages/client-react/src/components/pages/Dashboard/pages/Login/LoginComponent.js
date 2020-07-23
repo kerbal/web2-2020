@@ -41,7 +41,7 @@ const LoginComponent = memo(function LoginComponent(props) {
               <p>
                 Haven't banked with us before?
               </p>
-              <div onClick={() => onRegisterLinkPress && onRegisterLinkPress()} className="underline font-semibold">
+              <div onClick={() => onRegisterLinkPress && onRegisterLinkPress()} className="underline font-semibold cursor-pointer">
                 Open your account now.
               </div>
             </div>

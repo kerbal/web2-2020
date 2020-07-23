@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginComponent from './LoginComponent';
 import { withRouter } from 'react-router-dom';
+import { checkUserHasLoggedIn } from '../../utils';
 
 const LoginContainer = (props) => {
   const [email, setEmail] = useState('');
@@ -19,6 +20,11 @@ const LoginContainer = (props) => {
   const onRegisterLinkPress = () => {
     props.history.push('/dashboard/register');
   };
+
+  let isUserLoggedIn = checkUserHasLoggedIn();
+  if (isUserLoggedIn) {
+    props.history.replace('/dashboard')
+  }
 
   return (
     <>
