@@ -5,10 +5,9 @@ const { Log } = models;
 export default class LogService {
   static async write (data) {
     try {
-      await Log.create({
+      return await Log.create({
         data,
       });
-      return true;
     }
     catch (error) {
       return false;

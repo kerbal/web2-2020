@@ -5,7 +5,7 @@ module.exports = {
       fullname: 'admin',
       birthday: new Date,
       phone_number: 'admin',
-      password: 'abcdef',
+      password: '$2b$10$ttjepFfntDdMAOLV5dz6YO/oaX.DXRkHaZ6MPao6Jzfqm3l.5v99m', //abcdef
       email: 'admin',
       removed: false,
     }], {});
