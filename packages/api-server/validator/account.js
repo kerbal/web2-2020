@@ -1,10 +1,5 @@
 import ACCOUNT_TYPE from '../constants/accountType';
-const accountId = {
-  notEmpty: {
-    errorMessage: 'Account ID is required.',
-  },
-};
-const customerCreateValidator = (req, res, next) => {
+export const customerCreateValidator = (req, res, next) => {
   req.checkBody({
     accountType: {
       notEmpty: {
@@ -38,21 +33,4 @@ const customerCreateValidator = (req, res, next) => {
     });
   }
   next();
-};
-const customerToggleStatusValidator = (req, res, next) => {
-  req.checkBody({
-    accountId,
-  });
-  const errors = req.validationErrors();
-  if (errors) {
-    const firstError = errors[0];
-    return res.status(400).json({
-      error: firstError.msg,
-    });
-  }
-  next();
-};
-export {
-  customerCreateValidator,
-  customerToggleStatusValidator,
 };
