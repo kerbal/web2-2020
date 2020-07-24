@@ -5,14 +5,21 @@ import { BANK_ID, BANK_NAME } from '../constants/bank';
 import MailService from '../services/mail';
 import { receiveProfitEmail } from '../assets/mail-content/receive-profit-email';
 import Cron from 'cron';
+import moment from 'moment';
 
 const { Account, DepositAccount, DepositType, Customer } = models;
 
 const createProfit = async (account) => {
   try {
+    if (!account.closed_date || moment(new Date(account.closed_date).getTime()).isBefore(moment())) {
+      return;
+    }
+    if (moment(new Date(account.depositAccountDetail.deposit_date).getTime()).isAfter(moment())) {
+      return;
+    }
     const rate = account.depositAccountDetail.DepositType.interest_rate;
     const balance = account.balance;
-    const profit = balance * rate;
+    const profit = parseInt(balance * rate);
 
     const transaction = await TransactionService.create({
       source_bank_id: BANK_ID,
@@ -26,6 +33,13 @@ const createProfit = async (account) => {
     });
 
     await AdminTransaction.recharge(transaction);
+    account.depositAccountDetail.deposit_date = moment(
+      new Date(account.depositAccountDetail.deposit_date).getTime(),
+    ).add(
+      parseInt(account.depositAccountDetail.DepositType.expiry_time),
+      'months',
+    ).valueOf();
+    await account.depositAccountDetail.save();
 
     const email = receiveProfitEmail(transaction, account.balance);
     await MailService.sendMail(
@@ -63,5 +77,5 @@ const generateProfit = async () => {
   }));
 };
 
-const job = new Cron.CronJob('0 0 0 * * *', generateProfit);
+const job = new Cron.CronJob('00 00 00 * * *', generateProfit);
 job.start();
