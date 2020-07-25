@@ -101,7 +101,7 @@ const login = async (req, res) => {
       { id: user.id },
       process.env.JWT_SECRET,
     );
-    const { id, name, status } = user;
+    const { id, status, fullname, address } = user;
     let message;
     //check user is update identity
     const identity = await Identity.findOne({
@@ -116,7 +116,7 @@ const login = async (req, res) => {
     }
     return res.json({
       token,
-      user: { id, email, name },
+      user: { id, email, fullname, address },
       message,
     });
   } catch (error) {
