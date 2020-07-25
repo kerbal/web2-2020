@@ -1,7 +1,12 @@
 import jwt from 'jsonwebtoken';
-
 import { comparePassword } from '../utils/password';
-import { Admin } from '../models';
+import { Admin, Customer } from '../models';
+import CUSTOMER_STATUS from '../constants/customerStatus';
+import AccountService from '../services/account';
+import LogService from '../services/log';
+import MailService from '../services/mail';
+import { newAccount as newAccountMailContent } from '../assets/mail-content/new-account';
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -34,4 +39,55 @@ const login = async (req, res) => {
   }
 };
 
-export { login };
+const verifyCustomerAccount = async (req, res)=>{
+  const { customer_id } = req.body;
+  if (!customer_id){
+    return res.status(400).json({
+      message:'Customer_id is required.',
+    });
+  }
+  try {
+    const user = await Customer.findOne({
+      where:{
+        id: customer_id,
+      },
+    });
+
+    if (user){
+      user.status = CUSTOMER_STATUS.VERIFIED;
+      await user.save();
+      const account = await AccountService.create(customer_id, 'VND', 'DEFAULT', 0);
+      await LogService.write({
+        adminId: req.auth.id,
+        action: `Admin verify customer:${customer_id}`,
+        customerId: customer_id,
+      });
+      await LogService.write({
+        adminId: req.auth.id,
+        action: `Create DEFAULT ACCOUNT  for ${user.fullname}`,
+        accountId: customer_id,
+        account_id: account.id,
+      });
+      await MailService.sendMail(
+        user.email,
+        `Piggy bank - New ${account.type} account created`,
+        newAccountMailContent(user, account),
+      );
+
+      res.json({
+        message: 'Success',
+      });
+    }
+    else {
+      res.json({
+        message: 'Fail',
+      });
+    }
+  }
+  catch(error){
+    return res.status(400).json({
+      error: 'Something went wrong.',
+    });
+  }
+};
+export { login, verifyCustomerAccount };

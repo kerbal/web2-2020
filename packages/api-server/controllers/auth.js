@@ -6,6 +6,8 @@ import { comparePassword, getHashedPassword } from '../utils/password';
 import multer from 'multer';
 import MailService from '../services/mail';
 import AccountService from '../services/account';
+import CUSTOMER_STATUS from '../constants/customerStatus';
+
 // SET STORAGE
 var storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -64,7 +66,7 @@ const register = async (req, res) => {
       password: hashedPassword,
       email,
       address,
-      status:'UNVERIFIED',
+      status: CUSTOMER_STATUS.UNVERIFIED,
     });
 
     if (newCustomer) {
