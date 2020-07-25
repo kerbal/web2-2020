@@ -43,7 +43,7 @@ const verifyCustomerAccount = async (req, res)=>{
   const { customer_id } = req.body;
   if (!customer_id){
     return res.status(400).json({
-      message:'Customer_id is required.',
+      message:'customer_id is required.',
     });
   }
   try {
@@ -59,14 +59,14 @@ const verifyCustomerAccount = async (req, res)=>{
       const account = await AccountService.create(customer_id, 'VND', 'DEFAULT', 0);
       await LogService.write({
         adminId: req.auth.id,
-        action: `Admin verify customer:${customer_id}`,
+        action: `Admin verify customer:${user.fullname}`,
         customerId: customer_id,
       });
       await LogService.write({
         adminId: req.auth.id,
         action: `Create DEFAULT ACCOUNT  for ${user.fullname}`,
-        accountId: customer_id,
-        account_id: account.id,
+        customerId: customer_id,
+        accountId: account.id,
       });
       await MailService.sendMail(
         user.email,
