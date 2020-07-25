@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 export default memo(function Input(props) {
-  const { label, type, id, placeholder, value, validator, onValueChange } = props;
+  const { label, type, id, placeholder, value, validator, onValueChange, disabled = false } = props;
 
   const onTextChange = (e) => {
     const text = e.target.value;
@@ -17,6 +17,7 @@ export default memo(function Input(props) {
         {label}
       </label>
       <input
+        disabled={disabled}
         value={value}
         onChange={onTextChange}
         type={type}

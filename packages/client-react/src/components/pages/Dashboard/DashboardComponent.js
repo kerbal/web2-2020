@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import Loading from '../../../components/common/Loading';
 
 const Container = props => {
-  return <div className="w-screen h-screen">{props.children}</div>;
+  return <div className="w-screen">{props.children}</div>;
 };
 
 const ContentContainer = props => {
