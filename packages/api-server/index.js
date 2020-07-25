@@ -11,9 +11,13 @@ import accountRoute from './routes/account';
 import userRoute from './routes/user';
 import adminAuthRoute from './routes/auth.admin';
 import transactionRoute from './routes/transaction';
+import adminTransactionRoute from './routes/transaction.admin';
 
 import verifyCustomer from './middleware/verifyUser';
+import verifyAdmin from './middleware/verifyAdmin';
+import verifyUser from './middleware/verifyUser';
 
+import './jobs';
 import Redis from './services/redis';
 
 const app = express();
@@ -29,6 +33,7 @@ app.use('/api/transaction', verifyCustomer, transactionRoute);
 app.use('/api', accountRoute);
 app.use('/api/user', verifyCustomer, userRoute);
 app.use('/api/admin/auth', adminAuthRoute);
+app.use('/api/admin/transaction', verifyUser, verifyAdmin, adminTransactionRoute);
 
 app.use('*', (req, res)=> {
   res.status(404).json({
