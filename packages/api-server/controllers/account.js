@@ -34,10 +34,13 @@ export const customerCreate = async (req, res, next) => {
 export const customerGetAll = async (req, res, next) => {
   try {
     const { id: customer_id } = req.auth;
-    const { page, status, all } = req.query;
+    const { page, status, all, account_number } = req.query;
     const where = { customer_id };
     if (status) {
       where.status = status.toUpperCase();
+    }
+    if(account_number) {
+      where.account_number = account_number;
     }
     const accounts = await AccountService.findAll(
       where,
@@ -78,7 +81,7 @@ export const customerToggleStatus = async (req, res, next) => {
 
 export const adminGetAll = async (req, res, next) => {
   try {
-    const { customerId, page, status } = req.query;
+    const { customerId, page, status, account_number } = req.query;
     const where = {};
     if(customerId) {
       where.customer_id = customerId;
@@ -86,8 +89,11 @@ export const adminGetAll = async (req, res, next) => {
     if (status) {
       where.status = status.toUpperCase();
     }
+    if (account_number) {
+      where.account_number = account_number;
+    }
     const accounts = await AccountService.findAll(
-      customerId || status ? where : null,
+      where,
       null,
       20,
       (page - 1) * 20 || 0,
