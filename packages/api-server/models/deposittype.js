@@ -4,8 +4,12 @@ module.exports = (sequelize, DataTypes) => {
     expiry_time: DataTypes.INTEGER,
     removed: DataTypes.BOOLEAN,
   }, {});
-  DepositType.associate = function () {
+  DepositType.associate = function (models) {
     // associations can be defined here
+    DepositType.hasMany(models.DepositAccount, {
+      foreignKey: 'type_id',
+      as: 'depositType',
+    });
   };
   return DepositType;
 };

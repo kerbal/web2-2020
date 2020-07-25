@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     DepositAccount.belongsTo(models.DepositType, {
       foreignKey: 'type_id',
+      as: 'depositType',
     });
     DepositAccount.belongsTo(models.Account, {
       foreignKey: 'account_id',
