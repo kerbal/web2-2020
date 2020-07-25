@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Accounts', {
@@ -6,39 +5,40 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       customer_id: {
         type: Sequelize.INTEGER,
-        onDelete: "CASCADE",
+        onDelete: 'CASCADE',
         allowNull: false,
         references: {
           model: 'Customers',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       type: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       account_number: {
+        unique: true,
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       balance: {
         type: Sequelize.FLOAT,
-        allowNull: false
+        allowNull: false,
       },
       currency_unit: {
-        defaultValue: "VND",
-        type: Sequelize.STRING
+        defaultValue: 'VND',
+        type: Sequelize.STRING,
       },
       created_date: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       closed_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       status: {
         type: Sequelize.STRING,
@@ -47,16 +47,16 @@ module.exports = {
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('Accounts');
-  }
+  },
 };

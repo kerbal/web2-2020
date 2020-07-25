@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('DepositTypes', {
@@ -6,33 +5,33 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       interest_rate: {
         type: Sequelize.FLOAT,
-        allowNull: false
+        allowNull: false,
       },
       expiry_time: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       removed: {
         defaultValue: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('DepositTypes');
-  }
+  },
 };

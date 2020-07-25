@@ -1,0 +1,5 @@
+const CUSTOMER_STATUS = {
+  UNVERIFIED: 'UNVERIFIED',
+  VERIFIED: 'VERIFIED',
+};
+module.exports = CUSTOMER_STATUS;
