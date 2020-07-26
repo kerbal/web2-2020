@@ -2,7 +2,7 @@ require('dotenv').config();
 
 import express from 'express';
 import bodyParser from 'body-parser';
-import models from './models';
+import cors from 'cors';
 import expressValidator from 'express-validator';
 import cookieParser from 'cookie-parser';
 
@@ -13,6 +13,7 @@ import adminAuthRoute from './routes/auth.admin';
 import transactionRoute from './routes/transaction';
 import adminTransactionRoute from './routes/transaction.admin';
 
+import models from './models';
 import verifyCustomer from './middleware/verifyUser';
 import verifyAdmin from './middleware/verifyAdmin';
 import verifyUser from './middleware/verifyUser';
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(cookieParser());
+app.use(cors());
 //route
 app.use('/api/auth', authRoute);
 app.use('/api/transaction', verifyCustomer, transactionRoute);
