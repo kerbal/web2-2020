@@ -4,13 +4,13 @@ import { icons } from '../../../../../assets/';
 const Logo = () => {
   return (
     <div className="flex items-center flex-shrink-0 text-gray-700 mr-6">
-      <img src={icons.logo} width={32} height={"auto"} />
+      <img src={icons.logo} width={32} height={'auto'} />
       <span className="font-semibold text-xl tracking-tight ml-2">
         Piggybank
-        </span>
+      </span>
     </div>
   );
-}
+};
 
 const MenuButton = () => {
   return (
@@ -30,7 +30,7 @@ const MenuButton = () => {
       </button>
     </div>
   );
-}
+};
 
 const NavItems = props => {
   const { navItems } = props;
@@ -83,14 +83,16 @@ const NavBar = () => {
     },
   ];
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-white p-6">
-      <Logo />
-      <MenuButton />
-      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:justify-between">
-        <NavItems navItems={navItems} />
-        <InternetBankingButton />
-      </div>
-    </nav>
+    <div className="bg-white p-6">
+      <nav className="container mx-auto flex items-center justify-between flex-wrap ">
+        <Logo />
+        <MenuButton />
+        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:justify-between">
+          <NavItems navItems={navItems} />
+          <InternetBankingButton />
+        </div>
+      </nav>
+    </div>
   );
 };
 
