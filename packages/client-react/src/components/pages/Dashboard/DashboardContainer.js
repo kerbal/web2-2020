@@ -14,7 +14,9 @@ const DashboardContainer = () => {
   const isUserLoggedIn = checkUserHasLoggedIn();
   const currentCustomerName = getCurrentUserName();
 
-  const [currentSidebarItem, setCurrentSidebarItem] = useState(getDefaultPage());
+  const [currentSidebarItem, setCurrentSidebarItem] = useState(
+    getDefaultPage()
+  );
   const sidebarItems = [
     {
       id: 1,

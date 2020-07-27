@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+
 import NavBar from './components/NavBar';
 import SplashCarousel from './components/SplashCarousel';
 import Introduction from './components/Introduction';
 import ProductIntroduction from './components/ProductIntroduction';
 import AboutUs from './components/AboutUs';
-import { withRouter } from 'react-router-dom';
 
 const Landing = props => {
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: '',
   });
+  const [, setFormError] = useState(null);
+  const [, setFormSending] = useState(false);
 
   const onLoginFormChange = field => {
     return value => {
@@ -27,12 +30,18 @@ const Landing = props => {
     props.history.push('/dashboard/register');
   };
 
-  const onSignIn = () => {
+  const onSignIn = async () => {
     const url = 'https://piggy-bank-api.herokuapp.com/api/auth/login';
-    axios
-      .post(url, loginForm)
-      .then(data => console.log(data))
-      .catch(error => console.log(error));
+    setFormSending(true);
+    setFormError(null);
+    try {
+      const res = await axios.post(url, loginForm);
+      setFormSending(false);
+      console.log(res);
+    } catch (error) {
+      console.error(error.response);
+      setFormError(error.response);
+    }
   };
 
   return (

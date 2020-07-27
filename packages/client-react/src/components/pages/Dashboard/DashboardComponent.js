@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import LoginContainer from './pages/Login/LoginContainer';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
-import Loading from '../../../components/common/Loading';
+import Loading from '../../common/Loading';
 
 const Container = props => {
-  return <div className="w-screen">{props.children}</div>;
+  const { children } = props;
+  return <div className="w-screen">{children}</div>;
 };
 
 const ContentContainer = props => {
-  return <div className="flex flex-row flex-1">{props.children}</div>;
+  const { children } = props;
+  return <div className="flex flex-row flex-1">{children}</div>;
 };
 
 const DashboardContainer = props => {
@@ -23,7 +25,7 @@ const DashboardContainer = props => {
   } = props;
   const ContentComponent = contentComponent;
 
-  const [loading, setLoading] = useState(true)
+  const [loading /* setLoading */] = useState(true);
 
   return (
     <>
@@ -42,7 +44,7 @@ const DashboardContainer = props => {
           </ContentContainer>
         </Container>
       )}
-      { loading && <Loading />}
+      {loading && <Loading />}
     </>
   );
 };
