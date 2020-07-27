@@ -14,7 +14,7 @@ const Logo = () => {
 };
 
 const Header = props => {
-  const { title } = props;
+  const { title, disableCurrentTime } = props;
   return (
     <nav className="flex items-center flex-wrap bg-white p-6">
       <div style={{ width: '250px' }}>
@@ -22,7 +22,7 @@ const Header = props => {
       </div>
       <div className="flex flex-row justify-between flex-1">
         <div className="font-thin text-2xl">{title}</div>
-        <div className="font-normal text-xl">{`Today is ${getCurrentDatetime()}`}</div>
+        {!disableCurrentTime && <div className="font-normal text-xl">{`Today is ${getCurrentDatetime()}`}</div>}
       </div>
     </nav>
   );

@@ -21,28 +21,25 @@ const DashboardContainer = props => {
     setCurrentSidebarItem,
     contentComponent,
   } = props;
+  console.log(contentComponent);
   const ContentComponent = contentComponent;
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
-      {!isUserLoggedIn ? (
-        <LoginContainer />
-      ) : (
-        <Container>
-          <Header title={`Welcome, ${currentCustomerName}`} />
-          <ContentContainer>
-            <Sidebar
-              sidebarItems={sidebarItems}
-              currentItem={currentSidebarItem}
-              setCurrentSidebarItem={setCurrentSidebarItem}
-            />
-            <ContentComponent />
-          </ContentContainer>
-        </Container>
-      )}
-      { loading && <Loading />}
+      <Container>
+        <Header title={`Welcome, ${currentCustomerName}`} />
+        <ContentContainer>
+          <Sidebar
+            sidebarItems={sidebarItems}
+            currentItem={currentSidebarItem}
+            setCurrentSidebarItem={setCurrentSidebarItem}
+          />
+          <ContentComponent />
+        </ContentContainer>
+      </Container>
+      {loading && <Loading />}
     </>
   );
 };

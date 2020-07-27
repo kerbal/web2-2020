@@ -3,6 +3,7 @@ import Landing from './components/pages/Landing';
 
 import DashboardContainer from './components/pages/Dashboard/DashboardContainer';
 import LoginContainer from './components/pages/Dashboard/pages/Login/LoginContainer';
+import VerifyPIDContainer from './components/pages/Dashboard/pages/VerifyPID/VerifyPIDContainer';
 import RegisterContainer from './components/pages/Dashboard/pages/Register/RegisterContainer';
 import Admin from './components/pages/Admin';
 
