@@ -1,10 +1,10 @@
 import React from 'react';
-import { icons } from '../../../../../assets';
+// import { icons } from '../../../../../assets';
 
 const SidebarItem = props => {
   const { name, icon, onItemClick, currentItem } = props;
   const isSelected = name === currentItem;
-  const _renderItem = () => {
+  const renderItem = () => {
     return (
       <div
         className="flex flex-row pt-6"
@@ -22,9 +22,9 @@ const SidebarItem = props => {
     );
   };
   return isSelected ? (
-    <div className="cursor-pointer">{_renderItem()}</div>
+    <div className="cursor-pointer">{renderItem()}</div>
   ) : (
-    <div className="opacity-50 cursor-pointer">{_renderItem()}</div>
+    <div className="opacity-50 cursor-pointer">{renderItem()}</div>
   );
 };
 
@@ -34,14 +34,14 @@ const Seperator = () => {
 
 const Sidebar = props => {
   const { sidebarItems, currentItem, setCurrentSidebarItem } = props;
-  const onItemClick = (item) => {
+  const onItemClick = item => {
     setCurrentSidebarItem(item);
-  }
+  };
   return (
     <div className="px-6" style={{ width: '250px' }}>
       {sidebarItems.map(item => {
         if (item.name === 'Seperator') {
-          return <Seperator />
+          return <Seperator />;
         }
         return (
           <SidebarItem

@@ -5,7 +5,7 @@ import { getCurrentDatetime } from '../../../../../utils';
 const Logo = () => {
   return (
     <div className="flex items-center flex-shrink-0 text-gray-700 mr-6">
-      <img src={icons.logo} width={32} height={'auto'} />
+      <img src={icons.logo} width={32} height={'auto'} alt={'logo'}/>
       <span className="font-semibold text-xl tracking-tight ml-2">
         Piggybank
       </span>

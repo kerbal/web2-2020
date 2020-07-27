@@ -1,17 +1,20 @@
 import React from 'react';
-import { icons } from '../../../../../assets/';
+import { icons } from '../../../../../assets';
 
-const Container = props => {
+const Container = ({ children }) => {
   return (
     <div className="justify-center content-center items-center w-full p-12 flex flex-col">
-      {props.children}
+      {children}
     </div>
   );
 };
 
 const PersonalAccountIcons = () => {
   return (
-    <div id="personal-account" className="flex flex-row w-1/3 justify-between opacity-50">
+    <div
+      id="personal-account"
+      className="flex flex-row w-1/3 justify-between opacity-50"
+    >
       <img width={64} height="auto" alt="" src={icons.landing_cc_visa_brands} />
       <img
         width={64}
@@ -43,7 +46,10 @@ const PersonalAccount = () => {
 
 const SavingAccountIcon = () => {
   return (
-    <div id="saving-account" className="flex flex-row justify-between opacity-50 pt-6">
+    <div
+      id="saving-account"
+      className="flex flex-row justify-between opacity-50 pt-6"
+    >
       <img
         width={48}
         height="auto"
@@ -70,16 +76,20 @@ const SavingAccount = () => {
   );
 };
 
-const OpenAccountButton = (props) => {
+const OpenAccountButton = props => {
   const { onRegisterAccount } = props;
   return (
-    <button className="my-12 p-6 shadow-2xl text-xl rounded-lg" onClick={() => onRegisterAccount && onRegisterAccount()}>
+    <button
+      className="my-12 p-6 shadow-2xl text-xl rounded-lg"
+      onClick={() => onRegisterAccount && onRegisterAccount()}
+      type="button"
+    >
       Open an Account Now
     </button>
   );
-}
+};
 
-const ProductIntroduction = (props) => {
+const ProductIntroduction = props => {
   return (
     <Container>
       <PersonalAccountIcons />
