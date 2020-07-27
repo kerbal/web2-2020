@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from '../../../../common/Logo';
 
 const MenuButton = () => {
@@ -42,12 +43,12 @@ const NavItems = props => {
 const InternetBankingButton = () => {
   return (
     <div>
-      <a
-        href="/dashboard"
+      <Link
+        to="/dashboard"
         className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-700 border-gray-700 hover:border-transparent hover:text-teal-500 hover:bg-gray-700 mt-4 lg:mt-0"
       >
         Internet Banking
-      </a>
+      </Link>
     </div>
   );
 };
@@ -55,7 +56,7 @@ const InternetBankingButton = () => {
 const NavBar = () => {
   const navItems = [
     {
-      link: '',
+      link: '#',
       label: 'Home',
     },
     {

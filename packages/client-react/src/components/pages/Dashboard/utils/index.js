@@ -1,17 +1,17 @@
 export const checkUserHasLoggedIn = () => {
   return true;
-}
+};
 
 export const getDefaultPage = () => {
-  return 'Saving';
-}
+  return 'Overview';
+};
 
 export const getCurrentUser = () => {
   return {
-    name: 'Khoa'
+    name: 'Khoa',
   };
-}
+};
 
 export const getCurrentUserName = () => {
   return getCurrentUser().name;
-}
+};

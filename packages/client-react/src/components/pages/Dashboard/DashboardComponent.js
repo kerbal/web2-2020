@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import LoginContainer from './pages/Login/LoginContainer';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -16,8 +17,6 @@ const ContentContainer = props => {
 
 const DashboardContainer = props => {
   const {
-    isUserLoggedIn,
-    currentCustomerName,
     sidebarItems,
     currentSidebarItem,
     setCurrentSidebarItem,
@@ -26,14 +25,14 @@ const DashboardContainer = props => {
   const ContentComponent = contentComponent;
 
   const [loading /* setLoading */] = useState(true);
-
+  const user = useSelector(state => state.customerAuth.user);
   return (
     <>
-      {!isUserLoggedIn ? (
+      {!user ? (
         <LoginContainer />
       ) : (
         <Container>
-          <Header title={`Welcome, ${currentCustomerName}`} />
+          <Header />
           <ContentContainer>
             <Sidebar
               sidebarItems={sidebarItems}
