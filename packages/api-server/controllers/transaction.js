@@ -4,6 +4,7 @@ import { transactionconfirmation } from '../assets/mail-content/transaction-conf
 import { spendMoneyEmail, receiveMoneyEmail } from '../assets/mail-content/transaction';
 import BankService from '../services/bank';
 import AccountService from '../services/account';
+import NotFound from '../utils/error/NotFound';
 
 export class UserTransactionController {
   static async create (req, res, next) {
@@ -18,23 +19,23 @@ export class UserTransactionController {
 
       const source_bank_name = (await BankService.getBankInfo(source_bank_id)).name;
       if (!source_bank_name) {
-        return res.status(404).send({ message: 'Source bank not found' });
+        throw new NotFound('Source bank not found');
       }
       const destination_bank_name = (await BankService.getBankInfo(destination_bank_id)).name;
       if (!destination_bank_name) {
-        return res.status(404).send({ message: 'Destination bank not found' });
+        throw new NotFound('Destination bank not found');
       }
       const source_account = await AccountService.findById(source_account_id);
       if (!source_account) {
-        return res.status(404).send({ message: `Source account id ${source_account_id} not found` });
+        throw new NotFound(`Source account id ${source_account_id} not found`);
       }
       const destination_account = await AccountService.findById(destination_account_id);
       if (!destination_account) {
-        return res.status(404).send({ message: `Destination account id ${source_account_id} not found` });
+        throw new NotFound(`Destination account id ${source_account_id} not found`);
       }
       const remaining_balance = source_account.balance;
       if (amount > remaining_balance) {
-        return res.status(400).send({ message: 'Remaining balance is not enough' });
+        throw new NotFound('Remaining balance is not enough');
       }
 
       const transaction = await TransactionService.create({
@@ -104,10 +105,10 @@ export class UserTransactionController {
   static async getOne(req, res, next) {
     try {
       const { page } = req.query;
-      const { account_id } = req.params;
-      const transactions = await TransactionService.all({ account_id, page });
+      const { transaction_id } = req.params;
+      const transaction = await TransactionService.one(({ transaction_id, page }));
       res.send({
-        transactions,
+        transaction,
       });
     }
     catch (error) {
