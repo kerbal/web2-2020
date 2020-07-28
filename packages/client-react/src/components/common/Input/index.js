@@ -25,7 +25,6 @@ export default memo(function Input(props) {
   }
 
   const onTextChange = e => {
-    e.preventDefault();
     const text = e.target.value;
     if (onValueChange) onValueChange(text);
   };

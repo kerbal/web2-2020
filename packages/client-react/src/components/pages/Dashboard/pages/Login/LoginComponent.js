@@ -5,15 +5,13 @@ import { images, icons } from '../../../../../assets';
 
 const LoginComponent = memo(function LoginComponent(props) {
   const {
-    onSignIn,
     onRegisterLinkPress,
-    email,
-    setEmail,
-    emailValidator,
-    password,
-    setPassword,
-    passwordValidator,
+    onSignIn,
+    onLoginFormChange,
+    loginForm,
+    formValidator,
   } = props;
+  const { email, password } = loginForm;
   return (
     <div className="bg-white font-family-karla h-screen">
       <div className="w-full flex flex-wrap">
@@ -27,22 +25,24 @@ const LoginComponent = memo(function LoginComponent(props) {
             </p>
             <div className="flex flex-col pt-3 md:pt-8">
               <Input
-                label="Email"
                 type="email"
                 id="email"
                 placeholder="your@email.com"
-                value={email}
-                onValueChange={setEmail}
-                validator={emailValidator}
+                value={email.value}
+                validationError={email.validationError}
+                touched={email.touched}
+                onValueChange={onLoginFormChange('email')}
+                validator={formValidator('email')}
               />
               <Input
-                label="Password"
                 type="password"
                 id="password"
                 placeholder="Password"
-                value={password}
-                onValueChange={setPassword}
-                validator={passwordValidator}
+                value={password.value}
+                validationError={password.validationError}
+                touched={password.touched}
+                onValueChange={onLoginFormChange('password')}
+                validator={formValidator('password')}
               />
               <Button onClick={() => onSignIn && onSignIn()} label="Login" />
             </div>

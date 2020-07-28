@@ -21,7 +21,7 @@ const InstantLoginBox = props => {
   const { onSignIn, onLoginFormChange, loginForm, formValidator } = props;
   const { email, password } = loginForm;
   return (
-    <div className="m-12 p-6 shadow-xl w-2/5 rounded-lg">
+    <form className="m-12 p-6 shadow-xl w-2/5 rounded-lg">
       <span className="text-center text-xl font-light">
         Already have an account? Login now.
       </span>
@@ -46,7 +46,7 @@ const InstantLoginBox = props => {
         validator={formValidator('password')}
       />
       <Button onClick={() => onSignIn && onSignIn()} label="Login" />
-    </div>
+    </form>
   );
 };
 

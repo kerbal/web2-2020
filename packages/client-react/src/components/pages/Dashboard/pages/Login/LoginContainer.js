@@ -1,60 +1,48 @@
-import React, { useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
+import { useLoginForm } from '../../../../../utils/hooks';
 
-const LoginContainer = props => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginContainer = () => {
   const dispatch = useDispatch();
-  const emailValidator = () => {
-    return true;
-  };
+  const history = useHistory();
+  const [
+    loginForm,
+    loginData,
+    onLoginFormChange,
+    formValidator,
+  ] = useLoginForm();
 
-  const passwordValidator = () => {
-    return true;
-  };
-
-  const onSignIn = useCallback(
-    () =>
-      dispatch(
-        signIn(
-          { email, password },
-          () => {
-            props.history.push('/dashboard');
-          },
-          error => {
-            console.log(error);
-          }
-        )
-      ),
-    [dispatch]
-  );
+  const onSignIn = () =>
+    dispatch(
+      signIn(
+        loginData,
+        () => {
+          history.push('/dashboard');
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    );
 
   const onRegisterLinkPress = () => {
-    props.history.push('/dashboard/register');
+    history.push('/dashboard/register');
   };
-
-  const user = useSelector(state => state.customerAuth.user);
-  if (user) {
-    props.history.replace('/dashboard');
-  }
 
   return (
     <>
       <LoginComponent
         onRegisterLinkPress={onRegisterLinkPress}
         onSignIn={onSignIn}
-        email={email}
-        setEmail={setEmail}
-        emailValidator={emailValidator}
-        password={password}
-        setPassword={setPassword}
-        passwordValidator={passwordValidator}
+        onLoginFormChange={onLoginFormChange}
+        formValidator={formValidator}
+        loginForm={loginForm}
       />
     </>
   );
 };
 
-export default withRouter(LoginContainer);
+export default LoginContainer;
