@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^7.1.2",
     "autoprefixer": "^9.8.4",
     "axios": "^0.19.2",
-    "env-cmd": "^10.1.0",
     "moment": "^2.27.0",
     "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
@@ -31,7 +30,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
-    "eslint": "^6.6.0",
+    "eslint": "6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-universe": "^1.0.7",

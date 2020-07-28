@@ -1,16 +1,6 @@
 import React from 'react';
-import { icons } from '../../../../../assets/';
-
-const Logo = () => {
-  return (
-    <div className="flex items-center flex-shrink-0 text-gray-700 mr-6">
-      <img src={icons.logo} width={32} height={"auto"} />
-      <span className="font-semibold text-xl tracking-tight ml-2">
-        Piggybank
-        </span>
-    </div>
-  );
-}
+import { Link } from 'react-router-dom';
+import Logo from '../../../../common/Logo';
 
 const MenuButton = () => {
   return (
@@ -30,7 +20,7 @@ const MenuButton = () => {
       </button>
     </div>
   );
-}
+};
 
 const NavItems = props => {
   const { navItems } = props;
@@ -53,12 +43,12 @@ const NavItems = props => {
 const InternetBankingButton = () => {
   return (
     <div>
-      <a
-        href="/dashboard"
+      <Link
+        to="/dashboard"
         className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-700 border-gray-700 hover:border-transparent hover:text-teal-500 hover:bg-gray-700 mt-4 lg:mt-0"
       >
         Internet Banking
-      </a>
+      </Link>
     </div>
   );
 };
@@ -66,7 +56,7 @@ const InternetBankingButton = () => {
 const NavBar = () => {
   const navItems = [
     {
-      link: '',
+      link: '#',
       label: 'Home',
     },
     {

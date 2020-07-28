@@ -1,28 +1,18 @@
 import React from 'react';
-import { icons } from '../../../../../assets/';
+import { useSelector } from 'react-redux';
 import { getCurrentDatetime } from '../../../../../utils';
+import Logo from '../../../../common/Logo';
 
-const Logo = () => {
-  return (
-    <div className="flex items-center flex-shrink-0 text-gray-700 mr-6">
-      <img src={icons.logo} width={32} height={'auto'} />
-      <span className="font-semibold text-xl tracking-tight ml-2">
-        Piggybank
-      </span>
-    </div>
-  );
-};
-
-const Header = props => {
-  const { title, disableCurrentTime } = props;
+const Header = () => {
+  const user = useSelector(state => state.customerAuth.user);
   return (
     <nav className="flex items-center flex-wrap bg-white p-6">
       <div style={{ width: '250px' }}>
         <Logo />
       </div>
       <div className="flex flex-row justify-between flex-1">
-        <div className="font-thin text-2xl">{title}</div>
-        {!disableCurrentTime && <div className="font-normal text-xl">{`Today is ${getCurrentDatetime()}`}</div>}
+        <div className="font-thin text-2xl">{`Welcome, ${user.email}`}</div>
+        <div className="font-normal text-xl">{`Today is ${getCurrentDatetime()}`}</div>
       </div>
     </nav>
   );
