@@ -18,15 +18,8 @@ const IntroductionParagraph = () => {
 };
 
 const InstantLoginBox = props => {
-  const {
-    onSignIn,
-    email,
-    setEmail,
-    emailValidator,
-    password,
-    setPassword,
-    passwordValidator,
-  } = props;
+  const { onSignIn, onLoginFormChange, loginForm, formValidator } = props;
+  const { email, password } = loginForm;
   return (
     <div className="m-12 p-6 shadow-xl w-2/5 rounded-lg">
       <span className="text-center text-xl font-light">
@@ -36,17 +29,21 @@ const InstantLoginBox = props => {
         type="email"
         id="email"
         placeholder="your@email.com"
-        value={email}
-        onValueChange={setEmail}
-        validator={emailValidator}
+        value={email.value}
+        validationError={email.validationError}
+        touched={email.touched}
+        onValueChange={onLoginFormChange('email')}
+        validator={formValidator('email')}
       />
       <Input
         type="password"
         id="password"
         placeholder="Password"
-        value={password}
-        onValueChange={setPassword}
-        validator={passwordValidator}
+        value={password.value}
+        validationError={password.validationError}
+        touched={password.touched}
+        onValueChange={onLoginFormChange('password')}
+        validator={formValidator('password')}
       />
       <Button onClick={() => onSignIn && onSignIn()} label="Login" />
     </div>

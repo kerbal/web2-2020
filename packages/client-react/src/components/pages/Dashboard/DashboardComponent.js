@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import LoginContainer from './pages/Login/LoginContainer';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -15,24 +14,23 @@ const ContentContainer = props => {
   return <div className="flex flex-row flex-1">{children}</div>;
 };
 
-const DashboardContainer = props => {
+const DashboardComponent = props => {
   const {
+    customer,
     sidebarItems,
     currentSidebarItem,
     setCurrentSidebarItem,
     contentComponent,
   } = props;
   const ContentComponent = contentComponent;
-
   const [loading /* setLoading */] = useState(true);
-  const user = useSelector(state => state.customerAuth.user);
   return (
     <>
-      {!user ? (
+      {!customer ? (
         <LoginContainer />
       ) : (
         <Container>
-          <Header />
+          <Header title={`Welcome, ${customer?.email}`} />
           <ContentContainer>
             <Sidebar
               sidebarItems={sidebarItems}
@@ -48,4 +46,4 @@ const DashboardContainer = props => {
   );
 };
 
-export default DashboardContainer;
+export default DashboardComponent;

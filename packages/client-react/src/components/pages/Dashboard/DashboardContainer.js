@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import DashboardComponent from './DashboardComponent';
-import {
-  checkUserHasLoggedIn,
-  getCurrentUserName,
-  getDefaultPage,
-} from './utils';
+import { getDefaultPage } from './utils';
 import { icons } from '../../../assets';
 import HomeContainer from './pages/Home/HomeContainer';
 import TransferContainer from './pages/Transfer/TransferContainer';
 import SavingContainer from './pages/Saving/SavingContainer';
 
 const DashboardContainer = () => {
-  const isUserLoggedIn = checkUserHasLoggedIn();
-  const currentCustomerName = getCurrentUserName();
-
   const [currentSidebarItem, setCurrentSidebarItem] = useState(
     getDefaultPage()
   );
@@ -70,10 +64,11 @@ const DashboardContainer = () => {
     item => item.name === currentSidebarItem
   )?.render || <div />;
 
+  const customer = useSelector(state => state.customerAuth.user);
+
   return (
     <DashboardComponent
-      isUserLoggedIn={isUserLoggedIn}
-      currentCustomerName={currentCustomerName}
+      customer={customer}
       currentSidebarItem={currentSidebarItem}
       setCurrentSidebarItem={setCurrentSidebarItem}
       sidebarItems={sidebarItems}

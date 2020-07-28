@@ -8,15 +8,25 @@ export default memo(function Input(props) {
     placeholder,
     value,
     validator,
+    validationError,
     onValueChange,
+    touched,
     disabled = false,
+    required = true,
   } = props;
 
+  let errorMessage = null;
+  if (validationError && touched && validator && !validator()) {
+    errorMessage = (
+      <label htmlFor="email" className="text-lg text-left text-red-500">
+        {validationError}
+      </label>
+    );
+  }
+
   const onTextChange = e => {
+    e.preventDefault();
     const text = e.target.value;
-    if (validator && !validator(text)) {
-      return;
-    }
     if (onValueChange) onValueChange(text);
   };
 
@@ -26,6 +36,7 @@ export default memo(function Input(props) {
         {label}
       </label>
       <input
+        required={required}
         disabled={disabled}
         value={value}
         onChange={onTextChange}
@@ -34,6 +45,7 @@ export default memo(function Input(props) {
         placeholder={placeholder}
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
       />
+      {errorMessage}
     </div>
   );
 });

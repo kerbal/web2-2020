@@ -5,6 +5,7 @@ const initialState = {
   token: null,
   user: null,
   loading: false,
+  role: 'customer',
 };
 export const customerAuthSlice = createSlice({
   name: 'lading',
@@ -35,7 +36,7 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
   try {
     dispatch(setLoading(true));
     const res = await axios.post(url, loginData);
-    dispatch(setAuth(res.data));
+    dispatch(setAuth({ ...res.data }));
     resolve();
   } catch ({ response }) {
     reject(response);
