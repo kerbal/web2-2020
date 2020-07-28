@@ -103,23 +103,20 @@ const login = async (req, res) => {
       { id: user.id },
       process.env.JWT_SECRET,
     );
-    const { id, status, fullname, address } = user;
-    let message;
+    const { id,  fullname, address } = user;
+    let { status } = user;
     //check user is update identity
     const identity = await Identity.findOne({
       where:{
         customer_id:id,
       },
     });
-    if (!identity){
-      message='Update your identity.';
-    } else if (status==='UNVERIFIED'){
-      message='Unverified';
+    if (identity && status == CUSTOMER_STATUS.UNVERIFIED){
+      status='WAITING';
     }
     return res.json({
       token,
-      user: { id, email, fullname, address },
-      message,
+      user: { id, email, fullname, address, status },
     });
   } catch (error) {
     return res.status(400).json({
