@@ -1,8 +1,9 @@
 import React from 'react';
 import TransferComponent from './TransferComponent';
+import withDashboardFrame from '../../withDashboardFrame';
 
 const TransferContainer = props => {
   return <TransferComponent />;
 };
 
-export default TransferContainer;
+export default withDashboardFrame(TransferContainer);

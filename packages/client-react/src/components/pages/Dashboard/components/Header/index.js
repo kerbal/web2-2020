@@ -4,7 +4,7 @@ import { getCurrentDatetime } from '../../../../../utils';
 import Logo from '../../../../common/Logo';
 
 const Header = () => {
-  const user = useSelector(state => state.customerAuth.user);
+  const user = useSelector(state => state.customerAuth.user) || { email: ''};
   return (
     <nav className="flex items-center flex-wrap bg-white p-6">
       <div style={{ width: '250px' }}>
