@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatCurrency, formatDatetime } from '../../../../../utils';
-import TableView from '../../components/TableView';
+import TableView from '../../../../common/TableView';
 
 const Container = props => {
   const { children } = props;

@@ -1,0 +1,20 @@
+.modal-show {
+  animation: fadein 0.25s ease;
+}
+
+.modal-hide {
+  animation: fadeout 0.25s ease;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes fadein {
+  from { opacity: 0}
+  to   { opacity: 1}
+}
+
+@keyframes fadeout {
+  from { opacity: 1}
+  to   { opacity: 0; display: none}
+}

@@ -8,7 +8,10 @@ import RegisterContainer from './components/pages/Dashboard/pages/Register/Regis
 import HomeContainer from './components/pages/Dashboard/pages/Home/HomeContainer';
 import SavingContainer from './components/pages/Dashboard/pages/Saving/SavingContainer';
 import TransferContainer from './components/pages/Dashboard/pages/Transfer/TransferContainer';
-import Admin from './components/pages/Admin';
+
+import AdminContainer from './components/pages/Admin/AdminContainer';
+import AdminLoginContainer from './components/pages/Admin/pages/Login/LoginContainer';
+
 
 const routes = [
   {
@@ -54,7 +57,12 @@ const routes = [
   {
     path: '/admin',
     exact: true,
-    main: () => <Admin />,
+    main: () => <AdminContainer />,
+  },
+  {
+    path: '/admin/login',
+    exact: true,
+    main: () => <AdminLoginContainer />,
   },
 ];
 

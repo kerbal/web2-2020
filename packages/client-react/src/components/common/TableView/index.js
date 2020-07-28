@@ -52,7 +52,7 @@ const TableView = props => {
   }, [])
 
   return (
-    <table id={name} class="table-auto cursor-default" onDoubleClick={() => onClick && onClick()}>
+    <table id={name} class="table-auto cursor-default w-full" onDoubleClick={() => onClick && onClick()}>
       <thead>
         <tr id={`${name}-title-row`}></tr>
       </thead>
