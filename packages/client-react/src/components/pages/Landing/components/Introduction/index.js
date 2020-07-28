@@ -19,32 +19,29 @@ const IntroductionParagraph = () => {
 
 const InstantLoginBox = props => {
   const { onSignIn, onLoginFormChange, loginForm, formValidator } = props;
-  const { email, password } = loginForm;
   return (
     <form className="m-12 p-6 shadow-xl w-2/5 rounded-lg">
       <span className="text-center text-xl font-light">
         Already have an account? Login now.
       </span>
-      <Input
-        type="email"
-        id="email"
-        placeholder="your@email.com"
-        value={email.value}
-        validationError={email.validationError}
-        touched={email.touched}
-        onValueChange={onLoginFormChange('email')}
-        validator={formValidator('email')}
-      />
-      <Input
-        type="password"
-        id="password"
-        placeholder="Password"
-        value={password.value}
-        validationError={password.validationError}
-        touched={password.touched}
-        onValueChange={onLoginFormChange('password')}
-        validator={formValidator('password')}
-      />
+      {Object.entries(loginForm).map(
+        ([key, { type, value, placeholder, validationError, touched }]) => {
+          return (
+            <Input
+              key={key}
+              type={type}
+              id={key}
+              name={key}
+              placeholder={placeholder}
+              value={value}
+              validationError={validationError}
+              touched={touched}
+              onValueChange={onLoginFormChange(key)}
+              validator={formValidator(key)}
+            />
+          );
+        }
+      )}
       <Button onClick={() => onSignIn && onSignIn()} label="Login" />
     </form>
   );

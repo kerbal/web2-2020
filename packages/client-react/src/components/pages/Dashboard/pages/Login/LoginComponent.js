@@ -11,7 +11,6 @@ const LoginComponent = memo(function LoginComponent(props) {
     loginForm,
     formValidator,
   } = props;
-  const { email, password } = loginForm;
   return (
     <div className="bg-white font-family-karla h-screen">
       <div className="w-full flex flex-wrap">
@@ -24,26 +23,26 @@ const LoginComponent = memo(function LoginComponent(props) {
               Sign in to Internet Banking.
             </p>
             <div className="flex flex-col pt-3 md:pt-8">
-              <Input
-                type="email"
-                id="email"
-                placeholder="your@email.com"
-                value={email.value}
-                validationError={email.validationError}
-                touched={email.touched}
-                onValueChange={onLoginFormChange('email')}
-                validator={formValidator('email')}
-              />
-              <Input
-                type="password"
-                id="password"
-                placeholder="Password"
-                value={password.value}
-                validationError={password.validationError}
-                touched={password.touched}
-                onValueChange={onLoginFormChange('password')}
-                validator={formValidator('password')}
-              />
+              {Object.entries(loginForm).map(
+                ([
+                  key,
+                  { type, value, placeholder, validationError, touched },
+                ]) => {
+                  return (
+                    <Input
+                      key={key}
+                      type={type}
+                      id={key}
+                      placeholder={placeholder}
+                      value={value}
+                      validationError={validationError}
+                      touched={touched}
+                      onValueChange={onLoginFormChange(key)}
+                      validator={formValidator(key)}
+                    />
+                  );
+                }
+              )}
               <Button onClick={() => onSignIn && onSignIn()} label="Login" />
             </div>
             <div className="text-center pt-12 pb-12">

@@ -8,34 +8,38 @@ import SplashCarousel from './components/SplashCarousel';
 import Introduction from './components/Introduction';
 import ProductIntroduction from './components/ProductIntroduction';
 import AboutUs from './components/AboutUs';
-import { useLoginForm } from '../../../utils/hooks';
+import { useForm } from '../../../utils/hooks';
+import { loginFormSetup } from '../../../utils/formSetup';
 
 const Landing = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [
     loginForm,
-    loginData,
-    onLoginFormChange,
-    formValidator,
-  ] = useLoginForm();
+    getLoginData,
+    { onFormChange, formValidator, setTouched, checkFormValidity },
+  ] = useForm(loginFormSetup);
 
   const onRegisterAccount = () => {
     history.push('/dashboard/register');
   };
 
-  const onSignIn = () =>
-    dispatch(
-      signIn(
-        loginData,
-        () => {
-          history.push('/dashboard');
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    );
+  const onSignIn = () => {
+    setTouched();
+    if (checkFormValidity()) {
+      dispatch(
+        signIn(
+          getLoginData(),
+          () => {
+            history.push('/dashboard');
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      );
+    }
+  };
 
   return (
     <div>
@@ -43,7 +47,7 @@ const Landing = () => {
       <SplashCarousel />
       <Introduction
         onSignIn={onSignIn}
-        onLoginFormChange={onLoginFormChange}
+        onLoginFormChange={onFormChange}
         formValidator={formValidator}
         loginForm={loginForm}
       />

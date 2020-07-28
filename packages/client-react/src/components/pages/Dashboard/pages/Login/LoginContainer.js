@@ -3,30 +3,34 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
-import { useLoginForm } from '../../../../../utils/hooks';
+import { useForm } from '../../../../../utils/hooks';
+import { loginFormSetup } from '../../../../../utils/formSetup';
 
 const LoginContainer = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [
     loginForm,
-    loginData,
-    onLoginFormChange,
-    formValidator,
-  ] = useLoginForm();
+    getLoginData,
+    { onFormChange, formValidator, setTouched, checkFormValidity },
+  ] = useForm(loginFormSetup);
 
-  const onSignIn = () =>
-    dispatch(
-      signIn(
-        loginData,
-        () => {
-          history.push('/dashboard');
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    );
+  const onSignIn = () => {
+    setTouched();
+    if (checkFormValidity()) {
+      dispatch(
+        signIn(
+          getLoginData(),
+          () => {
+            history.push('/dashboard');
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      );
+    }
+  };
 
   const onRegisterLinkPress = () => {
     history.push('/dashboard/register');
@@ -37,7 +41,7 @@ const LoginContainer = () => {
       <LoginComponent
         onRegisterLinkPress={onRegisterLinkPress}
         onSignIn={onSignIn}
-        onLoginFormChange={onLoginFormChange}
+        onLoginFormChange={onFormChange}
         formValidator={formValidator}
         loginForm={loginForm}
       />

@@ -45,7 +45,7 @@ export const checkValidity = (value, rules) => {
     isValid = value.trim() !== '' && isValid;
   }
   if (rules.minLength) {
-    isValid = value.length >= rules.minLegth && isValid;
+    isValid = value.length >= rules.minLength && isValid;
   }
   if (rules.maxLength) {
     isValid = value.length <= rules.maxLength && isValid;
@@ -58,6 +58,14 @@ export const checkValidity = (value, rules) => {
   if (rules.isNumeric) {
     const pattern = /^\d+$/;
     isValid = pattern.test(value) && isValid;
+  }
+  if (rules.dob) {
+    const timestamp = Date.parse(value);
+    if (Number.isNaN(timestamp)) isValid = Number.isNaN(timestamp) && isValid;
+    else {
+      const date = new Date(value);
+      isValid = date < new Date() && date > new Date('1900-1-1') && isValid;
+    }
   }
   return isValid;
 };

@@ -5,6 +5,7 @@ export default memo(function Input(props) {
     label,
     type,
     id,
+    name,
     placeholder,
     value,
     validator,
@@ -18,7 +19,7 @@ export default memo(function Input(props) {
   let errorMessage = null;
   if (validationError && touched && validator && !validator()) {
     errorMessage = (
-      <label htmlFor="email" className="text-lg text-left text-red-500">
+      <label htmlFor={name} className="text-lg text-left text-red-500">
         {validationError}
       </label>
     );
@@ -31,10 +32,11 @@ export default memo(function Input(props) {
 
   return (
     <div className="flex flex-col pt-4">
-      <label htmlFor="email" className="text-lg text-left">
+      <label htmlFor={name} className="text-lg text-left">
         {label}
       </label>
       <input
+        name={name}
         required={required}
         disabled={disabled}
         value={value}
