@@ -1,6 +1,7 @@
 import React from 'react';
 import HomeComponent from './HomeComponent';
 import withAdminFrame from '../../withAdminFrame';
+import { formatDatetime } from '../../../../../utils';
 
 const HomeContainer = () => {
   const name = 'admin-customer-table';
@@ -37,7 +38,13 @@ const HomeContainer = () => {
       "address": "TP.HCM"
     }
   ]`;
-  const data = JSON.parse(dataString);
+  const parsedData = JSON.parse(dataString);
+  const data = parsedData.map(item => {
+    if (item.birthday) {
+      return { ...item, birthday: formatDatetime(item.birthday) };
+    }
+    return { ...item };
+  });
   const onClick = () => {
     console.log('clicked');
   };
