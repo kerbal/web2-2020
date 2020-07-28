@@ -1,19 +1,30 @@
 import React, { memo } from 'react';
 
 export default memo(function Input(props) {
-  const { label, type, id, placeholder, value, validator, onValueChange, disabled = false } = props;
+  const {
+    label,
+    type,
+    id,
+    placeholder,
+    value,
+    validator,
+    onValueChange,
+    disabled = false,
+  } = props;
 
-  const onTextChange = (e) => {
+  const onTextChange = e => {
     const text = e.target.value;
     if (validator && !validator(text)) {
       return;
     }
-    onValueChange && onValueChange(text)
-  }
+    if (onValueChange) {
+      onValueChange(text);
+    }
+  };
 
   return (
     <div className="flex flex-col pt-4">
-      <label for="email" className="text-lg text-left">
+      <label htmlFor="email" className="text-lg text-left">
         {label}
       </label>
       <input
