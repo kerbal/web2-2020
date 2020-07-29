@@ -1,17 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { fetchSessionStorage } from './slice/customerAuthSlice';
 
 export default (status, onlyUnAuth) => WarpedComponent => {
   return () => {
     const history = useHistory();
     const customer = useSelector(state => state.customerAuth.user);
     const isFirstRun = useRef(true);
+    const dispatch = useDispatch();
 
     useEffect(() => {
       if (isFirstRun.current) {
         isFirstRun.current = false;
-        return;
+        dispatch(fetchSessionStorage());
       }
       if (!customer) history.replace('/dashboard/login');
       if (onlyUnAuth && customer) history.replace('/dashboard/overview');
