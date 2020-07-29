@@ -1,4 +1,5 @@
 import React from 'react';
+import { icons } from '../../../../../assets';
 // import { icons } from '../../../../../assets';
 
 const SidebarItem = props => {
@@ -52,6 +53,23 @@ const Sidebar = props => {
           />
         );
       })}
+
+      <button
+        type="button"
+        className="flex flex-row pt-6 opacity-50"
+        // onClick={() => {
+
+        // }}
+      >
+        <div>
+          <img
+            src={icons.sidebar_logout}
+            alt=""
+            className="object-contain w-6 h-6 opacity-50"
+          />
+        </div>
+        <div className="pl-6">Log out</div>
+      </button>
     </div>
   );
 };

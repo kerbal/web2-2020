@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { icons } from '../../../assets';
 
 export default memo(function ComboBox(props) {
-  const { label, validator, onValueChange, value } = props;
+  const { label, validator, onValueChange, value, disabled } = props;
 
   const onTextChange = e => {
     const text = e.target.value;
@@ -21,6 +21,7 @@ export default memo(function ComboBox(props) {
       </label>
       <div className="relative">
         <select
+          disabled={disabled}
           value={value}
           name="example"
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"

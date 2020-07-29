@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ComboBox from '../../../../common/ComboBox';
 import Input from '../../../../common/Input';
-import Button from '../../../../common/Button';
+import VerifyTransaction from './VerifyTransaction';
+import axios from '../../../../../utils/axios';
 
 const Container = props => {
   const { children } = props;
@@ -26,6 +27,35 @@ const Transfer = () => {
   const [destinationAccountNumber, setDestinationAccountNumber] = useState();
   const [amount, setAmount] = useState(0);
   const [note, setNote] = useState('');
+  const [sourceBankId, setSourceBankId] = useState('PIGGY');
+  const [destinationBankId, setDestinationBankId] = useState('PIGGY');
+  const [creating, setCreating] = useState(false);
+  const [verify, setVerify] = useState(false);
+  const [transaction, setTransaction] = useState(null);
+  const [error, setError] = useState(null);
+  const [destinationAccount, setDestinationAccount] = useState(null);
+
+  const searchDestinationAccount = async () => {
+    const res = await axios.get(
+      `/customer/account?account_number=${destinationAccountNumber}`
+    );
+    console.log(res.data);
+    if (res.data.length === 1) {
+      setDestinationAccount(res.data[0]);
+    }
+  };
+
+  const createTransaction = async () => {
+    setError(null);
+    const res = await axios.post('/transaction', {
+      source_bank_id: 'PIGGY',
+      destination_bank_id: destinationBankId,
+      source_account_id: accountId,
+      destination_account_id: '',
+      amount,
+      note,
+    });
+  };
 
   return (
     <Container>
@@ -39,6 +69,7 @@ const Transfer = () => {
               setAccountId(accounts[currentAccountIndex].id);
             }}
             value={currentAccountIndex}
+            disabled={verify}
           >
             {accounts.map((account, index) => (
               <option value={index}>{account.account_number}</option>
@@ -55,7 +86,13 @@ const Transfer = () => {
       </div>
       <div className="flex">
         <div className="w-1/3">
-          <ComboBox label="Destination Bank" onValueChange={() => {}}>
+          <ComboBox
+            label="Destination Bank"
+            disabled={verify}
+            onValueChange={value => {
+              return setDestinationBankId(value);
+            }}
+          >
             {['Piggy - Bank', 'Chicken Bank'].map(value => (
               <option>{value}</option>
             ))}
@@ -65,31 +102,46 @@ const Transfer = () => {
           <Input
             value={destinationAccountNumber}
             label="Destination Account Number"
-            onValueChange={value => setDestinationAccountNumber(value)}
+            disabled={verify}
+            onValueChange={value => {
+              setDestinationAccountNumber(value);
+              searchDestinationAccount();
+            }}
           />
         </div>
       </div>
       <div className="w-2/3">
         <Input
           value={amount}
+          type="number"
           label="Amount"
-          onValueChange={value => setAmount(value)}
+          disabled={verify}
+          onValueChange={value => setAmount(Math.abs(value))}
         />
       </div>
-      <div className="w-2/3">
+      <div className="w-2/3 mb-10">
         <Input
           label="Note"
           value={note}
+          disabled={verify}
           onValueChange={value => setNote(value)}
         />
       </div>
-      {/* <div className="w-2/3 flex">
-        <div className="w-3/4">
-          <Input label="Verified OTP" />
-        </div>
-        <div className="align-text-bottom self-end pb-2 pl-6">Get OTP Code</div>
-      </div> */}
-      <button className="bg-blue-900 text-white">Make transfer</button>
+      {!verify ? (
+        <button
+          className="btn bg-blue-900 text-white w-2/3 rounded shadow-md text-lg p-2 button"
+          type="button"
+          disabled={creating}
+          onClick={() => {
+            setVerify(true);
+            setCreating(true);
+          }}
+        >
+          Make transfer
+        </button>
+      ) : (
+        <VerifyTransaction transaction={transaction} />
+      )}
     </Container>
   );
 };

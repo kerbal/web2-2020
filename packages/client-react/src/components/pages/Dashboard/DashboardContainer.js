@@ -52,12 +52,6 @@ const DashboardContainer = () => {
       icon: icons.sidebar_help,
       render: TransferContainer,
     },
-    {
-      id: 8,
-      name: 'Logout',
-      icon: icons.sidebar_logout,
-      render: TransferContainer,
-    },
   ];
 
   const contentComponent = sidebarItems.find(
