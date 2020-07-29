@@ -16,7 +16,8 @@ const LoginContainer = () => {
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ] = useForm(loginFormSetup);
 
-  const onSignIn = () => {
+  const onSignIn = e => {
+    e.preventDefault();
     setTouched();
     if (checkFormValidity()) {
       dispatch(
@@ -33,16 +34,11 @@ const LoginContainer = () => {
     }
   };
 
-  const onRegisterLinkPress = () => {
-    history.push('/register');
-  };
-
   useCustomerCheck(customer => customer, '/dashboard/overview');
 
   return (
     <>
       <LoginComponent
-        onRegisterLinkPress={onRegisterLinkPress}
         onSignIn={onSignIn}
         onLoginFormChange={onFormChange}
         formValidator={formValidator}

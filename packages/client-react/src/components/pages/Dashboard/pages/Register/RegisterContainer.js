@@ -20,7 +20,7 @@ const RegisterContainer = () => {
       axios
         .post(url, getRegisterData())
         .then(() => {
-          history.push('/dashboard/login');
+          history.replace('/dashboard/login');
         })
         .catch(({ response }) => {
           console.log(response);
