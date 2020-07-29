@@ -5,6 +5,7 @@ import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
 import { useForm } from '../../../../../utils/hooks';
 import { loginFormSetup } from '../../../../../utils/formSetup';
+import withProtected from '../../withProtected';
 
 const LoginContainer = () => {
   const dispatch = useDispatch();
@@ -49,4 +50,4 @@ const LoginContainer = () => {
   );
 };
 
-export default LoginContainer;
+export default withProtected(null, true)(LoginContainer);

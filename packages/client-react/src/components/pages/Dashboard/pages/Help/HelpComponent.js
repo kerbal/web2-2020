@@ -1,13 +1,7 @@
 import React from 'react';
-import Header from '../../components/Header';
-import Sidebar from '../../components/Sidebar';
 
-const Container = props => {
-  return <div className="w-screen h-screen">{props.children}</div>;
-};
-
-const ContentContainer = props => {
-  return <div className="flex flex-row flex-1">{props.children}</div>;
+const Container = ({ children }) => {
+  return <div className="w-screen h-screen">{children}</div>;
 };
 
 const Content = () => {
@@ -17,11 +11,7 @@ const Content = () => {
 const Help = () => {
   return (
     <Container>
-      <Header title="Help" />
-      <ContentContainer>
-        <Sidebar currentItem="Help" />
-        <Content />
-      </ContentContainer>
+      <Content />
     </Container>
   );
 };
