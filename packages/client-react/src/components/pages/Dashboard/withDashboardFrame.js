@@ -50,17 +50,8 @@ const sidebarItems = [
     path: '/dashboard/logout',
   },
 ];
-const getCurrentSidebarItem = () => {
-  const pathName = window.location.pathname;
-  const currentSidebarItem = sidebarItems.find(item => item.path === pathName);
-  if (currentSidebarItem) {
-    return currentSidebarItem.name;
-  }
-  return '';
-};
 
 const withDashboardFrame = ContentComponent => {
-  // console.log('withDashboardFrame');
   return () => {
     const [loading, setLoading] = useState(false);
     return (
@@ -68,10 +59,7 @@ const withDashboardFrame = ContentComponent => {
         <Container>
           <Header />
           <ContentContainer>
-            <Sidebar
-              sidebarItems={sidebarItems}
-              currentItem={getCurrentSidebarItem()}
-            />
+            <Sidebar sidebarItems={sidebarItems} />
             <ContentComponent setLoading={setLoading} />
           </ContentContainer>
         </Container>
