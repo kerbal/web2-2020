@@ -1,7 +1,7 @@
 import React from 'react';
 import HomeComponent from './HomeComponent';
 
-const HomeContainer = props => {
+const HomeContainer = () => {
   return <HomeComponent />;
 };
 

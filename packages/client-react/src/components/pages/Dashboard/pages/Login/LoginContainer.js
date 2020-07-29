@@ -1,45 +1,52 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
-import { withRouter } from 'react-router-dom';
-import { checkUserHasLoggedIn } from '../../utils';
+import { signIn } from '../../slice/customerAuthSlice';
+import { useForm } from '../../../../../utils/hooks';
+import { loginFormSetup } from '../../../../../utils/formSetup';
 
-const LoginContainer = (props) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginContainer = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const [
+    loginForm,
+    getLoginData,
+    { onFormChange, formValidator, setTouched, checkFormValidity },
+  ] = useForm(loginFormSetup);
 
-  const emailValidator = () => {
-    return true;
-  }
-
-  const passwordValidator = () => {
-    return true;
-  }
-
-  const onSignIn = () => { };
-
-  const onRegisterLinkPress = () => {
-    props.history.push('/dashboard/register');
+  const onSignIn = () => {
+    setTouched();
+    if (checkFormValidity()) {
+      dispatch(
+        signIn(
+          getLoginData(),
+          () => {
+            history.push('/dashboard');
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      );
+    }
   };
 
-  let isUserLoggedIn = checkUserHasLoggedIn();
-  if (isUserLoggedIn) {
-    props.history.replace('/dashboard')
-  }
+  const onRegisterLinkPress = () => {
+    history.push('/dashboard/register');
+  };
 
   return (
     <>
       <LoginComponent
         onRegisterLinkPress={onRegisterLinkPress}
         onSignIn={onSignIn}
-        email={email}
-        setEmail={setEmail}
-        emailValidator={emailValidator}
-        password={password}
-        setPassword={setPassword}
-        passwordValidator={passwordValidator}
+        onLoginFormChange={onFormChange}
+        formValidator={formValidator}
+        loginForm={loginForm}
       />
     </>
   );
 };
 
-export default withRouter(LoginContainer);
+export default LoginContainer;
