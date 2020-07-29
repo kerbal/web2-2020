@@ -1,20 +1,8 @@
 import React from 'react';
-import { icons } from '../../../../../assets/';
 import { getCurrentDatetime } from '../../../../../utils';
+import Logo from '../../../../common/Logo';
 
-const Logo = () => {
-  return (
-    <div className="flex items-center flex-shrink-0 text-gray-700 mr-6">
-      <img src={icons.logo} width={32} height={'auto'} />
-      <span className="font-semibold text-xl tracking-tight ml-2">
-        Piggybank
-      </span>
-    </div>
-  );
-};
-
-const Header = props => {
-  const { title } = props;
+const Header = ({ title }) => {
   return (
     <nav className="flex items-center flex-wrap bg-white p-6">
       <div style={{ width: '250px' }}>

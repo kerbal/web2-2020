@@ -6,7 +6,6 @@ import LoginContainer from './components/pages/Dashboard/pages/Login/LoginContai
 import RegisterContainer from './components/pages/Dashboard/pages/Register/RegisterContainer';
 import Admin from './components/pages/Admin';
 
-
 const routes = [
   {
     path: '/',
