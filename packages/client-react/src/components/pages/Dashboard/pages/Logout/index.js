@@ -6,7 +6,6 @@ import { signOut } from '../../slice/customerAuthSlice';
 const Logout = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-
   useEffect(() => {
     dispatch(signOut());
     history.replace('/');

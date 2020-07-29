@@ -6,7 +6,9 @@ const initialState = {
   user: null,
   loading: false,
   role: 'customer',
+  ready: false,
 };
+
 export const customerAuthSlice = createSlice({
   name: 'lading',
   initialState,
@@ -29,12 +31,20 @@ export const customerAuthSlice = createSlice({
         ...user,
       },
     }),
-    clearAuth: () => initialState,
+    clearAuth: () => ({
+      ...initialState,
+      ready: true,
+    }),
+    setReady: state => ({
+      ...state,
+      ready: true,
+    }),
   },
 });
 
 export const {
   setAuth,
+  setReady,
   clearAuth,
   setLoading,
   setStatus,
@@ -61,6 +71,8 @@ export const fetchSessionStorage = () => dispatch => {
     if (customerAuth) dispatch(setAuth(customerAuth));
   } catch (error) {
     //
+  } finally {
+    dispatch(setReady());
   }
 };
 
