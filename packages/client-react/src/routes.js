@@ -26,36 +26,6 @@ const routes = [
     exact: true,
     main: () => <RegisterContainer />,
   },
-  // {
-  //   path: '/dashboard/logout',
-  //   exact: true,
-  //   main: () => <Logout />,
-  // },
-  // {
-  //   path: '/dashboard/verify',
-  //   exact: true,
-  //   main: () => <VerifyPIDContainer />,
-  // },
-  // {
-  //   path: '/dashboard/overview',
-  //   exact: true,
-  //   main: () => <HomeContainer />,
-  // },
-  // {
-  //   path: '/dashboard/savingaccount',
-  //   exact: true,
-  //   main: () => <SavingContainer />,
-  // },
-  // {
-  //   path: '/dashboard/transfer',
-  //   exact: true,
-  //   main: () => <TransferContainer />,
-  // },
-  // {
-  //   path: '/dashboard/help',
-  //   exact: true,
-  //   main: () => <HelpContainer />,
-  // },
   {
     path: '/admin',
     exact: true,
