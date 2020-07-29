@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 const rawData = `[
   {
@@ -18,9 +18,9 @@ const rawData = `[
 ]`;
 
 const TableView = props => {
-  const { name = "", columns = [], data = [{}], onClick } = props;
+  const { name = '', columns = [], data = [{}], onClick } = props;
 
-  const _renderTitleRow = () => {
+  const renderTitleRow = () => {
     let result = '';
     if (!columns) return;
     columns.forEach(item => {
@@ -29,12 +29,15 @@ const TableView = props => {
     return result;
   };
 
-  const _renderContent = () => {
+  const renderContent = () => {
     let result = '';
     if (!data) return;
     data.forEach((item, index) => {
-      result += index%2 === 0 ? `<tr class="hover:bg-gray-200">` : `<tr class="bg-gray-100 hover:bg-gray-200">`;
-      for (let key in item) {
+      result +=
+        index % 2 === 0
+          ? `<tr class="hover:bg-gray-200">`
+          : `<tr class="bg-gray-100 hover:bg-gray-200">`;
+      for (const key in item) {
         if (key !== 'id') {
           result += `<td class="border px-4 py-2">${item[key]}</td>`;
         }
@@ -45,18 +48,22 @@ const TableView = props => {
   };
 
   useEffect(() => {
-    let titleRowContent = _renderTitleRow();
+    const titleRowContent = renderTitleRow();
     document.getElementById(`${name}-title-row`).innerHTML = titleRowContent;
-    let dataContent = _renderContent();
+    const dataContent = renderContent();
     document.getElementById(`${name}-content`).innerHTML = dataContent;
-  }, [])
+  }, []);
 
   return (
-    <table id={name} class="table-auto cursor-default" onDoubleClick={() => onClick && onClick()}>
+    <table
+      id={name}
+      className="table-auto cursor-default"
+      onDoubleClick={() => onClick && onClick()}
+    >
       <thead>
-        <tr id={`${name}-title-row`}></tr>
+        <tr id={`${name}-title-row`} />
       </thead>
-      <tbody id={`${name}-content`}></tbody>
+      <tbody id={`${name}-content`} />
     </table>
   );
 };
