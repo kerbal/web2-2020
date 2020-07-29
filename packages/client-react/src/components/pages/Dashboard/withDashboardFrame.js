@@ -78,7 +78,7 @@ const getCurrentSidebarItem = () => {
 };
 
 const withDashboardFrame = ContentComponent => {
-  console.log('withDashboardFrame');
+  // console.log('withDashboardFrame');
   return () => {
     const [loading, setLoading] = useState(false);
     return (

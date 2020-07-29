@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-// import { icons } from '../../../../../assets';
 
 const SidebarItem = props => {
   const { name, icon, path, onItemClick, currentItem } = props;

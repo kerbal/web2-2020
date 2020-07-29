@@ -11,6 +11,7 @@ import TransferContainer from './components/pages/Dashboard/pages/Transfer/Trans
 import HelpContainer from './components/pages/Dashboard/pages/Help/HelpContainer';
 
 import Admin from './components/pages/Admin';
+import Logout from './components/pages/Dashboard/pages/Logout';
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
     path: '/dashboard/help',
     exact: true,
     main: () => <HelpContainer />,
+  },
+  {
+    path: '/dashboard/logout',
+    exact: true,
+    main: () => <Logout />,
   },
   {
     path: '/admin',

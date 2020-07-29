@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from '../../../../utils/axios';
 
 const initialState = {
   token: null,
@@ -41,7 +41,7 @@ export const {
 } = customerAuthSlice.actions;
 
 export const signIn = (loginData, resolve, reject) => async dispatch => {
-  const url = 'https://piggy-bank-api.herokuapp.com/api/auth/login';
+  const url = '/auth/login';
   try {
     dispatch(setLoading(true));
     const res = await axios.post(url, loginData);
@@ -56,8 +56,12 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
 };
 
 export const fetchSessionStorage = () => dispatch => {
-  const customerAuth = JSON.parse(sessionStorage.getItem('customerAuth'));
-  if (customerAuth) dispatch(setAuth(customerAuth));
+  try {
+    const customerAuth = JSON.parse(sessionStorage.getItem('customerAuth'));
+    if (customerAuth) dispatch(setAuth(customerAuth));
+  } catch (error) {
+    //
+  }
 };
 
 export const signOut = () => dispatch => {
