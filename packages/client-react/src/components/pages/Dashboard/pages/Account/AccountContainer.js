@@ -1,5 +1,5 @@
 import React from 'react';
-import SavingComponent from './SavingComponent';
+import SavingComponent from './AccountComponent';
 import withDashboardFrame from '../../withDashboardFrame';
 
 const SavingContainer = () => {

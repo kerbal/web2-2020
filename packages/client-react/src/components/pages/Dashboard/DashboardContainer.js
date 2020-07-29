@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
-import HomeContainer from './pages/Home/HomeContainer';
-import SavingContainer from './pages/Saving/SavingContainer';
+import OverviewContainer from './pages/Overview/OverviewContainer';
+import AccountContainer from './pages/Account/AccountContainer';
 import TransferContainer from './pages/Transfer/TransferContainer';
 import HelpContainer from './pages/Help/HelpContainer';
 import VerifyPIDContainer from './pages/VerifyPID/VerifyPIDContainer';
@@ -22,12 +22,12 @@ const routes = [
   {
     path: '/dashboard/overview',
     exact: true,
-    main: () => <HomeContainer />,
+    main: () => <OverviewContainer />,
   },
   {
-    path: '/dashboard/savingaccount',
+    path: '/dashboard/account',
     exact: true,
-    main: () => <SavingContainer />,
+    main: () => <AccountContainer />,
   },
   {
     path: '/dashboard/transfer',
