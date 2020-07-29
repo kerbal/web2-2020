@@ -4,11 +4,10 @@ import Button from '../../../../common/Button';
 
 const IntroductionParagraph = () => {
   return (
-    <div className="p-12 justify-between flex flex-col">
-      <span className="text-xl font-light">
+    <div class="p-12 justify-between flex flex-col flex-auto">
+      <span class="text-xl font-light">
         Register with us to explore the most futuristic bank. It’s plain fast,
-        simple with the creating mindset of: it just works.
-        <br />
+        simple with the creating mindset of: it just works. <br />
         You don’t need to go through the exhausting opening account process.
         Everything just works right at your fingertip.
       </span>
@@ -50,7 +49,7 @@ const InstantLoginBox = props => {
 const Introduction = props => {
   return (
     <>
-      <div className="flex-row flex">
+      <div class="container mx-auto flex flex-col md:flex-row ">
         <IntroductionParagraph />
         <InstantLoginBox {...props} />
       </div>
