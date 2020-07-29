@@ -4,8 +4,7 @@ import Input from '../../../../common/Input';
 import VerifyTransaction from './VerifyTransaction';
 import axios from '../../../../../utils/axios';
 
-const Container = props => {
-  const { children } = props;
+const Container = ({ children }) => {
   return <div className="flex-1 p-6">{children}</div>;
 };
 

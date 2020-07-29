@@ -1,5 +1,16 @@
-export const checkUserHasLoggedIn = () => {
-  return true;
+export const checkUserHasLoggedIn = user => {
+  if (user) {
+    return true;
+  }
+  return false;
+};
+
+export const checkUserHasVerified = user => {
+  return user.status === 'VERIFIED';
+};
+
+export const checkUserIsWaiting = user => {
+  return user.status === 'WAITING';
 };
 
 export const getDefaultPage = () => {

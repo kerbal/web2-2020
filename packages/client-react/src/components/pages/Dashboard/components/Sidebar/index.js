@@ -1,15 +1,15 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { icons } from '../../../../../assets';
-// import { icons } from '../../../../../assets';
 
 const SidebarItem = props => {
-  const { name, icon, onItemClick, currentItem } = props;
+  const { name, icon, path, onItemClick, currentItem } = props;
   const isSelected = name === currentItem;
   const renderItem = () => {
     return (
       <div
         className="flex flex-row pt-6"
-        onClick={() => onItemClick && onItemClick(name)}
+        onClick={() => onItemClick && onItemClick(path)}
       >
         <div>
           <img
@@ -34,10 +34,15 @@ const Seperator = () => {
 };
 
 const Sidebar = props => {
-  const { sidebarItems, currentItem, setCurrentSidebarItem } = props;
-  const onItemClick = item => {
-    setCurrentSidebarItem(item);
+  const { sidebarItems, currentItem } = props;
+  const directToPath = path => {
+    props.history.push(path);
   };
+
+  const onItemClick = path => {
+    directToPath(path);
+  };
+
   return (
     <div className="px-6" style={{ width: '250px' }}>
       {sidebarItems.map(item => {
@@ -48,6 +53,7 @@ const Sidebar = props => {
           <SidebarItem
             icon={item.icon}
             name={item.name}
+            path={item.path}
             currentItem={currentItem}
             onItemClick={onItemClick}
           />
@@ -74,4 +80,4 @@ const Sidebar = props => {
   );
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

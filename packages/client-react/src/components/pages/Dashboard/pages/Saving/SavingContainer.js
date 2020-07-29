@@ -1,8 +1,10 @@
 import React from 'react';
 import SavingComponent from './SavingComponent';
+import withDashboardFrame from '../../withDashboardFrame';
+import withProtected from '../../withProtected';
 
-const SavingContainer = props => {
+const SavingContainer = () => {
   return <SavingComponent />;
 };
 
-export default SavingContainer;
+export default withProtected()(withDashboardFrame(SavingContainer));
