@@ -56,8 +56,12 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
 };
 
 export const fetchSessionStorage = () => dispatch => {
-  const customerAuth = JSON.parse(sessionStorage.getItem('customerAuth'));
-  if (customerAuth) dispatch(setAuth(customerAuth));
+  try {
+    const customerAuth = JSON.parse(sessionStorage.getItem('customerAuth'));
+    if (customerAuth) dispatch(setAuth(customerAuth));
+  } catch (error) {
+    //
+  }
 };
 
 export const signOut = () => dispatch => {
