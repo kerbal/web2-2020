@@ -1,7 +1,11 @@
 import React from 'react';
 
 const Container = props => {
-  return <div id="about-us" className="p-12 bg-black text-white">{props.children}</div>;
+  return (
+    <div id="about-us" className="p-12 bg-black text-white">
+      <div className="container mx-auto">{props.children}</div>
+    </div>
+  );
 };
 
 const Copyright = () => {
@@ -13,14 +17,14 @@ const Copyright = () => {
 };
 
 const ContentContainer = props => {
-  return <div className="flex flex-row justify-between">{props.children}</div>;
+  return <div className="flex flex-col md:flex-row justify-between">{props.children}</div>;
 };
 
 const AboutUsParagraph = () => {
   return (
-    <div className="max-w-xl">
+    <div className="flex-auto p-6">
       <div className="text-3xl pb-6">about us</div>
-      <p className="text-xl font-light pb-6">
+      <p className="text-xl font-light">
         We are a group of people, thriving for the next banking experience to
         our customers, aiming to create a fast, modern and convenient Internet
         Banking. Our mission is having every single one able to access and use
@@ -32,7 +36,7 @@ const AboutUsParagraph = () => {
 
 const BranchesInfo = () => {
   return (
-    <div className="pr-6">
+    <div className="flex-initial p-6">
       <div className="text-2xl pb-6 pt-6">PiggyBANK</div>
       <div className="flex flex-row">
         <div>
