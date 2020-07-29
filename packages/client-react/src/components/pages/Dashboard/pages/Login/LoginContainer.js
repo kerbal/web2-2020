@@ -1,13 +1,12 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useDispatch, connect } from 'react-redux';
+import { useHistory, Redirect } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
 import { useForm } from '../../../../../utils/hooks';
 import { loginFormSetup } from '../../../../../utils/formSetup';
-import withProtected from '../../withProtected';
 
-const LoginContainer = () => {
+const LoginContainer = ({ customer }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [
@@ -37,6 +36,10 @@ const LoginContainer = () => {
     history.push('/dashboard/register');
   };
 
+  if (customer) {
+    return <Redirect to="/dashboard/overview" />;
+  }
+
   return (
     <>
       <LoginComponent
@@ -50,4 +53,6 @@ const LoginContainer = () => {
   );
 };
 
-export default withProtected(null, true)(LoginContainer);
+export default connect(state => ({
+  customer: state.customerAuth.user,
+}))(LoginContainer);

@@ -5,6 +5,7 @@ import { spendMoneyEmail, receiveMoneyEmail } from '../assets/mail-content/trans
 import BankService from '../services/bank';
 import AccountService from '../services/account';
 import NotFound from '../utils/error/NotFound';
+import BadRequest from '../utils/error/BadRequest';
 
 export class UserTransactionController {
   static async create (req, res, next) {
@@ -37,7 +38,9 @@ export class UserTransactionController {
       if (amount > remaining_balance) {
         throw new NotFound('Remaining balance is not enough');
       }
-
+      if (amount < 0) {
+        throw new BadRequest('Amount must be larger than 0');
+      }
       const transaction = await TransactionService.create({
         ...req.body,
         source_account,

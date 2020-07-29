@@ -25,6 +25,9 @@ class AccountService {
           model: DepositType,
           as: 'depositType',
         }],
+      }, {
+        model: Customer,
+        attributes: ['email', 'fullname', 'phone_number', 'id'],
       }],
       limit,
       offset,

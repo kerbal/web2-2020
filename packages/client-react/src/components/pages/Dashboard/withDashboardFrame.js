@@ -22,28 +22,16 @@ const sidebarItems = [
     path: '/dashboard/overview',
   },
   {
+    id: 3,
+    name: 'Account',
+    icon: icons.sidebar_saving,
+    path: '/dashboard/account',
+  },
+  {
     id: 2,
     name: 'Transfer',
     icon: icons.sidebar_transfer,
     path: '/dashboard/transfer',
-  },
-  {
-    id: 3,
-    name: 'Saving Account',
-    icon: icons.sidebar_saving,
-    path: '/dashboard/savingaccount',
-  },
-  {
-    id: 4,
-    name: 'Sub Account',
-    icon: icons.sidebar_saving,
-    path: '/dashboard/subaccount',
-  },
-  {
-    id: 5,
-    name: 'Transactions',
-    icon: icons.sidebar_transactions,
-    path: '/dashboard/transactions',
   },
   {
     id: 6,
@@ -54,12 +42,6 @@ const sidebarItems = [
     name: 'Settings',
     icon: icons.sidebar_setting,
     path: '/dashboard/settings',
-  },
-  {
-    id: 8,
-    name: 'Help',
-    icon: icons.sidebar_help,
-    path: '/dashboard/help',
   },
   {
     id: 9,
