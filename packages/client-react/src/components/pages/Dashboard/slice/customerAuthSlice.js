@@ -11,6 +11,13 @@ export const customerAuthSlice = createSlice({
   name: 'lading',
   initialState,
   reducers: {
+    setStatus: (state, status) => ({
+      ...state,
+      user: {
+        ...state.user,
+        status,
+      },
+    }),
     setLoading: (state, loading) => ({
       ...state,
       loading,
@@ -18,17 +25,19 @@ export const customerAuthSlice = createSlice({
     setAuth: (state, { payload: { token, user } }) => ({
       ...state,
       token,
-      user,
+      user: {
+        ...user,
+      },
     }),
-    signOut: () => initialState,
+    clearAuth: () => initialState,
   },
 });
 
 export const {
   setAuth,
-  signOut,
+  clearAuth,
   setLoading,
-  setError,
+  setStatus,
 } = customerAuthSlice.actions;
 
 export const signIn = (loginData, resolve, reject) => async dispatch => {
@@ -37,6 +46,7 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
     dispatch(setLoading(true));
     const res = await axios.post(url, loginData);
     dispatch(setAuth({ ...res.data }));
+    sessionStorage.setItem('customerAuth', JSON.stringify({ ...res.data }));
     resolve();
   } catch ({ response }) {
     reject(response);
@@ -44,4 +54,15 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
     dispatch(setLoading(false));
   }
 };
+
+export const fetchSessionStorage = () => dispatch => {
+  const customerAuth = JSON.parse(sessionStorage.getItem('customerAuth'));
+  if (customerAuth) dispatch(setAuth(customerAuth));
+};
+
+export const signOut = () => dispatch => {
+  sessionStorage.setItem('customerAuth', '');
+  dispatch(clearAuth());
+};
+
 export default customerAuthSlice.reducer;

@@ -3,7 +3,8 @@ import { formatCurrency, formatDatetime } from '../../../../../utils';
 import TableView from '../../components/TableView';
 
 const Container = props => {
-  return <div className="flex-1 p-6">{props.children}</div>;
+  const { children } = props;
+  return <div className="flex-1 p-6">{children}</div>;
 };
 
 const TransactionsTable = () => {

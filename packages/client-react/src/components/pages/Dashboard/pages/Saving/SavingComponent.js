@@ -4,11 +4,12 @@ import Input from '../../../../common/Input';
 import Button from '../../../../common/Button';
 
 const Container = props => {
-  return <div className="flex-1 p-6">{props.children}</div>;
+  const { children } = props;
+  return <div className="flex-1 p-6">{children}</div>;
 };
 
 const SavingStep1 = () => {
-  let options = ['A', 'B'];
+  const options = ['A', 'B'];
   return (
     <Container>
       <div className="pb-6 font-bold text-xl">Create a Saving Account</div>
@@ -42,27 +43,29 @@ const SavingStep1 = () => {
       </div>
     </Container>
   );
-}
+};
 
-const SavingStep2 = () => {
+export const SavingStep2 = () => {
   const error = null;
   if (error) {
     return (
       <Container>
-        We are unable to create your saving account, due to {error}. Please try again later or contact us for more details.
+        {`We are unable to create your saving account, due to ${error}. Please try again later or contact us for more details.`}
       </Container>
     );
   }
   return (
     <Container>
-      <div className="pb-6 font-medium text-xl">Your saving account has been created successfully. Here is the account details:</div>
-      
+      <div className="pb-6 font-medium text-xl">
+        Your saving account has been created successfully. Here is the account
+        details:
+      </div>
     </Container>
   );
-}
+};
 
 const Saving = () => {
-  return <SavingStep2 />
+  return <SavingStep1 />;
 };
 
 export default Saving;

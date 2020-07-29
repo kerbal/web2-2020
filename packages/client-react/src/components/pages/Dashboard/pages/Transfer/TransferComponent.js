@@ -3,12 +3,12 @@ import ComboBox from '../../../../common/ComboBox';
 import Input from '../../../../common/Input';
 import Button from '../../../../common/Button';
 
-const Container = props => {
-  return <div className="flex-1 p-6">{props.children}</div>;
+const Container = ({ children }) => {
+  return <div className="flex-1 p-6">{children}</div>;
 };
 
 const Transfer = () => {
-  let options = ['A', 'B'];
+  const options = ['A', 'B'];
   return (
     <Container>
       <div className="pb-6 font-bold text-xl">Create a Transfer</div>

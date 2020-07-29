@@ -4,6 +4,7 @@ import axios from 'axios';
 import RegisterComponent from './RegisterComponent';
 import { useForm } from '../../../../../utils/hooks';
 import { registerFormSetup } from '../../../../../utils/formSetup';
+import withProtected from '../../withProtected';
 
 const RegisterContainer = () => {
   const history = useHistory();
@@ -36,4 +37,4 @@ const RegisterContainer = () => {
   );
 };
 
-export default RegisterContainer;
+export default withProtected(null, true)(RegisterContainer);
