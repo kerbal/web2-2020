@@ -24,9 +24,9 @@ const ContentContainer = props => {
 
 const AboutUsParagraph = () => {
   return (
-    <div className="max-w-xl">
+    <div className="flex-auto p-6">
       <div className="text-3xl pb-6">about us</div>
-      <p className="text-xl font-light pb-6">
+      <p className="text-xl font-light">
         We are a group of people, thriving for the next banking experience to
         our customers, aiming to create a fast, modern and convenient Internet
         Banking. Our mission is having every single one able to access and use
@@ -38,7 +38,7 @@ const AboutUsParagraph = () => {
 
 const BranchesInfo = () => {
   return (
-    <div className="pr-6">
+    <div className="flex-initial p-6">
       <div className="text-2xl pb-6 pt-6">PiggyBANK</div>
       <div className="flex flex-row">
         <div>

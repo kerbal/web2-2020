@@ -4,6 +4,6 @@ import { UserTransactionController } from '../controllers/transaction';
 const router = express.Router();
 
 router.post('/', AdminTransactionController.recharge);
-router.get('/account_id', UserTransactionController.getAll);
+router.get('/:transaction_id', UserTransactionController.getOne);
 
 export default router;
