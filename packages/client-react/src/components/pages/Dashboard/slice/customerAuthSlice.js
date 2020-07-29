@@ -81,4 +81,6 @@ export const signOut = () => dispatch => {
   dispatch(clearAuth());
 };
 
+export const customerSelector = state => state.customerAuth.user;
+
 export default customerAuthSlice.reducer;

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TransferComponent from './TransferComponent';
 import withDashboardFrame from '../../withDashboardFrame';
-import withProtected from '../../withProtected';
 
 const TransferContainer = () => {
   const [refresh, setRefresh] = useState(false);
@@ -23,4 +22,4 @@ const TransferContainer = () => {
   );
 };
 
-export default withProtected()(withDashboardFrame(TransferContainer));
+export default withDashboardFrame(TransferContainer);

@@ -1,13 +1,12 @@
 import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import useCustomerCheck from '../../utils/useCustomerCheck';
 import RegisterComponent from './RegisterComponent';
-import { useForm } from '../../../../../utils/hooks';
+import useForm from '../../../../../utils/useForm';
 import { registerFormSetup } from '../../../../../utils/formSetup';
-// import withProtected from '../../withProtected';
-import { connect } from 'react-redux';
 
-const RegisterContainer = ({ customer }) => {
+const RegisterContainer = () => {
   const history = useHistory();
   const [
     registerForm,
@@ -28,11 +27,7 @@ const RegisterContainer = ({ customer }) => {
         });
     }
   };
-
-  if (customer) {
-    return <Redirect to="/dashboard/overview" />;
-  }
-
+  useCustomerCheck(customer => customer, '/dashboard/overview');
   return (
     <RegisterComponent
       onRegister={onRegister}
@@ -43,6 +38,4 @@ const RegisterContainer = ({ customer }) => {
   );
 };
 
-export default connect(state => ({
-  customer: state.customerAuth.user,
-}))(RegisterContainer);
+export default RegisterContainer;

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import VerifyPIDComponent from './VerifyPIDComponent';
 import VerifyPIDDoneComponent from './VerifyPIDDoneComponent';
-import withProtected from '../../withProtected';
 
 const VerifyPIDContainer = props => {
   const [isDoneUploadingInfo] = useState(true);
@@ -61,4 +60,4 @@ const VerifyPIDContainer = props => {
   );
 };
 
-export default withProtected('UNVERIFIED')(VerifyPIDContainer);
+export default VerifyPIDContainer;
