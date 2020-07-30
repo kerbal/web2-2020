@@ -197,7 +197,7 @@ const updateIdentity = async (req, res)=>{
       create_date,
       location,
       front_image: req.body.front_image[0].filename,
-      back_image: req.body.front_image[0].filename,
+      back_image: req.body.back_image[0].filename,
       status: 'PENDING',
     });
     if (newIdentity){
