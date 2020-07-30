@@ -1,32 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, connect } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import routes from './routes';
+import { fetchSessionStorage } from './components/pages/Dashboard/slice/customerAuthSlice';
 
-const generateRoutes = () => {
-  let result = null;
-  if (routes.length > 0) {
-    result = routes.map(route => {
-      return (
-        <Route
-          key={route.path}
-          path={route.path}
-          exact={route.exact}
-          component={route.main}
-        />
-      );
-    });
+const App = ({ isReady }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchSessionStorage());
+  }, []);
+  console.log(isReady);
+  if (!isReady) {
+    return <div />;
   }
-  return result;
-};
 
-function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>{generateRoutes(routes)}</Switch>
+        <Switch>
+          {routes.map(route => {
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                exact={route.exact}
+                component={route.main}
+              />
+            );
+          })}
+        </Switch>
       </Router>
     </div>
   );
-}
+};
 
-export default App;
+export default connect(state => ({
+  isReady: state.customerAuth.ready,
+}))(App);

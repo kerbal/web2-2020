@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from '../../components/Header';
 import Loading from '../../../../common/Loading';
 import ImageUploader from '../../../../common/ImageUploader';
@@ -42,7 +42,6 @@ const ButtonContainer = props => {
 const VerifyPIDComponent = props => {
   const {
     loading,
-    setLoading,
     frontSidePIDImgUrl,
     setFrontSidePIDImgUrl,
     rearSidePIDImgUrl,
@@ -53,21 +52,25 @@ const VerifyPIDComponent = props => {
   return (
     <>
       <Container>
-        <Header title={`Account Verification`} disableCurrentTime />
+        <Header title="Account Verification" disableCurrentTime />
         <ContentContainer>
           <TextContainer>
             <span className="font-medium text-2xl">
               Your account has not yet verified.
             </span>
             <span className="pt-6">
-              In order to use our services, your account must be verified first.<br/><br/>
+              In order to use our services, your account must be verified first.
+              <br />
+              <br />
               To continue, please update your PID images (both front-side and
-              rear-side).<br /> We will get back to you once we're sure that the
-              information you provided is valid.
+              rear-side).
+              <br />
+              We will get back to you once we&#39;re sure that the information
+              you provided is valid.
             </span>
           </TextContainer>
           <ImagesContainer>
-            <ImageIndividuallyContainer name={'Front side'}>
+            <ImageIndividuallyContainer name="Front side">
               <ImageUploader
                 imageUrl={frontSidePIDImgUrl}
                 setImageUrl={setFrontSidePIDImgUrl}
@@ -75,7 +78,7 @@ const VerifyPIDComponent = props => {
             </ImageIndividuallyContainer>
 
             <div className="w-12" />
-            <ImageIndividuallyContainer name={'Rear-side'}>
+            <ImageIndividuallyContainer name="Rear-side">
               <ImageUploader
                 imageUrl={rearSidePIDImgUrl}
                 setImageUrl={setRearSidePIDImgUrl}

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import VerifyPIDComponent from './VerifyPIDComponent';
 import VerifyPIDDoneComponent from './VerifyPIDDoneComponent';
-import { withRouter } from 'react-router-dom';
+import withProtected from '../../withProtected';
 
 const VerifyPIDContainer = props => {
-  const [isDoneUploadingInfo, setIsDoneUploadingInfo] = useState(true);
+  const [isDoneUploadingInfo] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const [frontSidePIDImgUrl, setFrontSidePIDImgUrl] = useState('');
@@ -13,23 +13,25 @@ const VerifyPIDContainer = props => {
 
   const uploadImage = async selectedFile => {
     try {
-      let fileData = new FormData();
+      const fileData = new FormData();
       fileData.set(
         'image',
         selectedFile,
         `${selectedFile.lastModified}-${selectedFile.name}`
       );
-      let res = await axios({
+      const res = await axios({
         method: 'post',
         url: process.env.REACT_APP_UPLOAD_API_URL,
         data: fileData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (res && res.data) {
-        return res.data.fileLocation + '?alt=media';
+        return `${res.data.fileLocation}?alt=media`;
       }
+      return null;
     } catch (e) {
       console.log(e);
+      return e;
     }
   };
 
@@ -40,8 +42,8 @@ const VerifyPIDContainer = props => {
   const onSubmit = async () => {
     console.log(frontSidePIDImgUrl, rearSidePIDImgUrl);
     setLoading(true);
-    const frontSidePIDCDNUrl = await uploadImage(frontSidePIDImgUrl);
-    const rearSidePIDCDNUrl = await uploadImage(rearSidePIDImgUrl);
+    await uploadImage(frontSidePIDImgUrl);
+    await uploadImage(rearSidePIDImgUrl);
   };
 
   return isDoneUploadingInfo ? (
@@ -59,4 +61,4 @@ const VerifyPIDContainer = props => {
   );
 };
 
-export default withRouter(VerifyPIDContainer);
+export default withProtected('UNVERIFIED')(VerifyPIDContainer);

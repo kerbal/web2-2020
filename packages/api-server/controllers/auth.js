@@ -6,6 +6,8 @@ import { comparePassword, getHashedPassword } from '../utils/password';
 import multer from 'multer';
 import MailService from '../services/mail';
 import AccountService from '../services/account';
+import CUSTOMER_STATUS from '../constants/customerStatus';
+
 // SET STORAGE
 var storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -64,7 +66,7 @@ const register = async (req, res) => {
       password: hashedPassword,
       email,
       address,
-      status:'UNVERIFIED',
+      status: CUSTOMER_STATUS.UNVERIFIED,
     });
 
     if (newCustomer) {
@@ -101,23 +103,20 @@ const login = async (req, res) => {
       { id: user.id },
       process.env.JWT_SECRET,
     );
-    const { id, name, status } = user;
-    let message;
+    const { id,  fullname, address } = user;
+    let { status } = user;
     //check user is update identity
     const identity = await Identity.findOne({
       where:{
         customer_id:id,
       },
     });
-    if (!identity){
-      message='Update your identity.';
-    } else if (status==='UNVERIFIED'){
-      message='Unverified';
+    if (identity && status == CUSTOMER_STATUS.UNVERIFIED){
+      status='WAITING';
     }
     return res.json({
       token,
-      user: { id, email, name },
-      message,
+      user: { id, email, fullname, address, status },
     });
   } catch (error) {
     return res.status(400).json({

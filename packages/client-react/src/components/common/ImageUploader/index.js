@@ -2,40 +2,44 @@ import React, { useState, useRef } from 'react';
 import { icons } from '../../../assets';
 
 const Container = props => {
-  return <div onClick={props.onClick} className="mt-12 rounded-lg shadow-xl">{props.children}</div>;
+  return (
+    <div onClick={props.onClick} className="mt-12 rounded-lg shadow-xl">
+      {props.children}
+    </div>
+  );
 };
 
 const ContentContainer = props => {
-  return <div className="border-solid border-white border-4" >{props.children}</div>;
+  return (
+    <div className="border-solid border-white border-4">{props.children}</div>
+  );
 };
 
-const ImageUploader = (props) => {
+const ImageUploader = props => {
   const { imageUrl, setImageUrl } = props;
   const [imagePreview, setImagePreview] = useState('');
 
   const inputRef = useRef();
 
-  const _onImageClicked = (e) => {
+  const _onImageClicked = e => {
     if (inputRef && inputRef.current) {
       inputRef.current.click();
     }
-  }
+  };
 
   const _handleImageChange = e => {
     e.preventDefault();
     try {
-      let reader = new FileReader();
-    let file = e.target.files[0];
+      const reader = new FileReader();
+      const file = e.target.files[0];
 
-    reader.onloadend = () => {
-      setImageUrl(file);
-      setImagePreview(reader.result);
-    };
+      reader.onloadend = () => {
+        setImageUrl(file);
+        setImagePreview(reader.result);
+      };
 
-    reader.readAsDataURL(file);
-    }
-    catch(e) {
-    }
+      reader.readAsDataURL(file);
+    } catch (e) {}
   };
 
   const _renderImagePlaceholder = () => {
@@ -68,8 +72,13 @@ const ImageUploader = (props) => {
   };
 
   return (
-    <Container onClick={(e) => _onImageClicked(e)}>
-      <input ref={inputRef} type="file" style={{ display: 'none'}} onChange={(e) => _handleImageChange(e)} />
+    <Container onClick={e => _onImageClicked(e)}>
+      <input
+        ref={inputRef}
+        type="file"
+        style={{ display: 'none' }}
+        onChange={e => _handleImageChange(e)}
+      />
       <ContentContainer>{_renderImage()}</ContentContainer>
     </Container>
   );

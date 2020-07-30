@@ -5,6 +5,7 @@ import { TRANSACTION_STATUS } from '../constants/transactionStatus';
 import { generateOTP } from '../utils/otpGenerator';
 import Redis from './redis';
 import { Op } from 'sequelize';
+import BadRequest from '../utils/error/BadRequest';
 
 const { sequelize, Sequelize, Transaction } = models;
 
@@ -20,7 +21,7 @@ export default class TransactionService {
       where: {
         [Op.or]: [
           { destination_account_id: account_id },
-          { destination_account_id: account_id },
+          { source_account_id: account_id },
         ],
       },
       limit: 20,
@@ -75,6 +76,9 @@ export default class TransactionService {
   }
 
   static async registerOTP (transaction) {
+    if (transaction.status !== TRANSACTION_STATUS.CREATED) {
+      throw new BadRequest('Invalid OTP registration');
+    }
     const token = generateOTP();
     transaction.otp_id = token.id;
     transaction.status = TRANSACTION_STATUS.UNVERIFIED;
@@ -92,10 +96,10 @@ export default class TransactionService {
       await Redis.removeString(key);
     }
     else if (generated_otp === null) {
-      throw new Error('OTP expired');
+      throw new BadRequest('OTP expired');
     }
     else {
-      throw new Error('OTP not match');
+      throw new BadRequest('OTP not match');
     }
   }
 
@@ -107,9 +111,9 @@ export default class TransactionService {
     try {
       switch (transaction.status) {
       case TRANSACTION_STATUS.UNVERIFIED:
-        throw new Error('Transaction is unverified');
+        throw new BadRequest('Transaction is unverified');
       case TRANSACTION_STATUS.SUCCESS:
-        throw new Error('Transaction has already executed');
+        throw new BadRequest('Transaction has already executed');
       }
 
       try {

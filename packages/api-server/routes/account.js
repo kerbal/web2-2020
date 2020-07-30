@@ -26,9 +26,13 @@ router.put('/customer/account/:account_id/status',
   verifyCustomer,
   AccountController.customerToggleStatus);
 
-router.get('/customer/account/:account_id/transactions',
+router.get('/customer/account/:account_id/transaction',
   verifyCustomer,
   UserTransactionController.getAll);
+
+router.get('/customer/account/:account_id/transaction/:transaction_id',
+  verifyCustomer,
+  UserTransactionController.getOne);
 
 router.get('/admin/account',
   verifyCustomer,
@@ -44,5 +48,15 @@ router.put('/admin/account/:accountId/status',
   verifyCustomer,
   verifyAdmin,
   AccountController.adminChangeStatus);
+
+router.get('/admin/account/:account_id/transaction',
+  verifyCustomer,
+  verifyAdmin,
+  UserTransactionController.getAll);
+
+router.get('/admin/account/:account_id/transaction/:transaction_id',
+  verifyCustomer,
+  verifyAdmin,
+  UserTransactionController.getOne);
 
 export default router;

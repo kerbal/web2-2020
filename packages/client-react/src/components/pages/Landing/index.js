@@ -1,47 +1,44 @@
-import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { signIn } from './slice/customerAuthSlice';
+import { signIn } from '../Dashboard/slice/customerAuthSlice';
 import NavBar from './components/NavBar';
 import SplashCarousel from './components/SplashCarousel';
 import Introduction from './components/Introduction';
 import ProductIntroduction from './components/ProductIntroduction';
 import AboutUs from './components/AboutUs';
+import { useForm } from '../../../utils/hooks';
+import { loginFormSetup } from '../../../utils/formSetup';
 
-const Landing = props => {
+const Landing = () => {
   const dispatch = useDispatch();
-  const [loginForm, setLoginForm] = useState({
-    email: '',
-    password: '',
-  });
-
-  const onLoginFormChange = field => {
-    return value => {
-      const newLoginForm = {
-        ...loginForm,
-        [field]: value,
-      };
-      setLoginForm(newLoginForm);
-    };
-  };
+  const history = useHistory();
+  const [
+    loginForm,
+    getLoginData,
+    { onFormChange, formValidator, setTouched, checkFormValidity },
+  ] = useForm(loginFormSetup);
 
   const onRegisterAccount = () => {
-    props.history.push('/dashboard/register');
+    history.push('/dashboard/register');
   };
 
   const onSignIn = () => {
-    dispatch(
-      signIn(
-        loginForm,
-        () => {
-          props.history.push('/dashboard');
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    );
+    setTouched();
+    if (checkFormValidity()) {
+      dispatch(
+        signIn(
+          getLoginData(),
+          () => {
+            history.push('/dashboard');
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      );
+    }
   };
 
   return (
@@ -50,10 +47,9 @@ const Landing = props => {
       <SplashCarousel />
       <Introduction
         onSignIn={onSignIn}
-        email={loginForm.email}
-        setEmail={onLoginFormChange('email')}
-        password={loginForm.password}
-        setPassword={onLoginFormChange('password')}
+        onLoginFormChange={onFormChange}
+        formValidator={formValidator}
+        loginForm={loginForm}
       />
       <ProductIntroduction onRegisterAccount={onRegisterAccount} />
       <AboutUs />
@@ -61,4 +57,4 @@ const Landing = props => {
   );
 };
 
-export default withRouter(Landing);
+export default Landing;

@@ -1,31 +1,21 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-// import { icons } from '../../../../../assets';
+import { NavLink } from 'react-router-dom';
 
 const SidebarItem = props => {
-  const { name, icon, path, onItemClick, currentItem } = props;
-  const isSelected = name === currentItem;
-  const renderItem = () => {
-    return (
-      <div
-        className="flex flex-row pt-6"
-        onClick={() => onItemClick && onItemClick(path)}
-      >
-        <div>
-          <img
-            src={icon}
-            alt=""
-            className="object-contain w-6 h-6 opacity-50"
-          />
-        </div>
-        <div className="pl-6">{name}</div>
+  const {
+    item: { name, icon, path },
+  } = props;
+  return (
+    <NavLink
+      className="flex flex-row pt-6 opacity-50"
+      to={path}
+      activeClassName="opacity-100"
+    >
+      <div>
+        <img src={icon} alt="" className="object-contain w-6 h-6 opacity-50" />
       </div>
-    );
-  };
-  return isSelected ? (
-    <div className="cursor-pointer">{renderItem()}</div>
-  ) : (
-    <div className="opacity-50 cursor-pointer">{renderItem()}</div>
+      <div className="pl-6">{name}</div>
+    </NavLink>
   );
 };
 
@@ -34,33 +24,15 @@ const Seperator = () => {
 };
 
 const Sidebar = props => {
-  const { sidebarItems, currentItem } = props;
-  const directToPath = path => {
-    props.history.push(path);
-  };
-
-  const onItemClick = path => {
-    directToPath(path);
-  };
+  const { sidebarItems } = props;
 
   return (
     <div className="px-6" style={{ width: '250px' }}>
-      {sidebarItems.map(item => {
-        if (item.name === 'Seperator') {
-          return <Seperator />;
-        }
-        return (
-          <SidebarItem
-            icon={item.icon}
-            name={item.name}
-            path={item.path}
-            currentItem={currentItem}
-            onItemClick={onItemClick}
-          />
-        );
-      })}
+      {sidebarItems.map(item =>
+        item.name === 'Seperator' ? <Seperator /> : <SidebarItem item={item} />
+      )}
     </div>
   );
 };
 
-export default withRouter(Sidebar);
+export default Sidebar;

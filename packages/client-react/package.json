@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "autoprefixer": "^9.8.4",
     "axios": "^0.19.2",
+    "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "postcss-cli": "^7.1.1",
     "react": "^16.13.1",
@@ -21,7 +22,7 @@
     "tailwindcss": "^1.4.6"
   },
   "scripts": {
-    "dev": "env-cmd -f .env npm run watch:css && react-scripts start",
+    "dev": "npm run watch:css && react-scripts start",
     "build": "npm run build:css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

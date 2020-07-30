@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
+import { useDispatch, connect } from 'react-redux';
+import { useHistory, Redirect } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
+import { signIn } from '../../slice/customerAuthSlice';
+import { useForm } from '../../../../../utils/hooks';
+import { loginFormSetup } from '../../../../../utils/formSetup';
 
-const LoginContainer = props => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginContainer = ({ customer }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const [
+    loginForm,
+    getLoginData,
+    { onFormChange, formValidator, setTouched, checkFormValidity },
+  ] = useForm(loginFormSetup);
 
-  const emailValidator = () => {
-    return true;
+  const onSignIn = () => {
+    setTouched();
+    if (checkFormValidity()) {
+      dispatch(
+        signIn(
+          getLoginData(),
+          () => {
+            history.push('/dashboard');
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      );
+    }
   };
-
-  const passwordValidator = () => {
-    return true;
-  };
-
-  const onSignIn = () => {};
 
   const onRegisterLinkPress = () => {
-    props.history.push('/dashboard/register');
+    history.push('/dashboard/register');
   };
 
-  const user = useSelector(state => state.customerAuth.user);
-  if (user) {
-    props.history.replace('/dashboard');
+  if (customer) {
+    return <Redirect to="/dashboard/overview" />;
   }
 
   return (
@@ -31,15 +45,14 @@ const LoginContainer = props => {
       <LoginComponent
         onRegisterLinkPress={onRegisterLinkPress}
         onSignIn={onSignIn}
-        email={email}
-        setEmail={setEmail}
-        emailValidator={emailValidator}
-        password={password}
-        setPassword={setPassword}
-        passwordValidator={passwordValidator}
+        onLoginFormChange={onFormChange}
+        formValidator={formValidator}
+        loginForm={loginForm}
       />
     </>
   );
 };
 
-export default withRouter(LoginContainer);
+export default connect(state => ({
+  customer: state.customerAuth.user,
+}))(LoginContainer);

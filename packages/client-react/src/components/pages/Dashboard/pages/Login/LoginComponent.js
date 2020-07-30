@@ -5,14 +5,11 @@ import { images, icons } from '../../../../../assets';
 
 const LoginComponent = memo(function LoginComponent(props) {
   const {
-    onSignIn,
     onRegisterLinkPress,
-    email,
-    setEmail,
-    emailValidator,
-    password,
-    setPassword,
-    passwordValidator,
+    onSignIn,
+    onLoginFormChange,
+    loginForm,
+    formValidator,
   } = props;
   return (
     <div className="bg-white font-family-karla h-screen">
@@ -26,24 +23,26 @@ const LoginComponent = memo(function LoginComponent(props) {
               Sign in to Internet Banking.
             </p>
             <div className="flex flex-col pt-3 md:pt-8">
-              <Input
-                label="Email"
-                type="email"
-                id="email"
-                placeholder="your@email.com"
-                value={email}
-                onValueChange={setEmail}
-                validator={emailValidator}
-              />
-              <Input
-                label="Password"
-                type="password"
-                id="password"
-                placeholder="Password"
-                value={password}
-                onValueChange={setPassword}
-                validator={passwordValidator}
-              />
+              {Object.entries(loginForm).map(
+                ([
+                  key,
+                  { type, value, placeholder, validationError, touched },
+                ]) => {
+                  return (
+                    <Input
+                      key={key}
+                      type={type}
+                      id={key}
+                      placeholder={placeholder}
+                      value={value}
+                      validationError={validationError}
+                      touched={touched}
+                      onValueChange={onLoginFormChange(key)}
+                      validator={formValidator(key)}
+                    />
+                  );
+                }
+              )}
               <Button onClick={() => onSignIn && onSignIn()} label="Login" />
             </div>
             <div className="text-center pt-12 pb-12">

@@ -48,7 +48,7 @@ const HomeComponent = props => {
             <SearchBar placeholder="Search customer username or email" />
           </SearchbarContainer>
           <TooltipContainer>
-            Double tap on a customer to view more details
+            Double click on a customer to view more details
           </TooltipContainer>
         </ToolbarContainer>
         <TableViewContainer>

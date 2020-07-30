@@ -73,14 +73,16 @@ const NavBar = () => {
     },
   ];
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-white p-6">
-      <Logo />
-      <MenuButton />
-      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:justify-between">
-        <NavItems navItems={navItems} />
-        <InternetBankingButton />
-      </div>
-    </nav>
+    <div className="bg-white p-6">
+      <nav className="container mx-auto flex items-center justify-between flex-wrap ">
+        <Logo />
+        <MenuButton />
+        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:justify-between">
+          <NavItems navItems={navItems} />
+          <InternetBankingButton />
+        </div>
+      </nav>
+    </div>
   );
 };
 

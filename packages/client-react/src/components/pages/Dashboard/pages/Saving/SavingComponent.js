@@ -45,13 +45,12 @@ const SavingStep1 = () => {
   );
 };
 
-const SavingStep2 = () => {
+export const SavingStep2 = () => {
   const error = null;
   if (error) {
     return (
       <Container>
-        We are unable to create your saving account, due to {error}. Please try
-        again later or contact us for more details.
+        {`We are unable to create your saving account, due to ${error}. Please try again later or contact us for more details.`}
       </Container>
     );
   }

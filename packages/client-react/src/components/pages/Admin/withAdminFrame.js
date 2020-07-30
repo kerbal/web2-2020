@@ -39,7 +39,6 @@ const withAdminFrame = ContentComponent => {
       return (
         <>
           <Container>
-            {/* <Header /> */}
             <ContentContainer>
               <ContentComponent setLoading={this.setLoading} />
             </ContentContainer>
