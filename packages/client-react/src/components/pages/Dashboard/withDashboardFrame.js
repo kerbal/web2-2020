@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Loading from '../../common/Loading';
 import { icons } from '../../../assets';
+import useCustomerCheck from './utils/useCustomerCheck';
 
 const Container = props => {
   const { children } = props;
@@ -35,7 +36,7 @@ const sidebarItems = [
   },
   {
     id: 6,
-    name: 'Seperator',
+    name: 'Separator',
   },
   {
     id: 7,
@@ -52,7 +53,12 @@ const sidebarItems = [
 ];
 
 const withDashboardFrame = ContentComponent => {
-  return () => {
+  return ({ checkCustomer }) => {
+    if (checkCustomer)
+      useCustomerCheck(
+        c => c.status !== checkCustomer?.status,
+        checkCustomer?.to
+      );
     const [loading, setLoading] = useState(false);
     return (
       <>

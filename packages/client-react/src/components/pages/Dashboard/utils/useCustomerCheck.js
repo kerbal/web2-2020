@@ -11,4 +11,5 @@ export default (checkCustomer, to) => {
       history.replace(to);
     }
   }, []);
+  return [customer, checkCustomer];
 };

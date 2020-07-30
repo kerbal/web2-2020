@@ -3,10 +3,14 @@ import { Redirect, Switch, Route } from 'react-router-dom';
 import OverviewContainer from './pages/Overview/OverviewContainer';
 import AccountContainer from './pages/Account/AccountContainer';
 import TransferContainer from './pages/Transfer/TransferContainer';
-import HelpContainer from './pages/Help/HelpContainer';
 import VerifyPIDContainer from './pages/VerifyPID/VerifyPIDContainer';
 import Logout from './pages/Logout';
 import useCustomerCheck from './utils/useCustomerCheck';
+
+const checkVerifiedCustomer = {
+  status: 'VERIFIED',
+  to: '/dashboard/verify',
+};
 
 const routes = [
   {
@@ -22,22 +26,17 @@ const routes = [
   {
     path: '/dashboard/overview',
     exact: true,
-    main: () => <OverviewContainer />,
+    main: () => <OverviewContainer checkCustomer={checkVerifiedCustomer} />,
   },
   {
     path: '/dashboard/account',
     exact: true,
-    main: () => <AccountContainer />,
+    main: () => <AccountContainer checkCustomer={checkVerifiedCustomer} />,
   },
   {
     path: '/dashboard/transfer',
     exact: true,
-    main: () => <TransferContainer />,
-  },
-  {
-    path: '/dashboard/help',
-    exact: true,
-    main: () => <HelpContainer />,
+    main: () => <TransferContainer checkCustomer={checkVerifiedCustomer} />,
   },
 ];
 

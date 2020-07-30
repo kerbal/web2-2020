@@ -19,7 +19,7 @@ const SidebarItem = props => {
   );
 };
 
-const Seperator = () => {
+const Separator = () => {
   return <div className="h-6" />;
 };
 
@@ -29,7 +29,11 @@ const Sidebar = props => {
   return (
     <div className="px-6" style={{ width: '250px' }}>
       {sidebarItems.map(item =>
-        item.name === 'Seperator' ? <Seperator /> : <SidebarItem item={item} />
+        item.name === 'Separator' ? (
+          <Separator key={item.id} />
+        ) : (
+          <SidebarItem key={item.id} item={item} />
+        )
       )}
     </div>
   );
