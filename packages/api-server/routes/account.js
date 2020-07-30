@@ -26,6 +26,10 @@ router.put('/customer/account/:account_id/status',
   verifyCustomer,
   AccountController.customerToggleStatus);
 
+router.put('/customer/account/:account_id/status',
+  verifyCustomer,
+  AccountController.customerCloseAccount);
+
 router.put('/customer/account/:account_id/confirm-deposit',
   verifyCustomer,
   AccountController.customerConfirmDeposit);
