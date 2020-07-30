@@ -12,7 +12,6 @@ import userRoute from './routes/user';
 import adminAuthRoute from './routes/auth.admin';
 import transactionRoute from './routes/transaction';
 import adminTransactionRoute from './routes/transaction.admin';
-import adminUserRoute from './routes/user.admin';
 
 import models from './models';
 import verifyCustomer from './middleware/verifyUser';
@@ -37,7 +36,6 @@ app.use('/api', accountRoute);
 app.use('/api/user', verifyCustomer, userRoute);
 app.use('/api/admin/auth', adminAuthRoute);
 app.use('/api/admin/transaction', verifyUser, verifyAdmin, adminTransactionRoute);
-app.use('/api/admin/user', adminUserRoute);
 
 app.use('*', (req, res)=> {
   res.status(404).json({

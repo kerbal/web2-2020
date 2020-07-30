@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { register, uploadImage, login, forgotPassword, resetPassword, updateIdentity, updatePassword } from '../controllers/auth';
+import { register, uploadImage, login, forgotPassword, resetPassword, updateIdentity } from '../controllers/auth';
 import { customerValidator, resetPasswordValidator, identityValidator } from '../validator/auth';
 import verifyUser from '../middleware/verifyUser';
 
@@ -12,7 +12,7 @@ router.post('/login', login);
 router.post('/forgotPassword', forgotPassword);
 router.post('/resetPassword', resetPasswordValidator, resetPassword);
 router.post('/updateIdentity', verifyUser, uploadImage, identityValidator, updateIdentity);
-router.post('/updatePassword', verifyUser, resetPasswordValidator, updatePassword);
+
 //test protect route
 router.get('/test', verifyUser, (req, res) => {
   res.json('Hello World');
