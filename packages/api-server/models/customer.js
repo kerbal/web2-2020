@@ -9,8 +9,12 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     resetPasswordToken: DataTypes.STRING,
   }, {});
-  Customer.associate = function () {
+  Customer.associate = function (models) {
     // associations can be defined here
+    Customer.hasMany(models.Account, {
+      foreignKey: 'customer_id',
+      as: 'account',
+    });
   };
   return Customer;
 };

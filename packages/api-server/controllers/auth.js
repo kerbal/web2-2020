@@ -213,4 +213,34 @@ const updateIdentity = async (req, res)=>{
     });
   }
 };
-export { register, login, uploadImage, updateIdentity, resetPassword, forgotPassword   };
+
+const updatePassword = async (req, res)=>{
+  const { newPassword } = req.body;
+  const { id } = req.auth;
+  try{
+    const user = await Customer.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!user) return res.status(400).json({ error:'Invalid!' });
+    const hashedPassword = await getHashedPassword(newPassword);
+    user.password = hashedPassword;
+    user.resetPasswordToken='';
+    await user.save();
+
+    const token = jwt.sign(
+      { id },
+      process.env.JWT_SECRET,
+    );
+
+    return res.json({ token, message: 'Success' });
+  }
+  catch(error){
+    return res.status(400).json({
+      error:'Something went wrong.',
+    });
+  }
+};
+
+export { register, login, uploadImage, updateIdentity, resetPassword, forgotPassword, updatePassword  };
