@@ -7,9 +7,10 @@ import Input from '../../../../common/Input';
 import { updatePassword } from '../../slice/customerAuthSlice';
 
 const SettingContainer = () => {
-  const { email, fullname, address, status } = useSelector(
-    state => state.customerAuth.user || {}
-  );
+  const {
+    token,
+    user: { email, fullname, address, status },
+  } = useSelector(state => state.customerAuth || {});
   const dispatch = useDispatch();
   const [
     newPassword,
@@ -38,7 +39,7 @@ const SettingContainer = () => {
     setTouched();
     if (checkFormValidity()) {
       dispatch(
-        updatePassword({ newPassword: getNewPassword().password }, error =>
+        updatePassword(token, getNewPassword().password, error =>
           console.log(error)
         )
       );

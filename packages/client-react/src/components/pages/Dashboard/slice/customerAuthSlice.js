@@ -55,12 +55,22 @@ export const {
   setToken,
 } = customerAuthSlice.actions;
 
-export const updatePassword = (newPassword, reject) => async dispatch => {
+export const updatePassword = (
+  token,
+  newPassword,
+  reject
+) => async dispatch => {
   const url = '/auth/updatePassword';
   try {
     dispatch(setLoading(true));
-    const res = await axios.post(url, newPassword);
-    dispatch(setToken({ token: res.data.token }));
+    const res = await axios.post(
+      url,
+      { newPassword },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    dispatch(setToken(res.data.token));
   } catch (error) {
     reject(error);
   } finally {
