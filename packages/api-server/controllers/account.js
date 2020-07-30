@@ -79,6 +79,20 @@ export const customerToggleStatus = async (req, res, next) => {
   }
 };
 
+export const customerConfirmDeposit = async (req, res, next) => {
+  try {
+    const { id: customerId } = req.auth;
+    const { account_id } = req.params;
+    const account = await AccountService.customerConfirmDeposit(
+      customerId,
+      account_id,
+    );
+    return res.status(200).json(account);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const adminGetAll = async (req, res, next) => {
   try {
     const { customerId, page, status, account_number } = req.query;

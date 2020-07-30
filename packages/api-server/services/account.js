@@ -101,6 +101,27 @@ class AccountService {
     }
   }
 
+  static async customerConfirmDeposit(customer_id, accountId) {
+    try {
+      const account = await AccountService.findOne({
+        id: accountId,
+        customer_id,
+        type: ACCOUNT_TYPE.DEPOSIT,
+      });
+      if (!account) throw new Error('Account not found');
+      if (account.balance === 0) throw new Error('Account balance is 0');
+      if (!account.depositAccountDetail.deposit_date) throw new Error('Account already deposited');
+      return await account.update({
+        depositAccountDetail: {
+          deposit_date: new Date(),
+        },
+      });
+    } catch (error) {
+      console.log('Service Error');
+      throw error;
+    }
+  }
+
   static async toggleStatusByCustomer(customer_id, accountId) {
     try {
       const account = await AccountService.findOne({
