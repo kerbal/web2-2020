@@ -36,6 +36,8 @@ const Transfer = props => {
   const [transactionId, setTransactionId] = useState(null);
   const [error, setError] = useState(null);
   const [destinationAccount, setDestinationAccount] = useState(null);
+  const [currencyUnit, setCurrencyUnit] = useState('VND');
+
   const token = useSelector(state => state.customerAuth.token);
 
   const searchDestinationAccount = async value => {
@@ -61,6 +63,7 @@ const Transfer = props => {
           destination_account_id: destinationAccount.id,
           amount,
           note,
+          currency_unit: currencyUnit,
         },
         {
           headers: {
@@ -112,7 +115,7 @@ const Transfer = props => {
               return setDestinationBankId(value);
             }}
           >
-            {['Piggy - Bank', 'Chicken Bank'].map(value => (
+            {['Piggy Bank', 'Chicken Bank'].map(value => (
               <option>{value}</option>
             ))}
           </ComboBox>
@@ -148,16 +151,31 @@ const Transfer = props => {
           </p>
         </div>
       )}
-      <div className="w-2/3">
-        <Input
-          value={amount}
-          type="number"
-          label="Amount"
-          disabled={verify}
-          onValueChange={value => setAmount(Math.abs(value))}
-        />
+      <div className="flex">
+        <div className="w-1/3">
+          <Input
+            value={amount}
+            type="number"
+            label="Amount"
+            disabled={verify}
+            onValueChange={value => setAmount(Math.abs(value))}
+          />
+        </div>
+        <div className="w-1/3 mb-10 pl-6">
+          <ComboBox
+            label="Currency Unit"
+            disabled={verify}
+            value={currencyUnit}
+            onValueChange={value => {
+              return setCurrencyUnit(value);
+            }}
+          >
+            <option>VND</option>
+            <option>USD</option>
+          </ComboBox>
+        </div>
       </div>
-      <div className="w-2/3 mb-10">
+      <div className="w-2/3 mb-10 pr-2">
         <Input
           label="Note"
           value={note}

@@ -8,6 +8,7 @@ import TransferContainer from './pages/Transfer/TransferContainer';
 import HelpContainer from './pages/Help/HelpContainer';
 import VerifyPIDContainer from './pages/VerifyPID/VerifyPIDContainer';
 import Logout from './pages/Logout';
+import TransactionPage from './pages/Transaction';
 
 const DashboardContainer = ({ customer }) => {
   const routes = [
@@ -35,6 +36,11 @@ const DashboardContainer = ({ customer }) => {
       path: '/dashboard/transfer',
       exact: true,
       main: () => <TransferContainer />,
+    },
+    {
+      path: '/dashboard/transaction',
+      exact: true,
+      main: () => <TransactionPage />,
     },
     {
       path: '/dashboard/help',

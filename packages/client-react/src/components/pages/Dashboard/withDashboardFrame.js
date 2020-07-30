@@ -34,6 +34,12 @@ const sidebarItems = [
     path: '/dashboard/transfer',
   },
   {
+    id: 20,
+    name: 'Transaction',
+    icon: icons.sidebar_transfer,
+    path: '/dashboard/transaction',
+  },
+  {
     id: 6,
     name: 'Seperator',
   },

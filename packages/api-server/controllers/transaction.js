@@ -6,6 +6,7 @@ import BankService from '../services/bank';
 import AccountService from '../services/account';
 import NotFound from '../utils/error/NotFound';
 import BadRequest from '../utils/error/BadRequest';
+import { USD_VND } from '../constants/currency';
 
 export class UserTransactionController {
   static async create (req, res, next) {
@@ -15,8 +16,13 @@ export class UserTransactionController {
         destination_bank_id,
         source_account_id,
         destination_account_id,
-        amount,
+        currency_unit,
       } = req.body;
+
+      let amount = req.body.amount;
+      if (currency_unit === 'USD') {
+        amount = amount * USD_VND;
+      }
 
       const source_bank_name = (await BankService.getBankInfo(source_bank_id)).name;
       if (!source_bank_name) {
@@ -43,6 +49,7 @@ export class UserTransactionController {
       }
       const transaction = await TransactionService.create({
         ...req.body,
+        amount,
         source_account,
         destination_account,
       });
