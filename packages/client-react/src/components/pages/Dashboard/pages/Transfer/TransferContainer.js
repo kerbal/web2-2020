@@ -10,15 +10,13 @@ const TransferContainer = () => {
   }
 
   return (
-    <div className="w-full">
-      <TransferComponent
-        refresh={async () => {
-          console.log('ble');
-          await setRefresh(true);
-          await setRefresh(false);
-        }}
-      />
-    </div>
+    <TransferComponent
+      refresh={async () => {
+        console.log('ble');
+        await setRefresh(true);
+        await setRefresh(false);
+      }}
+    />
   );
 };
 

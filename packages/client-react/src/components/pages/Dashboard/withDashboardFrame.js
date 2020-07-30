@@ -7,12 +7,16 @@ import useCustomerCheck from './utils/useCustomerCheck';
 
 const Container = props => {
   const { children } = props;
-  return <div className="w-screen">{children}</div>;
+  return (
+    <div className="mx-auto" style={{ maxWidth: '1600px' }}>
+      {children}
+    </div>
+  );
 };
 
 const ContentContainer = props => {
   const { children } = props;
-  return <div className="flex flex-row flex-1">{children}</div>;
+  return <div className="flex flex-row flex-1 p-6">{children}</div>;
 };
 
 const sidebarItems = [
@@ -55,10 +59,7 @@ const sidebarItems = [
 const withDashboardFrame = ContentComponent => {
   return ({ checkCustomer }) => {
     if (checkCustomer)
-      useCustomerCheck(
-        c => c.status !== checkCustomer?.status,
-        checkCustomer?.to
-      );
+      useCustomerCheck(checkCustomer?.check, checkCustomer?.to);
     const [loading, setLoading] = useState(false);
     return (
       <>

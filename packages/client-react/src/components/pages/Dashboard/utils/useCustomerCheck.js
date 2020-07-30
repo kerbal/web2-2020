@@ -5,11 +5,11 @@ import { customerSelector } from '../slice/customerAuthSlice';
 
 export default (checkCustomer, to) => {
   const history = useHistory();
-  const customer = useSelector(customerSelector);
+  const [token, customer] = useSelector(customerSelector);
   useEffect(() => {
     if (checkCustomer(customer)) {
       history.replace(to);
     }
-  }, []);
-  return [customer, checkCustomer];
+  }, [history, checkCustomer, customer, to]);
+  return [{ token, ...customer }, checkCustomer];
 };

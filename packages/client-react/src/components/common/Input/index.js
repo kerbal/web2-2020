@@ -31,7 +31,7 @@ export default memo(function Input(props) {
   };
 
   return (
-    <div className="flex flex-col pt-4">
+    <div className="flex flex-col pb-4">
       <label htmlFor={name} className="text-lg text-left">
         {label}
       </label>

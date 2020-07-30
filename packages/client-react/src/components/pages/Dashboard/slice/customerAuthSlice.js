@@ -9,8 +9,8 @@ const initialState = {
   ready: false,
 };
 
-export const customerAuthSlice = createSlice({
-  name: 'lading',
+const customerAuthSlice = createSlice({
+  name: 'customerAuthSlice',
   initialState,
   reducers: {
     setStatus: (state, { payload: status }) => ({
@@ -39,6 +39,10 @@ export const customerAuthSlice = createSlice({
       ...state,
       ready: true,
     }),
+    setToken: (state, { payload: token }) => ({
+      ...state,
+      token,
+    }),
   },
 });
 
@@ -48,7 +52,21 @@ export const {
   clearAuth,
   setLoading,
   setStatus,
+  setToken,
 } = customerAuthSlice.actions;
+
+export const updatePassword = (newPassword, reject) => async dispatch => {
+  const url = '/auth/updatePassword';
+  try {
+    dispatch(setLoading(true));
+    const res = await axios.post(url, newPassword);
+    dispatch(setToken({ token: res.data.token }));
+  } catch (error) {
+    reject(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
 
 export const signIn = (loginData, resolve, reject) => async dispatch => {
   const url = '/auth/login';
@@ -104,6 +122,9 @@ export const signOut = () => dispatch => {
   dispatch(clearAuth());
 };
 
-export const customerSelector = state => state.customerAuth.user;
+export const customerSelector = state => [
+  state.customerAuth.token,
+  state.customerAuth.user,
+];
 
 export default customerAuthSlice.reducer;

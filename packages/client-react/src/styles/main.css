@@ -5930,6 +5930,10 @@ video {
   flex: 1 1 40%;
 }
 
+.flex-1-2\/3 {
+  flex: 1 1 66.666667%;
+}
+
 .flex-grow-0 {
   flex-grow: 0;
 }
@@ -19676,6 +19680,10 @@ video {
 
   .sm\:flex-1-2\/5 {
     flex: 1 1 40%;
+  }
+
+  .sm\:flex-1-2\/3 {
+    flex: 1 1 66.666667%;
   }
 
   .sm\:flex-grow-0 {
@@ -33425,6 +33433,10 @@ video {
     flex: 1 1 40%;
   }
 
+  .md\:flex-1-2\/3 {
+    flex: 1 1 66.666667%;
+  }
+
   .md\:flex-grow-0 {
     flex-grow: 0;
   }
@@ -47172,6 +47184,10 @@ video {
     flex: 1 1 40%;
   }
 
+  .lg\:flex-1-2\/3 {
+    flex: 1 1 66.666667%;
+  }
+
   .lg\:flex-grow-0 {
     flex-grow: 0;
   }
@@ -60917,6 +60933,10 @@ video {
 
   .xl\:flex-1-2\/5 {
     flex: 1 1 40%;
+  }
+
+  .xl\:flex-1-2\/3 {
+    flex: 1 1 66.666667%;
   }
 
   .xl\:flex-grow-0 {

@@ -15,7 +15,7 @@ export default memo(function ComboBox(props) {
   };
 
   return (
-    <div className="flex flex-col pt-4">
+    <div className="flex flex-col pb-4">
       <label htmlFor="email" className="text-lg text-left">
         {label}
       </label>

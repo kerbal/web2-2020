@@ -59,6 +59,10 @@ export const checkValidity = (value, rules) => {
     const pattern = /^\d+$/;
     isValid = pattern.test(value) && isValid;
   }
+  if (rules.haveDigit) {
+    const pattern = /\d/;
+    isValid = pattern.test(value) && isValid;
+  }
   if (rules.dob) {
     const timestamp = Date.parse(value);
     if (Number.isNaN(timestamp)) isValid = Number.isNaN(timestamp) && isValid;
