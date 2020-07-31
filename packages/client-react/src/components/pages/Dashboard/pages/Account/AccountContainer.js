@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  confirmDeposit,
   setSelectedAccount,
   createAccount,
   selectorAccounts,
@@ -39,6 +40,13 @@ const AccountContainer = () => {
       })
     );
   };
+  const onConfirmDeposit = () => {
+    dispatch(
+      confirmDeposit(token, selectedAccount.id, error => {
+        console.log(error);
+      })
+    );
+  }
   const handlerFilter = (value, id) => {
     const handle = {
       'type-filter': setTypeFilter,
@@ -81,6 +89,7 @@ const AccountContainer = () => {
       statusFilter={statusFilter}
       numberFilter={numberFilter}
       onCreateAccount={onCreateAccount}
+      onConfirmDeposit={onConfirmDeposit}
     />
   );
 };

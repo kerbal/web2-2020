@@ -121,6 +121,21 @@ export const changeStatus = (token, id, reject) => async dispatch => {
   }
 };
 
+export const confirmDeposit = (token, id, reject) => async dispatch => {
+  const url = `customer/account/${id}/confirm-deposit`;
+  try {
+    dispatch(setLoading(true));
+    const res = await axios.put(url, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    dispatch(setAccount(res.data));
+  } catch (error) {
+    reject(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 export const closed = (token, id, reject) => async dispatch => {
   const url = `customer/account/${id}/closed`;
   try {

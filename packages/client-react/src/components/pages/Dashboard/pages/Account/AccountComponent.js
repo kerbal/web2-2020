@@ -18,6 +18,7 @@ const AccountComponent = props => {
     statusFilter,
     numberFilter,
     onCreateAccount,
+    onConfirmDeposit,
   } = props;
   return (
     <>
@@ -77,6 +78,7 @@ const AccountComponent = props => {
           account={selectedAccount}
           onChangeStatus={onChangeStatus}
           onClosed={onClosedAccount}
+          onConfirmDeposit={onConfirmDeposit}
         />
       ) : null}
     </>

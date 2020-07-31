@@ -4,7 +4,7 @@ import Button from '../../../../common/Button';
 import Input from '../../../../common/Input';
 import { formatDatetime } from '../../../../../utils';
 
-export default ({ account, onChangeStatus, onClosed }) => {
+export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
   const { status, type, accountNumber, balance, closedAt } = account;
   const history = useHistory();
   let details = null;
@@ -63,12 +63,10 @@ export default ({ account, onChangeStatus, onClosed }) => {
           disabled
           value={formatDatetime(depositDate) || 'Add funds to begin deposit'}
         />
-        {balance !== 0 && (
+        {!depositDate && balance !== 0 && (
           <Button
             label="Complete your deposit"
-            onClick={() => {
-              console.log('complete');
-            }}
+            onClick={onConfirmDeposit}
           />
         )}
         {status === 'CLOSED' && (
