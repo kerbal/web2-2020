@@ -238,6 +238,7 @@ export const adminChangeStatus = async (req, res, next) => {
         note: `Admin ${req.auth.id} closed ${account.id}`,
       })).transaction;
       await TransactionService.execute(transaction);
+      await account.update({ closed_date: new Date() }, { t });
     }
 
     await account.update({ status: newStatus }, { t });
