@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Customer.hasMany(models.Account, {
       foreignKey: 'customer_id',
-      as: 'account',
     });
   };
   return Customer;

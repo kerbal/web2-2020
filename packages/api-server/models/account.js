@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Account.belongsTo(models.Customer, {
       foreignKey: 'customer_id',
-      as: 'account',
     });
     Account.hasOne(models.DepositAccount, {
       foreignKey: 'account_id',
