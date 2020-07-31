@@ -74,7 +74,7 @@ export default ({ account, onChangeStatus, onClosed }) => {
         {status === 'CLOSED' && (
           <Input label="Closed at" disabled value={closedAt || ''} />
         )}
-        {status === 'CLOSED' && balance === 0 && (
+        {status !== 'CLOSED' && balance === 0 && (
           <Button
             label="Transfer to this"
             onClick={() => {
