@@ -6,7 +6,6 @@ import { formatDatetime } from '../../../../../utils';
 
 export default ({ account, onChangeStatus, onClosed }) => {
   const { status, type, accountNumber, balance, closedAt } = account;
-  console.log(account);
   const history = useHistory();
   let details = null;
   if (type === 'CHECKING') {
