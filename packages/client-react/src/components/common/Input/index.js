@@ -19,9 +19,9 @@ export default memo(function Input(props) {
   let errorMessage = null;
   if (validationError && touched && validator && !validator()) {
     errorMessage = (
-      <label htmlFor={name} className="text-lg text-left text-red-500">
+      <div htmlFor={name} className="text-lg text-left text-red-500">
         {validationError}
-      </label>
+      </div>
     );
   }
 
@@ -31,7 +31,7 @@ export default memo(function Input(props) {
   };
 
   return (
-    <div className="flex flex-col pb-4">
+    <div className="flex flex-col pb-4 ">
       <label htmlFor={name} className="text-lg text-left">
         {label}
       </label>

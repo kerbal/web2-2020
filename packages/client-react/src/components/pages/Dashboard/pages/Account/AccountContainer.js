@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  setSelectedAccount,
+  createAccount,
   selectorAccounts,
   changeStatus,
+  closed,
 } from '../../slice/customerAccountSlice';
 import { customerSelector } from '../../slice/customerAuthSlice';
 import AccountComponent from './AccountComponent';
@@ -12,9 +15,15 @@ const AccountContainer = () => {
   const dispatch = useDispatch();
   const [columns, accounts] = useSelector(selectorAccounts);
   const [token] = useSelector(customerSelector);
-  const [selectedAccount, setSelectedAccount] = useState(null);
+  const selectedAccount = useSelector(
+    ({ customerAccounts: { accounts, selectedAccountId } }) =>
+      accounts.find(a => a.id === selectedAccountId)
+  );
+  const [typeFilter, setTypeFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [numberFilter, setNumberFilter] = useState('');
   const onClickRow = (e, item) => {
-    setSelectedAccount(item);
+    dispatch(setSelectedAccount(item.id));
   };
   const onChangeStatus = () => {
     dispatch(
@@ -23,13 +32,55 @@ const AccountContainer = () => {
       })
     );
   };
+  const onClosedAccount = () => {
+    dispatch(
+      closed(token, selectedAccount.id, error => {
+        console.log(error);
+      })
+    );
+  };
+  const handlerFilter = (value, id) => {
+    const handle = {
+      'type-filter': setTypeFilter,
+      'status-filter': setStatusFilter,
+      'number-filter': setNumberFilter,
+    };
+    handle[id](value);
+  };
+  const filterAccount = accounts => {
+    return accounts.filter(({ type, status, accountNumber }) => {
+      return (
+        type.includes(typeFilter.toUpperCase()) &&
+        status.includes(statusFilter.toUpperCase()) &&
+        accountNumber.includes(numberFilter)
+      );
+    });
+  };
+  const onCreateAccount = (type, depositType, cU) => {
+    const data = {
+      accountType: type,
+      currencyUnit: cU,
+      depositAccountTypeId: depositType,
+    };
+    dispatch(
+      createAccount(token, data, error => {
+        console.log(error);
+      })
+    );
+  };
   return (
     <AccountComponent
       onClickRow={onClickRow}
       columns={columns}
-      accounts={accounts}
+      accounts={filterAccount(accounts)}
       selectedAccount={selectedAccount}
       onChangeStatus={onChangeStatus}
+      onClosedAccount={onClosedAccount}
+      handlerFilter={handlerFilter}
+      typeFilter={typeFilter}
+      statusFilter={statusFilter}
+      numberFilter={numberFilter}
+      onCreateAccount={onCreateAccount}
     />
   );
 };

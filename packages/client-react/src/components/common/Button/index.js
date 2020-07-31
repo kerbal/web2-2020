@@ -5,7 +5,7 @@ export default memo(function Button(props) {
   return secondary ? (
     <button
       type={type || 'button'}
-      className="w-full block cursor-pointer border-2 border-black text-black text-center font-bold text-lg hover:bg-gray-100 p-2 mt-8 bg-white"
+      className="rounded w-full inline-block cursor-pointer border-2 border-black text-black text-center font-bold text-lg hover:bg-gray-100 p-2 mt-8 bg-white"
       onClick={onClick}
     >
       {label}
@@ -13,7 +13,7 @@ export default memo(function Button(props) {
   ) : (
     <button
       type={type || 'button'}
-      className="w-full block cursor-pointer bg-black text-white text-center font-bold text-lg hover:bg-gray-700 p-2 mt-8"
+      className="rounded w-full inline-block cursor-pointer bg-black text-white text-center font-bold text-lg hover:bg-gray-700 p-2 mt-8"
       onClick={onClick}
     >
       {label}

@@ -24,6 +24,7 @@ const SettingContainer = () => {
         required: true,
         minLength: 6,
         haveDigit: true,
+        noTouched: true,
       },
       validationError:
         'Please enter your password (at least 6 characters, 1 digit)',
@@ -74,7 +75,7 @@ const SettingContainer = () => {
       </div>
       <div className="pt-6 font-bold text-xl">Change password</div>
       <div className="flex">
-        <div className="flex-1 pr-16">
+        <div className="flex-1 pr-16 text-center">
           <Input
             key={key}
             type={type}
@@ -85,9 +86,8 @@ const SettingContainer = () => {
             touched={touched}
             onValueChange={onFormChange(key)}
             validator={formValidator(key)}
+            checkTouched={false}
           />
-        </div>
-        <div className="flex-1 pr-16">
           <button
             className={`${
               !value ? 'opacity-50 cursor-not-allowed' : ''

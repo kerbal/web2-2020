@@ -26,7 +26,7 @@ router.put('/customer/account/:account_id/status',
   verifyCustomer,
   AccountController.customerToggleStatus);
 
-router.put('/customer/account/:account_id/status',
+router.put('/customer/account/:account_id/closed',
   verifyCustomer,
   AccountController.customerCloseAccount);
 

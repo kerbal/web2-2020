@@ -5,7 +5,7 @@ export const getCurrentDatetime = () => {
 };
 
 export const formatDatetime = datetime => {
-  return new Moment(datetime).format('DD/MM/YYYY HH:mm');
+  return datetime ? new Moment(datetime).format('DD/MM/YYYY HH:mm') : null;
 };
 
 export const formatCurrency = (
@@ -39,6 +39,9 @@ export const checkValidity = (value, rules) => {
   let isValid = true;
 
   if (!rules) {
+    return isValid;
+  }
+  if (!value && rules.noTouched) {
     return isValid;
   }
   if (rules.required) {

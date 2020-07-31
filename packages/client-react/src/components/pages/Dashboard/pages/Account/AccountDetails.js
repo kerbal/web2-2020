@@ -4,18 +4,23 @@ import Button from '../../../../common/Button';
 import Input from '../../../../common/Input';
 import { formatDatetime } from '../../../../../utils';
 
-export default ({ account, onChangeStatus }) => {
-  const { status, type, accountNumber, balance } = account;
+export default ({ account, onChangeStatus, onClosed }) => {
+  const { status, type, accountNumber, balance, closedAt } = account;
+  console.log(account);
   const history = useHistory();
   let details = null;
   if (type === 'CHECKING') {
     details = (
       <>
-        <Button
-          label={status === 'NORMAL' ? 'Lock' : 'Unlock'}
-          onClick={onChangeStatus}
-        />
-        {status === 'NORMAL' ? (
+        {status !== 'CLOSED' ? (
+          <Button
+            label={status === 'NORMAL' ? 'Lock' : 'Unlock'}
+            onClick={onChangeStatus}
+          />
+        ) : (
+          <Input label="Closed at" disabled value={closedAt || ''} />
+        )}
+        {status === 'NORMAL' && (
           <Button
             label="Transfer to this"
             onClick={() => {
@@ -24,8 +29,8 @@ export default ({ account, onChangeStatus }) => {
               );
             }}
           />
-        ) : null}
-        {status === 'NORMAL' ? (
+        )}
+        {status === 'NORMAL' && balance !== 0 && (
           <Button
             label="Transfer from this"
             onClick={() => {
@@ -34,7 +39,10 @@ export default ({ account, onChangeStatus }) => {
               );
             }}
           />
-        ) : null}
+        )}
+        {status !== 'CLOSED' && (
+          <Button label="Closed" secondary onClick={onClosed} />
+        )}
       </>
     );
   }
@@ -54,20 +62,20 @@ export default ({ account, onChangeStatus }) => {
         <Input
           label="Deposited at"
           disabled
-          value={
-            depositDate
-              ? formatDatetime(depositDate)
-              : 'Add funds to begin deposit'
-          }
+          value={formatDatetime(depositDate) || 'Add funds to begin deposit'}
         />
-        {balance !== 0 ? (
+        {balance !== 0 && (
           <Button
             label="Complete your deposit"
             onClick={() => {
               console.log('complete');
             }}
           />
-        ) : (
+        )}
+        {status === 'CLOSED' && (
+          <Input label="Closed at" disabled value={closedAt || ''} />
+        )}
+        {status === 'CLOSED' && balance === 0 && (
           <Button
             label="Transfer to this"
             onClick={() => {
@@ -76,6 +84,9 @@ export default ({ account, onChangeStatus }) => {
               );
             }}
           />
+        )}
+        {!depositDate && status !== 'CLOSED' && (
+          <Button label="Closed" secondary onClick={onClosed} />
         )}
       </>
     );
@@ -91,14 +102,16 @@ export default ({ account, onChangeStatus }) => {
             );
           }}
         />
-        <Button
-          label="Transfer from this"
-          onClick={() => {
-            history.push(
-              `/dashboard/transfer?account_number=${accountNumber}&src=true`
-            );
-          }}
-        />
+        {balance !== 0 && (
+          <Button
+            label="Transfer from this"
+            onClick={() => {
+              history.push(
+                `/dashboard/transfer?account_number=${accountNumber}&src=true`
+              );
+            }}
+          />
+        )}
       </>
     );
   }

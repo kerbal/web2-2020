@@ -53,8 +53,8 @@ const TableView = props => {
   const { name = '', columns = [], data = [{}], onClick } = props;
 
   return (
-    <div className="overflow-auto">
-      <table id={name} className="table-auto cursor-default">
+    <div className="overflow-auto h-screen">
+      <table id={name} className="table-auto cursor-default w-full">
         <thead>
           <TitleRow columns={columns} />
         </thead>
