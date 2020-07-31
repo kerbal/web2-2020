@@ -64,10 +64,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
           value={formatDatetime(depositDate) || 'Add funds to begin deposit'}
         />
         {!depositDate && balance !== 0 && (
-          <Button
-            label="Complete your deposit"
-            onClick={onConfirmDeposit}
-          />
+          <Button label="Complete your deposit" onClick={onConfirmDeposit} />
         )}
         {status === 'CLOSED' && (
           <Input label="Closed at" disabled value={closedAt || ''} />

@@ -67,7 +67,7 @@ const customerAccountSlice = createSlice({
     }),
     setAccounts: (state, { payload: accounts }) => ({
       ...state,
-      accounts: [...state.accounts, ...accounts],
+      accounts: [...accounts],
     }),
     setAccount: (state, { payload: account }) => ({
       ...state,

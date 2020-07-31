@@ -28,7 +28,7 @@ const AccountComponent = props => {
       >
         <div className="pb-2 font-bold text-xl">Create new accounts</div>
         <div className="flex">
-          <AccountNew onConfirm={onCreateAccount}/>
+          <AccountNew onConfirm={onCreateAccount} />
         </div>
         <div className="pb-2 font-bold text-xl">Your accounts</div>
         <div className="flex">
@@ -41,7 +41,7 @@ const AccountComponent = props => {
               id="type-filter"
               value={typeFilter}
               onValueChange={text => handlerFilter(text, 'type-filter')}
-            ></Input>
+            />
           </div>
           <div
             className="px-2"
@@ -52,7 +52,7 @@ const AccountComponent = props => {
               id="number-filter"
               value={numberFilter}
               onValueChange={text => handlerFilter(text, 'number-filter')}
-            ></Input>
+            />
           </div>
           <div
             className="px-2"
@@ -63,7 +63,7 @@ const AccountComponent = props => {
               id="status-filter"
               value={statusFilter}
               onValueChange={text => handlerFilter(text, 'status-filter')}
-            ></Input>
+            />
           </div>
         </div>
         <TableView
