@@ -13,7 +13,6 @@ export const getAllAccount = async (req, res) => {
         {
           model: Account,
           foreignKey: 'customer_id',
-          as: 'account',
         },
       ],
     });

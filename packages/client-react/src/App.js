@@ -10,7 +10,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchSessionStorage());
-  }, []);
+  }, [dispatch]);
 
   if (!isReady) {
     return <div />;

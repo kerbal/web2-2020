@@ -1,51 +1,68 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
-// import withProtected from './withProtected';
-import HomeContainer from './pages/Home/HomeContainer';
-import SavingContainer from './pages/Saving/SavingContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAccounts } from './slice/customerAccountSlice';
+import OverviewContainer from './pages/Overview/OverviewContainer';
+import AccountContainer from './pages/Account/AccountContainer';
+import SettingContainer from './pages/Setting/SettingContainer';
 import TransferContainer from './pages/Transfer/TransferContainer';
-import HelpContainer from './pages/Help/HelpContainer';
 import VerifyPIDContainer from './pages/VerifyPID/VerifyPIDContainer';
 import Logout from './pages/Logout';
+import useCustomerCheck from './utils/useCustomerCheck';
+import Loading from '../../common/Loading';
 
-const DashboardContainer = ({ customer }) => {
-  const routes = [
-    {
-      path: '/dashboard/logout',
-      exact: true,
-      main: () => <Logout />,
-    },
-    {
-      path: '/dashboard/verify',
-      exact: true,
-      main: () => <VerifyPIDContainer />,
-    },
-    {
-      path: '/dashboard/overview',
-      exact: true,
-      main: () => <HomeContainer />,
-    },
-    {
-      path: '/dashboard/savingaccount',
-      exact: true,
-      main: () => <SavingContainer />,
-    },
-    {
-      path: '/dashboard/transfer',
-      exact: true,
-      main: () => <TransferContainer />,
-    },
-    {
-      path: '/dashboard/help',
-      exact: true,
-      main: () => <HelpContainer />,
-    },
-  ];
+const checkVerifiedCustomer = {
+  check: customer => customer && customer.status !== 'VERIFIED',
+  to: '/dashboard/verify',
+};
 
-  if (!customer) {
-    return <Redirect to="/login" />;
-  }
+const routes = [
+  {
+    path: '/dashboard/transfer',
+    exact: true,
+    main: () => <TransferContainer checkCustomer={checkVerifiedCustomer} />,
+  },
+  {
+    path: '/dashboard/overview',
+    exact: true,
+    main: () => <OverviewContainer checkCustomer={checkVerifiedCustomer} />,
+  },
+  {
+    path: '/dashboard/logout',
+    exact: true,
+    main: () => <Logout />,
+  },
+  {
+    path: '/dashboard/verify',
+    exact: true,
+    main: () => <VerifyPIDContainer />,
+  },
+  {
+    path: '/dashboard/account',
+    exact: true,
+    main: () => <AccountContainer checkCustomer={checkVerifiedCustomer} />,
+  },
+  {
+    path: '/dashboard/settings',
+    exact: true,
+    main: () => <SettingContainer />,
+  },
+];
+
+const DashboardContainer = () => {
+  const dispatch = useDispatch();
+  const [{ token, status }] = useCustomerCheck(customer => !customer, '/login');
+  const loading = useSelector(state => state.customerAccounts.loading);
+  useEffect(() => {
+    if (status === 'VERIFIED')
+      dispatch(
+        fetchAccounts(token, error => {
+          console.log(error);
+        })
+      );
+  }, [dispatch, token, status]);
+
+  if (loading) return <Loading />;
 
   return (
     <Switch>
@@ -57,6 +74,4 @@ const DashboardContainer = ({ customer }) => {
   );
 };
 
-export default connect(state => ({
-  customer: state.customerAuth.user,
-}))(DashboardContainer);
+export default DashboardContainer;
