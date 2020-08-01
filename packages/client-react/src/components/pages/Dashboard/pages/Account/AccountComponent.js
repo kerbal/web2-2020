@@ -23,10 +23,9 @@ const AccountComponent = props => {
   return (
     <>
       <div
-        className="pt-6 px-4"
-        style={{ flex: '1 1 60%', maxWidth: '60%' }}
+        className="pt-6 px-4 flex-1"
       >
-        <div className="pb-2 font-bold text-xl">Your accounts</div>
+        <div className="pb-4 font-bold text-4xl">Your accounts</div>
         <AccountNew onConfirm={onCreateAccount} />
         <div
           className="pb-2 font-bold text-xl"

@@ -39,7 +39,7 @@ export default ({ onConfirm }) => {
           <ComboBox
             label="Deposit Type"
             onValueChange={type => {
-              setDepositType(type);
+              setDepositType(+type);
             }}
             value={depositType}
             disabled={type !== 'DEPOSIT'}
