@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { checkValidity } from './index';
 
-export const useForm = initialState => {
+export default initialState => {
   const [form, setForm] = useState(initialState);
 
   const setTouched = () => {
@@ -66,8 +66,4 @@ export const useForm = initialState => {
     getFormData,
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ];
-};
-
-export default {
-  useForm,
 };

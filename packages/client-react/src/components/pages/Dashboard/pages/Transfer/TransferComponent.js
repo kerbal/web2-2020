@@ -91,7 +91,9 @@ const Transfer = props => {
             disabled={verify}
           >
             {accounts.map((account, index) => (
-              <option value={index}>{account.account_number}</option>
+              <option value={index} key={account.account_number}>
+                {account.account_number}
+              </option>
             ))}
           </ComboBox>
         </div>
@@ -113,7 +115,7 @@ const Transfer = props => {
             }}
           >
             {['Piggy - Bank', 'Chicken Bank'].map(value => (
-              <option>{value}</option>
+              <option key={value}>{value}</option>
             ))}
           </ComboBox>
         </div>

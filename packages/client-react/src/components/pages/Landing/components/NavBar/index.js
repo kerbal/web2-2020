@@ -29,6 +29,7 @@ const NavItems = props => {
       {navItems.map(item => {
         return (
           <a
+            key={item.link}
             href={item.link}
             className="block text-center mt-4 md:inline-block md:mt-0 text-gray-500 hover:text-gray-700 md:mr-4"
           >

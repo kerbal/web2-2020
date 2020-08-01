@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectorOverviewAccounts } from '../../slice/customerAccountSlice';
 import { formatCurrency, formatDatetime } from '../../../../../utils';
 import TableView from '../../components/TableView';
 
@@ -8,7 +10,7 @@ const Container = props => {
 };
 
 const TransactionsTable = () => {
-  const name = 'dashboard-account-table';
+  const name = 'dashboard-transaction-table';
   const columns = [
     'Date',
     'Destination Account Name',
@@ -44,39 +46,10 @@ const TransactionsTable = () => {
 };
 
 const AccountsTable = () => {
-  const name = 'dashboard-transaction-table';
-  const columns = [
-    'Customer Name',
-    'Account Number',
-    'Balance',
-    'Currency Unit',
-    'Status',
-  ];
-  const data = [
-    {
-      id: 2,
-      customerName: 'Khoa Ngo',
-      accountNumber: '2222222222222222',
-      balance: formatCurrency(2000000),
-      currencyUnit: 'VND',
-      status: 'NORMAL',
-    },
-    {
-      id: 3,
-      customerName: 'Khoa Ngo',
-      accountNumber: '2222222222222222',
-      balance: formatCurrency(9000000),
-      currencyUnit: 'VND',
-      status: 'NORMAL',
-    },
-  ];
-  const onClick = () => {
-    console.log('clicked');
-  };
+  const name = 'dashboard-account-table';
+  const [columns, data] = useSelector(selectorOverviewAccounts);
 
-  return (
-    <TableView name={name} columns={columns} data={data} onClick={onClick} />
-  );
+  return <TableView name={name} columns={columns} data={data} />;
 };
 
 const Home = () => {

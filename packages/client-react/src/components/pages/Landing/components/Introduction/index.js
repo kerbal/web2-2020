@@ -41,7 +41,7 @@ const InstantLoginBox = props => {
           );
         }
       )}
-      <Button onClick={() => onSignIn && onSignIn()} label="Login" />
+      <Button onClick={onSignIn} label="Login" />
     </form>
   );
 };
