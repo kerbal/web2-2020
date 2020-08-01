@@ -1,15 +1,19 @@
 import React from 'react';
 
 const Container = props => {
-  const { children, onClick } = props;
-  return (
-    <div
-      onClick={onClick}
-      className="bg-transparent hover:bg-gray-300 w-full p-3 rounded-md border-gray-300 border flex items-center justify-center cursor-pointer"
-    >
+  const { disabled, children, onClick } = props;
+  return disabled ? (
+    <div className="bg-transparent w-full p-3 rounded-md border-gray-300 border flex items-center justify-center opacity-50">
       {children}
     </div>
-  );
+  ) : (
+      <div
+        onClick={onClick}
+        className="bg-transparent hover:bg-gray-300 w-full p-3 rounded-md border-gray-300 border flex items-center justify-center cursor-pointer"
+      >
+        {children}
+      </div>
+    );
 };
 
 const Text = props => {
@@ -18,9 +22,9 @@ const Text = props => {
 };
 
 const FunctionButton = props => {
-  const { label, onClick } = props;
+  const { label, onClick, disabled } = props;
   return (
-    <Container onClick={() => onClick && onClick()}>
+    <Container disabled={disabled} onClick={() => onClick && onClick()}>
       <Text>{label}</Text>
     </Container>
   );

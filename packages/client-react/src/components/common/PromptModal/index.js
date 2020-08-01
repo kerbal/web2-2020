@@ -7,7 +7,7 @@ const Container = props => {
   return (
     <div
       id={modalName}
-      className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center modal-show"
+      className="absolute top-0 bottom-0 left-0 right-0 items-center justify-center flex modal-show"
     >
       <div className="bg-gray-700 absolute top-0 bottom-0 left-0 right-0 opacity-50" />
       {children}
@@ -33,8 +33,12 @@ const Content = props => {
 };
 
 const OKButton = props => {
-  const { children } = props;
-  return <div className="text-blue-500 cursor-pointer">OK</div>;
+  const { children, onClick } = props;
+  return (
+    <div onClick={onClick} className="text-blue-500 cursor-pointer">
+      OK
+    </div>
+  );
 };
 
 const CancelButton = props => {
@@ -46,9 +50,9 @@ const CancelButton = props => {
   );
 };
 
-const CloseButton = () => {
+const CloseButton = ({ onClick }) => {
   return (
-    <div className="opacity-50">
+    <div className="opacity-50 pl-6 cursor-pointer" onClick={onClick}>
       <img src={icons.modal_close} alt="" width={16} height="auto" />
     </div>
   );
@@ -56,19 +60,6 @@ const CloseButton = () => {
 
 const PromptFunction = props => {
   const { title, content, onAccept, onDismiss, enabled, modalName } = props;
-
-  useEffect(() => {
-    const modal = document.getElementById(modalName);
-    if (enabled) {
-      if (modal.classList.contains('modal-hide')) {
-        modal.classList.remove('modal-hide');
-      }
-      modal.classList.add('modal-show');
-    }
-    if (!enabled) {
-      modal.classList.add('modal-hide');
-    }
-  }, [enabled]);
 
   return (
     <Container modalName={modalName}>

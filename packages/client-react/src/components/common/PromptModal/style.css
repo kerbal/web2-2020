@@ -1,5 +1,6 @@
 .modal-show {
   animation: fadein 0.25s ease;
+  display: flex;
 }
 
 .modal-hide {

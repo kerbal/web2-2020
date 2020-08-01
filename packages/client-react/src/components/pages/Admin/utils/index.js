@@ -1,3 +1,13 @@
+import { getSessionStorage } from '../slice/adminAuthSlice';
+
 export const checkLoginState = () => {
-  return true;
+  const adminAuth = getSessionStorage();
+  if (adminAuth) {
+    return true;
+  }
+  return false;
 };
+
+export const checksfac = () => {
+  return 0;
+}

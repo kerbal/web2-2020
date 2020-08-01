@@ -14,6 +14,7 @@ export default memo(function Input(props) {
     touched,
     disabled = false,
     required = true,
+    autoComplete = 'off',
   } = props;
 
   let errorMessage = null;
@@ -44,6 +45,7 @@ export default memo(function Input(props) {
         type={type}
         id={id}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
       />
       {errorMessage}

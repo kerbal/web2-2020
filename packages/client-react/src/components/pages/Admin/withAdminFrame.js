@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Header from './components/Header';
 import Loading from '../../common/Loading';
 import { checkLoginState } from './utils';
@@ -30,10 +31,10 @@ const withAdminFrame = ContentComponent => {
 
     render() {
       const { loading } = this.state;
-      const { history } = this.props;
+      const { history, adminState } = this.props;
 
       if (!checkLoginState()) {
-        history.push('/');
+        history.push('/admin/login');
       }
 
       return (
@@ -49,7 +50,10 @@ const withAdminFrame = ContentComponent => {
     }
   }
 
-  return withRouter(HOC);
+  return connect(
+    state => ({ adminState: state.adminAuth }),
+    null
+  )(withRouter(HOC));
 };
 
 export default withAdminFrame;
