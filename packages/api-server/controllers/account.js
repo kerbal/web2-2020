@@ -36,7 +36,7 @@ export const customerGetAll = async (req, res, next) => {
     const { id: customer_id } = req.auth;
     const { page, status, all, account_number, other } = req.query;
     let where = { customer_id };
-    if(other === 'true') {
+    if(account_number && other === 'true') {
       where = {};
     }
     if (status) {
