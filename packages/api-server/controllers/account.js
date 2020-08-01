@@ -33,8 +33,12 @@ export const customerCreate = async (req, res, next) => {
 
 export const customerGetAll = async (req, res, next) => {
   try {
-    const { page, status, all, account_number } = req.query;
-    const where = {};
+    const { id: customer_id } = req.auth;
+    const { page, status, all, account_number, other } = req.query;
+    let where = { customer_id };
+    if(other === 'true') {
+      where = {};
+    }
     if (status) {
       where.status = status.toUpperCase();
     }
