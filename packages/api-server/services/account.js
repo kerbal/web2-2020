@@ -90,9 +90,15 @@ class AccountService {
         include: [{
           model: DepositAccount,
           as: 'depositAccountDetail',
+          include: [{
+            model: DepositType,
+            as: 'depositType',
+          }],
         }],
         transaction,
       });
+
+      account.depositAccountDetail.setDataValue('depositType', await account.depositAccountDetail.getDepositType());
       await transaction.commit();
       return account;
     } catch(error) {
@@ -111,12 +117,11 @@ class AccountService {
       });
       if (!account) throw new Error('Account not found');
       if (account.balance === 0) throw new Error('Account balance is 0');
-      if (!account.depositAccountDetail.deposit_date) throw new Error('Account already deposited');
-      return await account.update({
-        depositAccountDetail: {
-          deposit_date: new Date(),
-        },
+      if (account.depositAccountDetail.deposit_date) throw new Error('Account already deposited');
+      await account.depositAccountDetail.update({
+        deposit_date: new Date(),
       });
+      return account;
     } catch (error) {
       console.log('Service Error');
       throw error;

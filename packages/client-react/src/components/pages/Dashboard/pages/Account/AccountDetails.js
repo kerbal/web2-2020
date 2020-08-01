@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import Button from '../../../../common/Button';
@@ -6,7 +5,17 @@ import Input from '../../../../common/Input';
 import { formatDatetime } from '../../../../../utils';
 
 export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
-  const { status, type, account_number, balance, closedAt } = account;
+  const {
+    status,
+    type,
+    account_number: accountNumber,
+    balance,
+    closed_date: closedAt,
+    currency_unit: cU,
+    createdAt,
+    updatedAt,
+  } = account;
+  console.log(account);
   const history = useHistory();
   let details = null;
   if (type === 'CHECKING') {
@@ -18,14 +27,18 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             onClick={onChangeStatus}
           />
         ) : (
-          <Input label="Closed at" disabled value={closedAt || ''} />
+          <Input
+            label="Closed at"
+            disabled
+            value={formatDatetime(closedAt) || ''}
+          />
         )}
         {status === 'NORMAL' && (
           <Button
             label="Transfer to this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?destination_account_number=${account_number}`
+                `/dashboard/transfer?destination_account_number=${accountNumber}`
               );
             }}
           />
@@ -35,12 +48,12 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer from this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?source_account_number=${account_number}`
+                `/dashboard/transfer?source_account_number=${accountNumber}`
               );
             }}
           />
         )}
-        <Link to={`/dashboard/transaction?account_number=${account_number}`}>
+        <Link to={`/dashboard/transaction?account_number=${accountNumber}`}>
           <Button label="Transaction" />
         </Link>
         {status !== 'CLOSED' && (
@@ -50,10 +63,10 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
     );
   }
   if (type === 'DEPOSIT') {
-    const {
-      deposit_date: depositDate,
-      depositType: { expiry_time: expiryTime, interest_rate: interestRate },
-    } = account?.depositAccountDetail;
+    const { deposit_date: depositDate, depositType } =
+      account?.depositAccountDetail || {};
+    const { expiry_time: expiryTime, interest_rate: interestRate } =
+      depositType || {};
     details = (
       <>
         <Input label="Time" disabled value={`${expiryTime} months`} />
@@ -70,7 +83,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
         {!depositDate && balance !== 0 && (
           <Button label="Complete your deposit" onClick={onConfirmDeposit} />
         )}
-        <Link to={`/dashboard/transaction?account_number=${account_number}`}>
+        <Link to={`/dashboard/transaction?account_number=${accountNumber}`}>
           <Button label="Transaction" />
         </Link>
         {status === 'CLOSED' && (
@@ -81,7 +94,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer to this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?destination_account_number=${account_number}`
+                `/dashboard/transfer?destination_account_number=${accountNumber}`
               );
             }}
           />
@@ -99,7 +112,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
           label="Transfer to this"
           onClick={() => {
             history.push(
-              `/dashboard/transfer?destination_account_number=${account_number}`
+              `/dashboard/transfer?destination_account_number=${accountNumber}`
             );
           }}
         />
@@ -108,12 +121,12 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer from this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?source_account_number=${account_number}`
+                `/dashboard/transfer?source_account_number=${accountNumber}`
               );
             }}
           />
         )}
-        <Link to={`/dashboard/transaction?account_number=${account_number}`}>
+        <Link to={`/dashboard/transaction?account_number=${accountNumber}`}>
           <Button label="Transaction" />
         </Link>
       </>
@@ -121,8 +134,24 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
   }
 
   return (
-    <div className="flex-1 pl-6 pt-6" style={{ maxWidth: '275px' }}>
+    <div
+      className="flex-1 pl-6 pt-6"
+      style={{ maxWidth: '400px', minWidth: '275px' }}
+    >
       <div className="font-bold text-xl mb-4">Account Details</div>
+      <Input label="Account number" disabled value={accountNumber} />
+      <Input label="Type" disabled value={type} />
+      <Input label="Balance" disabled value={`${balance} ${cU}`} />
+      <Input
+        label="Created at"
+        disabled
+        value={formatDatetime(createdAt) || ''}
+      />
+      <Input
+        label="Latest action at"
+        disabled
+        value={formatDatetime(updatedAt) || ''}
+      />
       {details}
     </div>
   );

@@ -15,6 +15,20 @@ const TransactionPage = ({ accounts }) => {
   const [transactions, setTransactions] = useState([]);
   const token = useSelector(state => state.customerAuth.token);
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountNumber = urlParams.get('account_number');
+    if (accounts && accountNumber) {
+      const index = accounts.findIndex(
+        acc => acc.account_number === accountNumber
+      );
+      if (index >= 0) {
+        setCurrentAccountIndex(index);
+        setAccount(accounts[index]);
+      }
+    }
+  }, [accounts]);
+
   const fetchTransaction = async (currentPage = 1, reload = false) => {
     if (account) {
       try {
@@ -43,33 +57,18 @@ const TransactionPage = ({ accounts }) => {
     }
   };
 
-  const changeAccount = async () => {
-    setPage(1);
-    setCanLoadMore(true);
-    fetchTransaction(1, true);
-  };
-
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const accountNumber = urlParams.get('account_number');
-    if (accounts && accountNumber) {
-      const index = accounts.findIndex(
-        acc => acc.account_number === accountNumber
-      );
-      if (index >= 0) {
-        setCurrentAccountIndex(index);
-        setAccount(accounts[index]);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
+    const changeAccount = async () => {
+      setPage(1);
+      setCanLoadMore(true);
+      fetchTransaction(1, true);
+    };
     changeAccount();
   }, [account]);
 
   return (
     <div className="w-1/2 p-6">
-      <h1 className="text-lg font-bold mb-6">Transactions</h1>
+      <h1 className="pb-4 font-bold text-4xl">Your Transactions</h1>
       <ComboBox
         label="Choose account number"
         onValueChange={accountIndex => {

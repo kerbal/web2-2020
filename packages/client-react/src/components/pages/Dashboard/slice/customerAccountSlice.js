@@ -158,6 +158,7 @@ export const createAccount = (token, data, reject) => async dispatch => {
     const res = await axios.post(url, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(res.data);
     dispatch(addAccount(res.data));
     dispatch(setSelectedAccount(res.data.id));
   } catch (error) {
@@ -168,24 +169,19 @@ export const createAccount = (token, data, reject) => async dispatch => {
 };
 
 export const selectorOverviewAccounts = state => [
-  ['Type', 'Account Number', 'Balance', 'Currency Unit', 'Latest updating'],
+  ['Type', 'Account Number', 'Balance', 'Currency', 'Latest updating'],
   state.customerAccounts.accounts
     .filter(account => account.status === 'NORMAL')
     .map(overviewMap),
 ];
 
 export const selectorAccounts = state => [
-  [
-    'Type',
-    'Account Number',
-    'Balance',
-    'Currency Unit',
-    'Status',
-    'Latest updated at',
-    'Created at',
-    'Closed at',
-  ],
-  state.customerAccounts.accounts.map(accountMap),
+  ['Type', 'Account Number', 'Balance', 'Currency', 'Status'],
+  state.customerAccounts.accounts
+    .map(accountMap)
+    .map(({ updatedAt, createdAt, closedAt, ...account }) => ({
+      ...account,
+    })),
 ];
 
 export default customerAccountSlice.reducer;

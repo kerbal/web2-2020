@@ -74,16 +74,13 @@ const Transfer = props => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    // eslint-disable-next-line no-shadow
-    const destinationAccountNumber = urlParams.get(
-      'destination_account_number'
-    );
+    const desAccountNumber = urlParams.get('destination_account_number');
     const sourceAccountNumber = urlParams.get('source_account_number');
 
-    if (destinationAccountNumber) {
-      setDestinationAccountNumber(destinationAccountNumber);
-      if (`${destinationAccountNumber}`.length === 16) {
-        searchDestinationAccount(destinationAccountNumber);
+    if (desAccountNumber) {
+      setDestinationAccountNumber(desAccountNumber);
+      if (`${desAccountNumber}`.length === 16) {
+        searchDestinationAccount(desAccountNumber);
       }
     }
 
@@ -137,7 +134,7 @@ const Transfer = props => {
             }}
           >
             {['Piggy Bank', 'Chicken Bank'].map(value => (
-              <option>{value}</option>
+              <option key={value}>{value}</option>
             ))}
           </ComboBox>
         </div>
