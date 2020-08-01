@@ -4,7 +4,7 @@ import Logo from '../../../../common/Logo';
 
 const MenuButton = () => {
   return (
-    <div className="block lg:hidden">
+    <div className="block md:hidden">
       <button
         type="button"
         className="flex items-center px-3 py-2 border rounded text-gray-500 border-teal-400 hover:text-gray-700 hover:border-gray-700"
@@ -25,12 +25,13 @@ const MenuButton = () => {
 const NavItems = props => {
   const { navItems } = props;
   return (
-    <div className="text-sm lg:flex-grow">
+    <div className="text-sm md:flex-grow">
       {navItems.map(item => {
         return (
           <a
+            key={item.link}
             href={item.link}
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-500 hover:text-gray-700 mr-4"
+            className="block text-center mt-4 md:inline-block md:mt-0 text-gray-500 hover:text-gray-700 md:mr-4"
           >
             {item.label}
           </a>
@@ -42,10 +43,10 @@ const NavItems = props => {
 
 const InternetBankingButton = () => {
   return (
-    <div>
+    <div className="text-center mt-4 md:mt-0">
       <Link
         to="/dashboard"
-        className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-700 border-gray-700 hover:border-transparent hover:text-teal-500 hover:bg-gray-700 mt-4 lg:mt-0"
+        className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-700 border-gray-700 hover:border-transparent hover:text-teal-500 hover:bg-gray-700"
       >
         Internet Banking
       </Link>
@@ -73,11 +74,11 @@ const NavBar = () => {
     },
   ];
   return (
-    <div className="bg-white p-6">
-      <nav className="container mx-auto flex items-center justify-between flex-wrap ">
+    <div className="bg-white">
+      <nav className="container mx-auto flex items-center justify-between flex-wrap p-6">
         <Logo />
         <MenuButton />
-        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:justify-between">
+        <div className="w-full block flex-grow md:flex md:items-center md:w-auto md:justify-between">
           <NavItems navItems={navItems} />
           <InternetBankingButton />
         </div>

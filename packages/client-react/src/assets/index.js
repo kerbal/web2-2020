@@ -1,6 +1,7 @@
+/* eslint-disable global-require */
 export const images = {
   background1: require('./images/background1.jpg'),
-}
+};
 
 export const icons = {
   logo: require('./icons/logo.svg'),
@@ -17,5 +18,5 @@ export const icons = {
   sidebar_dashboard: require('./icons/sidebar_dashboard.svg'),
   combobox_arrowdown: require('./icons/combobox_arrowdown.svg'),
   imageuploader_placeholder: require('./icons/imageuploader_placeholder.svg'),
-  done_tick: require('./icons/done_tick.svg')
-}
+  done_tick: require('./icons/done_tick.svg'),
+};

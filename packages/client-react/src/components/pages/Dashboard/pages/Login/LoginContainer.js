@@ -1,12 +1,13 @@
 import React from 'react';
-import { useDispatch, connect } from 'react-redux';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
-import { useForm } from '../../../../../utils/hooks';
+import useForm from '../../../../../utils/useForm';
 import { loginFormSetup } from '../../../../../utils/formSetup';
+import useCustomerCheck from '../../utils/useCustomerCheck';
 
-const LoginContainer = ({ customer }) => {
+const LoginContainer = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [
@@ -15,7 +16,8 @@ const LoginContainer = ({ customer }) => {
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ] = useForm(loginFormSetup);
 
-  const onSignIn = () => {
+  const onSignIn = e => {
+    e.preventDefault();
     setTouched();
     if (checkFormValidity()) {
       dispatch(
@@ -32,18 +34,11 @@ const LoginContainer = ({ customer }) => {
     }
   };
 
-  const onRegisterLinkPress = () => {
-    history.push('/dashboard/register');
-  };
-
-  if (customer) {
-    return <Redirect to="/dashboard/overview" />;
-  }
+  useCustomerCheck(customer => customer, '/dashboard/overview');
 
   return (
     <>
       <LoginComponent
-        onRegisterLinkPress={onRegisterLinkPress}
         onSignIn={onSignIn}
         onLoginFormChange={onFormChange}
         formValidator={formValidator}
@@ -53,6 +48,4 @@ const LoginContainer = ({ customer }) => {
   );
 };
 
-export default connect(state => ({
-  customer: state.customerAuth.user,
-}))(LoginContainer);
+export default LoginContainer;

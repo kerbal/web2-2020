@@ -15,8 +15,11 @@ export const loginFormSetup = {
     value: '',
     rules: {
       required: true,
+      minLength: 6,
+      haveDigit: true,
     },
-    validationError: 'Please enter your password',
+    validationError:
+      'Please enter your password (at least 6 characters, 1 digit)',
     touched: false,
     placeholder: 'Password',
   },
@@ -51,8 +54,11 @@ export const registerFormSetup = {
     value: '',
     rules: {
       required: true,
+      minLength: 6,
+      haveDigit: true,
     },
-    validationError: 'Please enter your password',
+    validationError:
+      'Please enter your password (at least 6 characters, 1 digit)',
     touched: false,
     placeholder: 'Password',
     label: 'Password',

@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import routes from './routes';
 import { fetchSessionStorage } from './components/pages/Dashboard/slice/customerAuthSlice';
 
-const App = ({ isReady }) => {
+const App = () => {
   const dispatch = useDispatch();
+  const isReady = useSelector(state => state.customerAuth.ready);
 
   useEffect(() => {
     dispatch(fetchSessionStorage());
-  }, []);
-  console.log(isReady);
+  }, [dispatch]);
+
   if (!isReady) {
     return <div />;
   }
@@ -35,6 +36,4 @@ const App = ({ isReady }) => {
   );
 };
 
-export default connect(state => ({
-  isReady: state.customerAuth.ready,
-}))(App);
+export default App;

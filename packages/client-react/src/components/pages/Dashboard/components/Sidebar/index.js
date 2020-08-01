@@ -7,7 +7,7 @@ const SidebarItem = props => {
   } = props;
   return (
     <NavLink
-      className="flex flex-row pt-6 opacity-50"
+      className="flex flex-row mt-6 opacity-50"
       to={path}
       activeClassName="opacity-100"
     >
@@ -19,7 +19,7 @@ const SidebarItem = props => {
   );
 };
 
-const Seperator = () => {
+const Separator = () => {
   return <div className="h-6" />;
 };
 
@@ -27,9 +27,13 @@ const Sidebar = props => {
   const { sidebarItems } = props;
 
   return (
-    <div className="px-6" style={{ width: '250px' }}>
+    <div className="flex-1" style={{ maxWidth: '175px' }}>
       {sidebarItems.map(item =>
-        item.name === 'Seperator' ? <Seperator /> : <SidebarItem item={item} />
+        item.name === 'Separator' ? (
+          <Separator key={item.id} />
+        ) : (
+          <SidebarItem key={item.id} item={item} />
+        )
       )}
     </div>
   );

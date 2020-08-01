@@ -3,15 +3,20 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Loading from '../../common/Loading';
 import { icons } from '../../../assets';
+import useCustomerCheck from './utils/useCustomerCheck';
 
 const Container = props => {
   const { children } = props;
-  return <div className="w-screen">{children}</div>;
+  return (
+    <div className="mx-auto" style={{ maxWidth: '1600px' }}>
+      {children}
+    </div>
+  );
 };
 
 const ContentContainer = props => {
   const { children } = props;
-  return <div className="flex flex-row flex-1">{children}</div>;
+  return <div className="flex flex-row flex-1 p-6">{children}</div>;
 };
 
 const sidebarItems = [
@@ -41,7 +46,7 @@ const sidebarItems = [
   },
   {
     id: 6,
-    name: 'Seperator',
+    name: 'Separator',
   },
   {
     id: 7,
@@ -58,7 +63,9 @@ const sidebarItems = [
 ];
 
 const withDashboardFrame = ContentComponent => {
-  return () => {
+  return ({ checkCustomer }) => {
+    if (checkCustomer)
+      useCustomerCheck(checkCustomer?.check, checkCustomer?.to);
     const [loading, setLoading] = useState(false);
     return (
       <>
