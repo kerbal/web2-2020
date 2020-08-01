@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Header from '../../components/Header';
 import Loading from '../../../../common/Loading';
 import ImageUploader from '../../../../common/ImageUploader';
@@ -42,17 +43,15 @@ const ButtonContainer = props => {
 const VerifyPIDComponent = props => {
   const {
     loading,
-    frontSidePIDImgUrl,
     setFrontSidePIDImgUrl,
-    rearSidePIDImgUrl,
     setRearSidePIDImgUrl,
     onSubmit,
   } = props;
-
+  const history = useHistory();
   return (
     <>
       <Container>
-        <Header title="Account Verification" disableCurrentTime />
+        <Header title="Account Verification" />
         <ContentContainer>
           <TextContainer>
             <span className="font-medium text-2xl">
@@ -71,22 +70,23 @@ const VerifyPIDComponent = props => {
           </TextContainer>
           <ImagesContainer>
             <ImageIndividuallyContainer name="Front side">
-              <ImageUploader
-                imageUrl={frontSidePIDImgUrl}
-                setImageUrl={setFrontSidePIDImgUrl}
-              />
+              <ImageUploader setImageUrl={setFrontSidePIDImgUrl} />
             </ImageIndividuallyContainer>
 
             <div className="w-12" />
             <ImageIndividuallyContainer name="Rear-side">
-              <ImageUploader
-                imageUrl={rearSidePIDImgUrl}
-                setImageUrl={setRearSidePIDImgUrl}
-              />
+              <ImageUploader setImageUrl={setRearSidePIDImgUrl} />
             </ImageIndividuallyContainer>
           </ImagesContainer>
           <ButtonContainer>
-            <Button label="Submit" onClick={() => onSubmit && onSubmit()} />
+            <Button label="Submit" onClick={onSubmit} />
+          </ButtonContainer>
+          <ButtonContainer>
+            <Button
+              label="Logout"
+              secondary
+              onClick={() => history.replace('/dashboard/logout')}
+            />
           </ButtonContainer>
         </ContentContainer>
       </Container>

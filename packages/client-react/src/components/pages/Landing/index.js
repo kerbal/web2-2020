@@ -8,7 +8,7 @@ import SplashCarousel from './components/SplashCarousel';
 import Introduction from './components/Introduction';
 import ProductIntroduction from './components/ProductIntroduction';
 import AboutUs from './components/AboutUs';
-import { useForm } from '../../../utils/hooks';
+import useForm from '../../../utils/useForm';
 import { loginFormSetup } from '../../../utils/formSetup';
 
 const Landing = () => {

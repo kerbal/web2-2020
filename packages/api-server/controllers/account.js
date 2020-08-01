@@ -104,13 +104,16 @@ export const customerCloseAccount = async (req, res, next) => {
       id: account_id,
       customer_id: customerId,
     });
+    await account.update({ closed_date: new Date() }, { t });
 
     if (!account)
       throw new Error('Account not found');
-    if(account.type === ACCOUNT_TYPE.DEFAULT)
+    if (account.type === ACCOUNT_TYPE.DEFAULT)
       throw new Error('Account is DEFAULT');
+    if (account.status === ACCOUNT_STATUS.CLOSED)
+      throw new Error('Account is CLOSED');
 
-    if(account.balance === 0) {
+    if (account.balance === 0) {
       await account.update({ status: ACCOUNT_STATUS.CLOSED }, { t });
       await t.commit();
       return res.status(200).json(account);
@@ -238,6 +241,7 @@ export const adminChangeStatus = async (req, res, next) => {
         note: `Admin ${req.auth.id} closed ${account.id}`,
       })).transaction;
       await TransactionService.execute(transaction);
+      await account.update({ closed_date: new Date() }, { t });
     }
 
     await account.update({ status: newStatus }, { t });

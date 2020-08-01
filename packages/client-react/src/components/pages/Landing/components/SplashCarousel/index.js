@@ -38,12 +38,14 @@ const SplashCarousel = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative overflow-hidden">
       <Slider dots infinite speed={500} slidesToShow={1} slidesToScroll={1}>
         {appendItems(carouselItems)}
       </Slider>
-      <div className="absolute bottom-0 text-white text-6xl font-thin px-12 py-6">
-        your next bank is just a click away
+      <div className="relative container mx-auto ">
+        <p className="absolute right-full bottom-0 text-white text-4xl md:text-6xl font-thin px-12 py-6">
+          your next bank is just a click away
+        </p>
       </div>
     </div>
   );
