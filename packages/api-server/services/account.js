@@ -89,6 +89,10 @@ class AccountService {
         include: [{
           model: DepositAccount,
           as: 'depositAccountDetail',
+          include: [{
+            model: DepositType,
+            as: 'depositType',
+          }],
         }],
         transaction,
       });
