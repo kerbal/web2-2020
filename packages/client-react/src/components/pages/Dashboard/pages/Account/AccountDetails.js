@@ -1,11 +1,12 @@
+/* eslint-disable camelcase */
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import Button from '../../../../common/Button';
 import Input from '../../../../common/Input';
 import { formatDatetime } from '../../../../../utils';
 
 export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
-  const { status, type, accountNumber, balance, closedAt } = account;
+  const { status, type, account_number, balance, closedAt } = account;
   const history = useHistory();
   let details = null;
   if (type === 'CHECKING') {
@@ -24,7 +25,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer to this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?account_number=${accountNumber}&src=false`
+                `/dashboard/transfer?destination_account_number=${account_number}`
               );
             }}
           />
@@ -34,11 +35,14 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer from this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?account_number=${accountNumber}&src=true`
+                `/dashboard/transfer?source_account_number=${account_number}`
               );
             }}
           />
         )}
+        <Link to={`/dashboard/transaction?account_number=${account_number}`}>
+          <Button label="Transaction" />
+        </Link>
         {status !== 'CLOSED' && (
           <Button label="Closed" secondary onClick={onClosed} />
         )}
@@ -66,6 +70,9 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
         {!depositDate && balance !== 0 && (
           <Button label="Complete your deposit" onClick={onConfirmDeposit} />
         )}
+        <Link to={`/dashboard/transaction?account_number=${account_number}`}>
+          <Button label="Transaction" />
+        </Link>
         {status === 'CLOSED' && (
           <Input label="Closed at" disabled value={closedAt || ''} />
         )}
@@ -74,7 +81,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer to this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?account_number=${accountNumber}&src=false`
+                `/dashboard/transfer?destination_account_number=${account_number}`
               );
             }}
           />
@@ -92,7 +99,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
           label="Transfer to this"
           onClick={() => {
             history.push(
-              `/dashboard/transfer?account_number=${accountNumber}&src=false`
+              `/dashboard/transfer?destination_account_number=${account_number}`
             );
           }}
         />
@@ -101,11 +108,14 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             label="Transfer from this"
             onClick={() => {
               history.push(
-                `/dashboard/transfer?account_number=${accountNumber}&src=true`
+                `/dashboard/transfer?source_account_number=${account_number}`
               );
             }}
           />
         )}
+        <Link to={`/dashboard/transaction?account_number=${account_number}`}>
+          <Button label="Transaction" />
+        </Link>
       </>
     );
   }

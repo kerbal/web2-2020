@@ -24,8 +24,11 @@ export default class TransactionService {
           { source_account_id: account_id },
         ],
       },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: 10,
+      offset: (page - 1) * 10,
+      order: [
+        ['createdAt', 'DESC'],
+      ],
     };
     const t = await Transaction.findAll(query);
     return t;

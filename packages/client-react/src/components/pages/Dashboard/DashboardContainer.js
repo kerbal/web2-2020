@@ -10,6 +10,7 @@ import VerifyPIDContainer from './pages/VerifyPID/VerifyPIDContainer';
 import Logout from './pages/Logout';
 import useCustomerCheck from './utils/useCustomerCheck';
 import Loading from '../../common/Loading';
+import Transaction from './pages/Transaction';
 
 const checkVerifiedCustomer = {
   check: customer => customer && customer.status !== 'VERIFIED',
@@ -21,6 +22,11 @@ const routes = [
     path: '/dashboard/transfer',
     exact: true,
     main: () => <TransferContainer checkCustomer={checkVerifiedCustomer} />,
+  },
+  {
+    path: '/dashboard/transaction',
+    exact: true,
+    main: () => <Transaction />,
   },
   {
     path: '/dashboard/overview',
