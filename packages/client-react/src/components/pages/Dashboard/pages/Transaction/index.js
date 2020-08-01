@@ -1,57 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import axios from '../../../../../utils/axios';
 import withDashboardFrame from '../../withDashboardFrame';
 import { formatCurrency } from '../../../../../utils';
+import ComboBox from '../../../../common/ComboBox';
 
-const TransactionPage = () => {
-  const accounts = [
-    {
-      id: 0,
-      account_number: '12345',
-      balance: 150000,
-    },
-    {
-      id: 1,
-      account_number: '67890',
-      balance: 225000,
-    },
-  ];
-  const [currentAccountIndex, setCurrentAccountIndex] = useState(1);
-  const [account, setAccount] = useState(accounts[currentAccountIndex]);
+const TransactionPage = ({ accounts }) => {
+  const [currentAccountIndex, setCurrentAccountIndex] = useState(0);
+  const [account, setAccount] = useState(
+    accounts ? accounts[currentAccountIndex] : undefined
+  );
   const [page, setPage] = useState(1);
   const [canLoadMore, setCanLoadMore] = useState(true);
   const [transactions, setTransactions] = useState([]);
   const token = useSelector(state => state.customerAuth.token);
 
-  const fetchTransaction = async (currentPage = 1) => {
-    try {
-      const res = await axios.get(
-        `/customer/account/${account.id}/transaction?page=${currentPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+  const fetchTransaction = async (currentPage = 1, reload = false) => {
+    if (account) {
+      try {
+        const res = await axios.get(
+          `/customer/account/${account.id}/transaction?page=${currentPage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.data.transactions.length > 0) {
+          if (reload) {
+            setTransactions(res.data.transactions);
+          } else {
+            setTransactions(transactions.concat(res.data.transactions));
+          }
         }
-      );
-      if (res.data.transactions.length > 0) {
-        setTransactions(transactions.concat(res.data.transactions));
-      } else {
+        if (res.data.transactions.length < 10) {
+          setCanLoadMore(false);
+        }
+      } catch (error) {
+        console.log(error);
         setCanLoadMore(false);
       }
-    } catch (error) {
-      console.log(error);
-      setCanLoadMore(false);
     }
   };
 
+  const changeAccount = async () => {
+    setPage(1);
+    setCanLoadMore(true);
+    fetchTransaction(1, true);
+  };
+
   useEffect(() => {
-    fetchTransaction();
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountNumber = urlParams.get('account_number');
+    if (accounts && accountNumber) {
+      const index = accounts.findIndex(
+        acc => acc.account_number === accountNumber
+      );
+      if (index >= 0) {
+        setCurrentAccountIndex(index);
+        setAccount(accounts[index]);
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    changeAccount();
+  }, [account]);
 
   return (
     <div className="w-1/2 p-6">
       <h1 className="text-lg font-bold mb-6">Transactions</h1>
+      <ComboBox
+        label="Choose account number"
+        onValueChange={accountIndex => {
+          setCurrentAccountIndex(accountIndex);
+          setAccount(accounts[accountIndex]);
+        }}
+        value={currentAccountIndex}
+      >
+        {accounts &&
+          accounts.map((acc, index) => (
+            <option value={index} key={acc.account_number}>
+              {acc.account_number}
+            </option>
+          ))}
+      </ComboBox>
       {transactions.map(t => (
         <div className="border shadow-md mb-6 p-3 rounded flex">
           <div className="mr-10 text-lg p-2" style={{ borderRadius: '50%' }}>
@@ -125,4 +158,8 @@ const TransactionPage = () => {
   );
 };
 
-export default withDashboardFrame(TransactionPage);
+export default withDashboardFrame(
+  connect(state => ({
+    accounts: state.customerAccounts.accounts,
+  }))(TransactionPage)
+);

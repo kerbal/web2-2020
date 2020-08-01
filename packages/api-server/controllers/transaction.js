@@ -41,8 +41,9 @@ export class UserTransactionController {
         throw new NotFound(`Destination account id ${source_account_id} not found`);
       }
       const remaining_balance = source_account.balance;
+      console.log(amount, remaining_balance);
       if (amount > remaining_balance) {
-        throw new NotFound('Remaining balance is not enough');
+        throw new BadRequest('Remaining balance is not enough');
       }
       if (amount < 0) {
         throw new BadRequest('Amount must be larger than 0');

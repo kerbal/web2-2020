@@ -25,6 +25,7 @@ class AccountService {
           model: DepositType,
           as: 'depositType',
         }],
+        required: false,
       }, {
         model: Customer,
         attributes: ['email', 'fullname', 'phone_number', 'id'],

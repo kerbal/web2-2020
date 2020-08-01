@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, connect } from 'react-redux';
 import _ from 'lodash';
 import ComboBox from '../../../../common/ComboBox';
 import Input from '../../../../common/Input';
@@ -11,25 +11,15 @@ const Container = ({ children }) => {
 };
 
 const Transfer = props => {
-  const accounts = [
-    {
-      id: 0,
-      account_number: '12345',
-      balance: 150000,
-    },
-    {
-      id: 1,
-      account_number: '67890',
-      balance: 225000,
-    },
-  ];
+  const { accounts } = props;
   const { refresh } = props;
-  const [currentAccountIndex, setCurrentAccountIndex] = useState(1);
-  const [accountId, setAccountId] = useState(accounts[currentAccountIndex].id);
+  const [currentAccountIndex, setCurrentAccountIndex] = useState(0);
+  const [accountId, setAccountId] = useState(
+    (accounts[currentAccountIndex] || {}).id
+  );
   const [destinationAccountNumber, setDestinationAccountNumber] = useState();
   const [amount, setAmount] = useState(0);
   const [note, setNote] = useState('');
-  // const [sourceBankId, setSourceBankId] = useState('PIGGY');
   const [destinationBankId, setDestinationBankId] = useState('PIGGY');
   const [creating, setCreating] = useState(false);
   const [verify, setVerify] = useState(false);
@@ -41,11 +31,14 @@ const Transfer = props => {
   const token = useSelector(state => state.customerAuth.token);
 
   const searchDestinationAccount = async value => {
-    const res = await axios.get(`/customer/account?account_number=${value}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await axios.get(
+      `/customer/account?account_number=${value}&other=true`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (res.data.length === 1) {
       setDestinationAccount(res.data[0]);
     }
@@ -79,6 +72,32 @@ const Transfer = props => {
     setCreating(false);
   };
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    // eslint-disable-next-line no-shadow
+    const destinationAccountNumber = urlParams.get(
+      'destination_account_number'
+    );
+    const sourceAccountNumber = urlParams.get('source_account_number');
+
+    if (destinationAccountNumber) {
+      setDestinationAccountNumber(destinationAccountNumber);
+      if (`${destinationAccountNumber}`.length === 16) {
+        searchDestinationAccount(destinationAccountNumber);
+      }
+    }
+
+    if (sourceAccountNumber) {
+      const index = accounts.findIndex(
+        acc => acc.account_number === sourceAccountNumber
+      );
+      if (index >= 0) {
+        setCurrentAccountIndex(index);
+        setAccountId(accounts[index].id);
+      }
+    }
+  }, []);
+
   return (
     <Container>
       <div className="pb-6 font-bold text-xl">Create a Transfer</div>
@@ -88,7 +107,7 @@ const Transfer = props => {
             label="Source Account"
             onValueChange={accountIndex => {
               setCurrentAccountIndex(accountIndex);
-              setAccountId(accounts[currentAccountIndex].id);
+              setAccountId(accounts[accountIndex].id);
             }}
             value={currentAccountIndex}
             disabled={verify}
@@ -104,7 +123,7 @@ const Transfer = props => {
           <Input
             label="Remaining Balance"
             disabled
-            value={accounts[currentAccountIndex].balance}
+            value={(accounts[currentAccountIndex] || {}).balance}
           />
         </div>
       </div>
@@ -137,7 +156,7 @@ const Transfer = props => {
         </div>
       </div>
       {destinationAccount && (
-        <div>
+        <div className="mb-4">
           <h3 className="text-lg font-semibold mb-2">Destination account</h3>
           <p className="mb-1">
             <span className="font-semibold mr-2">Name:</span>
@@ -209,4 +228,6 @@ const Transfer = props => {
   );
 };
 
-export default Transfer;
+export default connect(state => ({
+  accounts: state.customerAccounts.accounts,
+}))(Transfer);
