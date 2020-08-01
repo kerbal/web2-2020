@@ -3,7 +3,7 @@ import ComboBox from '../../../../common/ComboBox';
 
 export default ({ onConfirm }) => {
   const [type, setType] = useState('CHECKING');
-  const [depositType, setDepositType] = useState(2);
+  const [depositTypeID, setDepositTypeID] = useState(2);
   const [cU, setCU] = useState('VND');
   const [isCreating, setIsCreating] = useState(false);
   const showButton = (
@@ -12,7 +12,7 @@ export default ({ onConfirm }) => {
         onClick={() => setIsCreating(true)}
         className="w-full rounded bg-black text-white text-center font-bold text-lg hover:bg-gray-700 py-1 px-3 border-2 border-black"
       >
-        Create new account
+        Create account
       </button>
     </div>
   );
@@ -22,8 +22,8 @@ export default ({ onConfirm }) => {
       <div className="px-2" style={{ flex: '1 1 33.33%', maxWidth: '33.33%' }}>
         <ComboBox
           label="Type"
-          onValueChange={type => {
-            setType(type);
+          onValueChange={typeDeposit => {
+            setType(typeDeposit);
           }}
           value={type}
         >
@@ -38,10 +38,10 @@ export default ({ onConfirm }) => {
         >
           <ComboBox
             label="Deposit Type"
-            onValueChange={type => {
-              setDepositType(+type);
+            onValueChange={id => {
+              setDepositTypeID(+id);
             }}
-            value={depositType}
+            value={depositTypeID}
             disabled={type !== 'DEPOSIT'}
           >
             <option value={1}>3 months, 1%/month</option>
@@ -61,8 +61,8 @@ export default ({ onConfirm }) => {
           }}
           value={cU}
         >
-          <option value={'VND'}>VND </option>
-          <option value={'USD'}>USD</option>
+          <option value="VND">VND </option>
+          <option value="USD">USD</option>
         </ComboBox>
       </div>
       <div
@@ -71,7 +71,7 @@ export default ({ onConfirm }) => {
       >
         <div className="flex-1 mt-auto pr-4">
           <button
-            onClick={() => onConfirm(type, depositType, cU)}
+            onClick={() => onConfirm(type, depositTypeID, cU)}
             className="w-full rounded bg-black text-white text-center font-bold text-lg hover:bg-gray-700 py-1 px-3 border-2 border-black"
           >
             Confirm
@@ -89,16 +89,8 @@ export default ({ onConfirm }) => {
     </>
   );
   return (
-    <div className="flex flex-wrap">
-      {isCreating && (
-        <div
-          className="pb-2 font-bold text-xl"
-          style={{ flex: '1 1 100%', maxWidth: '100%' }}
-        >
-          Creating
-        </div>
-      )}
-      <div className="flex flex-1 mb-2">{isCreating ? createForm : showButton}</div>
+    <div className="flex flex-1 mb-2 pl-4">
+      {isCreating ? createForm : showButton}
     </div>
   );
 };

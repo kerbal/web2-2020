@@ -90,6 +90,7 @@ export const customerConfirmDeposit = async (req, res, next) => {
       customerId,
       account_id,
     );
+    console.log(account);
     return res.status(200).json(account);
   } catch (error) {
     next(error);

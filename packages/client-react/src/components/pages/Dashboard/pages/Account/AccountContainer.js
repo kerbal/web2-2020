@@ -17,8 +17,8 @@ const AccountContainer = () => {
   const [columns, accounts] = useSelector(selectorAccounts);
   const [token] = useSelector(customerSelector);
   const selectedAccount = useSelector(
-    ({ customerAccounts: { accounts, selectedAccountId } }) =>
-      accounts.find(a => a.id === selectedAccountId)
+    ({ customerAccounts: { accounts: acs, selectedAccountId } }) =>
+      acs.find(a => a.id === selectedAccountId)
   );
   const [typeFilter, setTypeFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -46,7 +46,7 @@ const AccountContainer = () => {
         console.log(error);
       })
     );
-  }
+  };
   const handlerFilter = (value, id) => {
     const handle = {
       'type-filter': setTypeFilter,
@@ -55,8 +55,8 @@ const AccountContainer = () => {
     };
     handle[id](value);
   };
-  const filterAccount = accounts => {
-    return accounts.filter(({ type, status, accountNumber }) => {
+  const filterAccount = acs => {
+    return acs.filter(({ type, status, accountNumber }) => {
       return (
         type.includes(typeFilter.toUpperCase()) &&
         status.includes(statusFilter.toUpperCase()) &&
