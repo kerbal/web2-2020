@@ -6,30 +6,13 @@ import { formatCurrency } from '../../../../../utils';
 import ComboBox from '../../../../common/ComboBox';
 
 const TransactionPage = ({ accounts }) => {
-  const [currentAccountIndex, setCurrentAccountIndex] = useState(0);
-  const [account, setAccount] = useState(
-    accounts ? accounts[currentAccountIndex] : undefined
-  );
+  const [currentAccountIndex, setCurrentAccountIndex] = useState(null);
   const [page, setPage] = useState(1);
   const [canLoadMore, setCanLoadMore] = useState(true);
   const [transactions, setTransactions] = useState([]);
   const token = useSelector(state => state.customerAuth.token);
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const accountNumber = urlParams.get('account_number');
-    if (accounts && accountNumber) {
-      const index = accounts.findIndex(
-        acc => acc.account_number === accountNumber
-      );
-      if (index >= 0) {
-        setCurrentAccountIndex(index);
-        setAccount(accounts[index]);
-      }
-    }
-  }, [accounts]);
-
   const fetchTransaction = async (currentPage = 1, reload = false) => {
+    const account = accounts[currentAccountIndex];
     if (account) {
       try {
         const res = await axios.get(
@@ -40,12 +23,10 @@ const TransactionPage = ({ accounts }) => {
             },
           }
         );
-        if (res.data.transactions.length > 0) {
-          if (reload) {
-            setTransactions(res.data.transactions);
-          } else {
-            setTransactions(transactions.concat(res.data.transactions));
-          }
+        if (reload) {
+          setTransactions(res.data.transactions);
+        } else {
+          setTransactions(transactions.concat(res.data.transactions));
         }
         if (res.data.transactions.length < 10) {
           setCanLoadMore(false);
@@ -58,13 +39,28 @@ const TransactionPage = ({ accounts }) => {
   };
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountNumber = urlParams.get('account_number');
+    if (accounts && accountNumber) {
+      const index =
+        accounts.findIndex(acc => acc.account_number === accountNumber) || 0;
+      setCurrentAccountIndex(index);
+    }
+  }, []);
+
+  useEffect(() => {
     const changeAccount = async () => {
       setPage(1);
       setCanLoadMore(true);
       fetchTransaction(1, true);
     };
     changeAccount();
-  }, [account]);
+  }, [currentAccountIndex]);
+
+  const onLoadMore = async () => {
+    await setPage(page + 1);
+    await fetchTransaction(page + 1);
+  };
 
   return (
     <div className="w-1/2 p-6">
@@ -73,7 +69,6 @@ const TransactionPage = ({ accounts }) => {
         label="Choose account number"
         onValueChange={accountIndex => {
           setCurrentAccountIndex(accountIndex);
-          setAccount(accounts[accountIndex]);
         }}
         value={currentAccountIndex}
       >
@@ -85,9 +80,9 @@ const TransactionPage = ({ accounts }) => {
           ))}
       </ComboBox>
       {transactions.map(t => (
-        <div className="border shadow-md mb-6 p-3 rounded flex">
+        <div key={t.id} className="border shadow-md mb-6 p-3 rounded flex">
           <div className="mr-10 text-lg p-2" style={{ borderRadius: '50%' }}>
-            {t.destination_account_id === account.id ? (
+            {t.destination_account_id === accounts[currentAccountIndex].id ? (
               <span className="text-green-400 font-semibold">+</span>
             ) : (
               <span className="text-red-400 font-semibold">-</span>
@@ -144,10 +139,7 @@ const TransactionPage = ({ accounts }) => {
           <button
             type="button"
             className="button bg-blue-500 text-white p-3 rounded mb-4 outline-none"
-            onClick={async () => {
-              await setPage(page + 1);
-              await fetchTransaction(page + 1);
-            }}
+            onClick={onLoadMore}
           >
             Load more transactions
           </button>

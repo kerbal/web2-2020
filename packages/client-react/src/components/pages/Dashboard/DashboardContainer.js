@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchAccounts } from './slice/customerAccountSlice';
 import OverviewContainer from './pages/Overview/OverviewContainer';
 import AccountContainer from './pages/Account/AccountContainer';
@@ -9,7 +9,6 @@ import TransferContainer from './pages/Transfer/TransferContainer';
 import VerifyPIDContainer from './pages/VerifyPID/VerifyPIDContainer';
 import Logout from './pages/Logout';
 import useCustomerCheck from './utils/useCustomerCheck';
-import Loading from '../../common/Loading';
 import Transaction from './pages/Transaction';
 
 const checkVerifiedCustomer = {
@@ -58,7 +57,6 @@ const routes = [
 const DashboardContainer = () => {
   const dispatch = useDispatch();
   const [{ token, status }] = useCustomerCheck(customer => !customer, '/login');
-  const loading = useSelector(state => state.customerAccounts.loading);
   useEffect(() => {
     if (status === 'VERIFIED')
       dispatch(
@@ -67,9 +65,6 @@ const DashboardContainer = () => {
         })
       );
   }, [dispatch, token, status]);
-
-  if (loading) return <Loading />;
-
   return (
     <Switch>
       {routes.map(r => (

@@ -1,6 +1,7 @@
 import React from 'react';
 import Input from '../../../../common/Input';
 import Button from '../../../../common/Button';
+import Loading from '../../../../common/Loading';
 
 const IntroductionParagraph = () => {
   return (
@@ -17,9 +18,15 @@ const IntroductionParagraph = () => {
 };
 
 const InstantLoginBox = props => {
-  const { onSignIn, onLoginFormChange, loginForm, formValidator } = props;
+  const {
+    onSignIn,
+    onLoginFormChange,
+    loginForm,
+    formValidator,
+    loadingFrom,
+  } = props;
   return (
-    <form className="mx-16 md:mx-0 p-6 shadow-xl border-t-2 border-gray-600 flex-auto lg:flex-1-2/5 rounded-lg">
+    <form className="overflow-hidden relative mx-16 md:mx-0 p-6 shadow-xl border-t-2 border-gray-600 flex-auto lg:flex-1-2/5 rounded-lg">
       <span className="text-center text-xl font-light">
         Already have an account? Login now.
       </span>
@@ -42,6 +49,7 @@ const InstantLoginBox = props => {
         }
       )}
       <Button onClick={onSignIn} label="Login" />
+      {loadingFrom && <Loading />}
     </form>
   );
 };

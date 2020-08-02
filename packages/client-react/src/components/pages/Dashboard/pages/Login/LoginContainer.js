@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
@@ -15,6 +15,7 @@ const LoginContainer = () => {
     getLoginData,
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ] = useForm(loginFormSetup);
+  const loadingLogin = useSelector(state => state.customerAuth.loading);
 
   const onSignIn = e => {
     e.preventDefault();
@@ -43,6 +44,7 @@ const LoginContainer = () => {
         onLoginFormChange={onFormChange}
         formValidator={formValidator}
         loginForm={loginForm}
+        loadingForm={loadingLogin}
       />
     </>
   );

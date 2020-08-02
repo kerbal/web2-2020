@@ -12,18 +12,23 @@ const RegisterContainer = () => {
     registerForm,
     getRegisterData,
     { onFormChange, formValidator, setTouched, checkFormValidity },
-  ] = useForm(registerFormSetup);
+    [loading, setLoading],
+  ] = useForm(registerFormSetup, true);
+
   const onRegister = () => {
     setTouched();
     if (checkFormValidity()) {
+      setLoading(true);
       const url = 'https://piggy-bank-api.herokuapp.com/api/auth/register';
       axios
         .post(url, getRegisterData())
         .then(() => {
           history.replace('/dashboard/login');
+          setLoading(false);
         })
         .catch(({ response }) => {
           console.log(response);
+          setLoading(false);
         });
     }
   };
@@ -34,6 +39,7 @@ const RegisterContainer = () => {
       registerForm={registerForm}
       formValidator={formValidator}
       onFormChange={onFormChange}
+      loadingForm={loading}
     />
   );
 };
