@@ -6,7 +6,7 @@ import { formatCurrency } from '../../../../../utils';
 import ComboBox from '../../../../common/ComboBox';
 
 const TransactionPage = ({ accounts }) => {
-  const [currentAccountIndex, setCurrentAccountIndex] = useState(null);
+  const [currentAccountIndex, setCurrentAccountIndex] = useState(0);
   const [page, setPage] = useState(1);
   const [canLoadMore, setCanLoadMore] = useState(true);
   const [transactions, setTransactions] = useState([]);
