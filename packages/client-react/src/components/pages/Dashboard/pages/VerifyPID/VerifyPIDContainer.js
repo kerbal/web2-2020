@@ -18,7 +18,8 @@ const VerifyPIDContainer = () => {
 
   const onSubmit = () => {
     if (!frontSidePIDImgUrl || !rearSidePIDImgUrl) {
-      throw new Error('Need 2 image');
+      alert('Need 2 image');
+      return;
     }
 
     const fileData = new FormData();
