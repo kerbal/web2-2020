@@ -22,6 +22,7 @@ const VerifyPIDContainer = () => {
     }
 
     const fileData = new FormData();
+    fileData.append('customer_id', user.id);
     fileData.append('front_image', frontSidePIDImgUrl, `${user.id}-frontimage`);
     fileData.append('back_image', rearSidePIDImgUrl, `${user.id}-backimage`);
     console.log('Sending', fileData);
@@ -32,6 +33,7 @@ const VerifyPIDContainer = () => {
           console.log(res);
         },
         error => {
+          console.log(error);
           alert(error);
         }
       )

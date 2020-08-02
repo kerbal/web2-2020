@@ -36,9 +36,6 @@ const customerValidator = (req, res, next) => {
 };
 
 const identityValidator = (req, res, next)=>{
-  req.check('pid', 'PID is required.').notEmpty();
-  req.check('create_date', 'Invalid create date.').isISO8601().toDate();
-  req.check('location', 'Location is required.').notEmpty();
   req.check('customer_id', 'Customer id is required.').notEmpty();
   //check for error
   const errors = req.validationErrors();
