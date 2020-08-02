@@ -42,11 +42,12 @@ const TransactionPage = ({ accounts }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const accountNumber = urlParams.get('account_number');
     if (accounts && accountNumber) {
-      const index =
-        accounts.findIndex(acc => acc.account_number === accountNumber) || 0;
-      setCurrentAccountIndex(index);
+      const index = accounts.findIndex(
+        acc => acc.account_number === accountNumber
+      );
+      setCurrentAccountIndex(index === -1 ? 0 : index);
     }
-  }, []);
+  }, [accounts]);
 
   useEffect(() => {
     const changeAccount = async () => {
@@ -55,7 +56,7 @@ const TransactionPage = ({ accounts }) => {
       fetchTransaction(1, true);
     };
     changeAccount();
-  }, [currentAccountIndex]);
+  }, [currentAccountIndex, accounts]);
 
   const onLoadMore = async () => {
     await setPage(page + 1);
@@ -70,7 +71,7 @@ const TransactionPage = ({ accounts }) => {
         onValueChange={accountIndex => {
           setCurrentAccountIndex(accountIndex);
         }}
-        value={currentAccountIndex}
+        value={currentAccountIndex || 0}
       >
         {accounts &&
           accounts.map((acc, index) => (
