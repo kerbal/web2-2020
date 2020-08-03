@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { signIn } from '../Dashboard/slice/customerAuthSlice';
 import NavBar from './components/NavBar';
@@ -19,6 +19,7 @@ const Landing = () => {
     getLoginData,
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ] = useForm(loginFormSetup);
+  const loadingLogin = useSelector(state => state.customerAuth.loading);
 
   const onRegisterAccount = () => {
     history.push('/dashboard/register');
@@ -50,6 +51,7 @@ const Landing = () => {
         onLoginFormChange={onFormChange}
         formValidator={formValidator}
         loginForm={loginForm}
+        loadingFrom={loadingLogin}
       />
       <ProductIntroduction onRegisterAccount={onRegisterAccount} />
       <AboutUs />

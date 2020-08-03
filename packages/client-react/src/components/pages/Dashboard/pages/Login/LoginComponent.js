@@ -1,22 +1,29 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Input from '../../../../common/Input';
 import Button from '../../../../common/Button';
+import Loading from '../../../../common/Loading';
 import { images, icons } from '../../../../../assets';
 
-const LoginComponent = memo(function LoginComponent(props) {
-  const { onSignIn, onLoginFormChange, loginForm, formValidator } = props;
+const LoginComponent = props => {
+  const {
+    onSignIn,
+    onLoginFormChange,
+    loginForm,
+    formValidator,
+    loadingForm,
+  } = props;
   return (
     <div
       className="font-family-karla h-full bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${images.background1})` }}
     >
       <div className="container mx-auto flex flex-wrap">
-        <div className="overflow-y-auto h-screen md:w-1/2 flex flex-col bg-white">
+        <div className="relative overflow-y-auto h-screen md:w-1/2 flex flex-col bg-white">
           <div className="flex justify-center md:justify-start py-12 md:pl-12">
             <img alt="" src={icons.logo} width={80} height="auto" />
           </div>
-          <div className=" flex flex-col pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
+          <div className="flex flex-col pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
             <p className="text-center text-3xl font-light">
               Sign in to Internet Banking.
             </p>
@@ -42,6 +49,7 @@ const LoginComponent = memo(function LoginComponent(props) {
                 }
               )}
               <Button type="submit" onClick={onSignIn} label="Login" />
+              {loadingForm && <Loading />}
             </form>
             <div className="text-center pt-12 pb-12">
               <p>Haven&#39;t banked with us before?</p>
@@ -63,6 +71,6 @@ const LoginComponent = memo(function LoginComponent(props) {
       </div>
     </div>
   );
-});
+};
 
 export default LoginComponent;

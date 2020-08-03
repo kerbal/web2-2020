@@ -1,23 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Loading from '../../common/Loading';
 import { icons } from '../../../assets';
 import useCustomerCheck from './utils/useCustomerCheck';
-
-const Container = props => {
-  const { children } = props;
-  return (
-    <div className="mx-auto" style={{ maxWidth: '1600px' }}>
-      {children}
-    </div>
-  );
-};
-
-const ContentContainer = props => {
-  const { children } = props;
-  return <div className="flex flex-row flex-1 p-6">{children}</div>;
-};
 
 const sidebarItems = [
   {
@@ -66,17 +53,17 @@ const withDashboardFrame = ContentComponent => {
   return ({ checkCustomer }) => {
     if (checkCustomer)
       useCustomerCheck(checkCustomer?.check, checkCustomer?.to);
-    const [loading, setLoading] = useState(false);
+    const loading = useSelector(state => state.customerAccounts.loading);
     return (
       <>
-        <Container>
+        <div className="mx-auto" style={{ maxWidth: '1600px' }}>
           <Header />
-          <ContentContainer>
+          <div className="flex flex-row flex-1 p-6">
             <Sidebar sidebarItems={sidebarItems} />
-            <ContentComponent setLoading={setLoading} />
-          </ContentContainer>
-        </Container>
-        {loading && <Loading />}
+            <ContentComponent />
+          </div>
+          {loading && <Loading />}
+        </div>
       </>
     );
   };

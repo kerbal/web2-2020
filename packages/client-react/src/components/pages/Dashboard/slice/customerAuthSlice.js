@@ -98,7 +98,7 @@ export const uploadPID = (
   resolve,
   reject
 ) => async dispatch => {
-  const url = '/auth/updateIndentity';
+  const url = '/auth/updateIdentity';
   try {
     dispatch(setLoading(true));
     const res = await axios.post(url, fileData, {
@@ -109,8 +109,8 @@ export const uploadPID = (
     });
     dispatch(setStatus('WAITING'));
     resolve(res);
-  } catch ({ response }) {
-    reject(response);
+  } catch (error) {
+    reject(error);
   } finally {
     dispatch(setLoading(false));
   }
