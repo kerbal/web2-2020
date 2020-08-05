@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import Input from '../../../../common/Input';
 import axios from '../../../../../utils/axios';
+import Loading from '../../../../common/Loading';
 
 const VerifyTransaction = props => {
   const { transactionId, refresh } = props;
@@ -11,8 +12,10 @@ const VerifyTransaction = props => {
   const [success, setSuccess] = useState(false);
   const [otp, setOTP] = useState(null);
   const token = useSelector(state => state.customerAuth.token);
+  const [loading, setLoading] = useState(false);
 
   const verifyTransaction = async () => {
+    setLoading(true);
     setError(null);
     setVerifying(false);
     try {
@@ -30,9 +33,11 @@ const VerifyTransaction = props => {
       setVerifying(false);
       setError(_.get(err, 'response.data.message') || err.message);
     }
+    setLoading(false);
   };
 
   const registerOTP = async () => {
+    setLoading(true);
     setError(null);
     setVerifying(false);
     try {
@@ -50,10 +55,12 @@ const VerifyTransaction = props => {
       setVerifying(false);
       setError(_.get(err, 'response.data.message') || err.message);
     }
+    setLoading(false);
   };
 
   return (
     <div>
+      {loading && <Loading />}
       {success ? (
         <div className="text-green-500 font-bold text-center w-2/3">
           <p>Successfully transfer money</p>

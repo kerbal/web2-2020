@@ -5,6 +5,7 @@ import ComboBox from '../../../../common/ComboBox';
 import Input from '../../../../common/Input';
 import VerifyTransaction from './VerifyTransaction';
 import axios from '../../../../../utils/axios';
+import Loading from '../../../../common/Loading';
 
 const Container = ({ children }) => {
   return <div className="flex-1 p-6">{children}</div>;
@@ -27,10 +28,12 @@ const Transfer = props => {
   const [error, setError] = useState(null);
   const [destinationAccount, setDestinationAccount] = useState(null);
   const [currencyUnit, setCurrencyUnit] = useState('VND');
+  const [loading, setLoading] = useState(false);
 
   const token = useSelector(state => state.customerAuth.token);
 
   const searchDestinationAccount = async value => {
+    setLoading(true);
     const res = await axios.get(
       `/customer/account?account_number=${value}&other=true`,
       {
@@ -42,9 +45,11 @@ const Transfer = props => {
     if (res.data.length === 1) {
       setDestinationAccount(res.data[0]);
     }
+    setLoading(false);
   };
 
   const createTransaction = async () => {
+    setLoading(true);
     setError(null);
     try {
       const res = await axios.post(
@@ -70,6 +75,7 @@ const Transfer = props => {
       setError(_.get(err, 'response.data.message') || err.message);
     }
     setCreating(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -97,6 +103,7 @@ const Transfer = props => {
 
   return (
     <Container>
+      {loading && <Loading />}
       <div className="pb-6 font-bold text-xl">Create a Transfer</div>
       <div className="flex">
         <div className="w-1/3">

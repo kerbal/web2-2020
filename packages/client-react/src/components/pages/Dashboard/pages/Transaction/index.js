@@ -4,6 +4,7 @@ import axios from '../../../../../utils/axios';
 import withDashboardFrame from '../../withDashboardFrame';
 import { formatCurrency } from '../../../../../utils';
 import ComboBox from '../../../../common/ComboBox';
+import Loading from '../../../../common/Loading';
 
 const TransactionPage = ({ accounts }) => {
   const [currentAccountIndex, setCurrentAccountIndex] = useState(0);
@@ -11,7 +12,10 @@ const TransactionPage = ({ accounts }) => {
   const [canLoadMore, setCanLoadMore] = useState(true);
   const [transactions, setTransactions] = useState([]);
   const token = useSelector(state => state.customerAuth.token);
+  const [loading, setLoading] = useState(false);
+
   const fetchTransaction = async (currentPage = 1, reload = false) => {
+    setLoading(true);
     const account = accounts[currentAccountIndex];
     if (account) {
       try {
@@ -36,6 +40,7 @@ const TransactionPage = ({ accounts }) => {
         setCanLoadMore(false);
       }
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -136,6 +141,7 @@ const TransactionPage = ({ accounts }) => {
       ))}
 
       <div className="flex justify-center">
+        {loading && <Loading />}
         {canLoadMore && (
           <button
             type="button"
