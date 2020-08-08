@@ -103,17 +103,8 @@ const login = async (req, res) => {
       { id: user.id },
       process.env.JWT_SECRET,
     );
-    const { id,  fullname, address } = user;
-    let { status } = user;
+    const { id,  fullname, address, status } = user;
     //check user is update identity
-    const identity = await Identity.findOne({
-      where:{
-        customer_id:id,
-      },
-    });
-    if (identity && status == CUSTOMER_STATUS.UNVERIFIED){
-      status='WAITING';
-    }
     return res.json({
       token,
       user: { id, email, fullname, address, status },
@@ -191,6 +182,8 @@ const updateIdentity = async (req, res)=>{
     });
   }
   try{
+    const user = await Customer.findOne({ id: customer_id });
+    if (!user.status == CUSTOMER_STATUS.UNVERIFIED) return res.json({ error:'Uploaded.' });
     const newIdentity = await Identity.create({
       customer_id,
       pid,
@@ -200,6 +193,8 @@ const updateIdentity = async (req, res)=>{
       back_image: req.body.back_image[0].filename,
       status: 'PENDING',
     });
+    user.status = CUSTOMER_STATUS.WAITING;
+    await user.save();
     if (newIdentity){
       return res.json({ message: 'Success' });
     }
