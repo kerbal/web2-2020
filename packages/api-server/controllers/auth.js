@@ -183,7 +183,7 @@ const updateIdentity = async (req, res)=>{
   }
   try{
     const user = await Customer.findOne({ id: customer_id });
-    if (!user.status == CUSTOMER_STATUS.UNVERIFIED) return res.json({ error:'Uploaded.' });
+    if (!user.status == CUSTOMER_STATUS.UNVERIFIED) return res.json({ error:'Fail.' });
     const newIdentity = await Identity.create({
       customer_id,
       pid,
