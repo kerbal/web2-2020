@@ -4,6 +4,7 @@ import DashboardContainer from './components/pages/Dashboard/DashboardContainer'
 import LoginContainer from './components/pages/Dashboard/pages/Login/LoginContainer';
 import RegisterContainer from './components/pages/Dashboard/pages/Register/RegisterContainer';
 import AdminContainer from './components/pages/Admin/AdminContainer';
+import Error from './components/pages/Error';
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/admin',
     exact: false,
     main: () => <AdminContainer />,
+  },
+  {
+    path: '/404',
+    exact: false,
+    main: () => <Error />,
   },
 ];
 

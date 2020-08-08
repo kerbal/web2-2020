@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Header from './components/Header';
 import Loading from '../../common/Loading';
 import { checkLoginState } from './utils';
 
@@ -31,7 +30,7 @@ const withAdminFrame = ContentComponent => {
 
     render() {
       const { loading } = this.state;
-      const { history, adminState } = this.props;
+      const { history } = this.props;
 
       if (!checkLoginState()) {
         history.push('/admin/login');
@@ -41,7 +40,10 @@ const withAdminFrame = ContentComponent => {
         <>
           <Container>
             <ContentContainer>
-              <ContentComponent setLoading={this.setLoading} />
+              <ContentComponent
+                setLoading={this.setLoading}
+                history={history}
+              />
             </ContentContainer>
           </Container>
           {loading && <Loading />}

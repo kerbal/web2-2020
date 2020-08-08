@@ -1,9 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import HomeComponent from './HomeComponent';
 import withAdminFrame from '../../withAdminFrame';
 import { formatDatetime } from '../../../../../utils';
+import { getAllCustomer } from '../../api/adminCustomer';
 
-const HomeContainer = () => {
+let currentPage = 1;
+
+const HomeContainer = ({ history }) => {
+  const [customersList, setCustomersList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const pageSize = 5;
+  const token = useSelector(state => state.adminAuth.token);
+
+  const getCustomers = async () => {
+    const result = await getAllCustomer(currentPage, pageSize, token);
+    console.log(result.data);
+    if (result && result.data) {
+      try {
+        const data = result.data.map(item => {
+          if (item.birthday) {
+            return { ...item, birthday: formatDatetime(item.birthday) };
+          }
+          return { ...item };
+        });
+        currentPage += 1;
+        setCustomersList(prevCustomersList => [...prevCustomersList, ...data]);
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // console.log(token);
+    currentPage = 1;
+    getCustomers();
+  }, []);
+
   const name = 'admin-customer-table';
   const columns = [
     'Full Name',
@@ -12,48 +48,25 @@ const HomeContainer = () => {
     'Phone Number',
     'Address',
   ];
-  const dataString = `[
-    {
-      "id": 1,
-      "fullname": "Test customer 1",
-      "email": "huynonstop123nt@gmail.com",
-      "birthday": "2020-01-01T00:00:00.000Z",
-      "phone_number": "111111111",
-      "address": "abcdef 111"
-    },
-    {
-      "id": 2,
-      "fullname": "Test customer 2",
-      "email": "tthuykh99@gmail.com",
-      "birthday": "2020-02-02T00:00:00.000Z",
-      "phone_number": "222222222",
-      "address": "abcdef 222"
-    },
-    {
-      "id": 4,
-      "fullname": "Nguyen Hoang Thuc",
-      "email": "test123@gmail.com",
-      "birthday": "1999-12-30T00:00:00.000Z",
-      "phone_number": "0962123452",
-      "address": "TP.HCM"
+
+  const onClick = (e, item) => {
+    if (item && item.id) {
+      history.replace(`/admin/detail?cusId=${item.id}`);
     }
-  ]`;
-  const parsedData = JSON.parse(dataString);
-  const data = parsedData.map(item => {
-    if (item.birthday) {
-      return { ...item, birthday: formatDatetime(item.birthday) };
-    }
-    return { ...item };
-  });
-  const onClick = () => {
-    console.log('clicked');
   };
+  const onLoadMore = () => {
+    setLoading(true);
+    getCustomers();
+  };
+  console.log(customersList);
   return (
     <HomeComponent
       name={name}
       columns={columns}
-      data={data}
+      data={customersList}
       onClick={onClick}
+      onLoadMore={onLoadMore}
+      loading={loading}
     />
   );
 };

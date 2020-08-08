@@ -3,6 +3,7 @@ import SearchBar from '../../../../common/SearchBar';
 import TableView from '../../../../common/TableView';
 import FunctionButton from '../../../../common/FunctionButton';
 import Header from '../../components/Header';
+import Loading from '../../../../common/Loading';
 
 const ContentContainer = props => {
   const { children } = props;
@@ -37,7 +38,7 @@ const LoadMoreBtnContainer = props => {
 };
 
 const HomeComponent = props => {
-  const { name, columns, data, onClick } = props;
+  const { name, columns, data, onClick, onLoadMore, loading } = props;
 
   return (
     <>
@@ -60,9 +61,10 @@ const HomeComponent = props => {
           />
         </TableViewContainer>
         <LoadMoreBtnContainer>
-          <FunctionButton label="Load More" />
+          <FunctionButton label="Load More" onClick={onLoadMore} />
         </LoadMoreBtnContainer>
       </ContentContainer>
+      {loading && <Loading />}
     </>
   );
 };

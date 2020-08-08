@@ -4,108 +4,9 @@ import FunctionButtom from '../../../../common/FunctionButton';
 import Header from '../../components/Header';
 import { formatCurrency } from '../../../../../utils';
 import TableView from '../../../../common/TableView';
-import TopupContainer from '../Topup/TopupContainer';
-import VerifyContainer from '../Verify/VerifyContainer';
-
-const TopupModal = props => {
-  const { enabled, onDismiss, accountData } = props;
-  const [selectedAccount, setSelectedAccount] = useState(null);
-  const [amount, setAmount] = useState(0);
-  // For topupState:
-  // 'form': show form so user can type in
-  // 'loading': form submitted and sent to server to topup, waiting for response
-  // 'done': topup done
-  // 'fail': topup fail
-  const [topupState, setTopupState] = useState('form');
-
-  const getAccountId = () => {
-    const splittedStr = selectedAccount.split(' - ');
-    const accountNumber = splittedStr[0].split('Account Number: ')[1];
-    const accountItem = accountData.find(
-      item => item.account_number === accountNumber
-    );
-    if (accountItem) {
-      return accountItem.id;
-    }
-    return -1;
-  };
-  const onSubmitTopup = () => {
-    if (selectedAccount) {
-      const selectedAccountId = getAccountId();
-      const isValidToSubmit =
-        amount !== 0 && typeof amount === 'number' && selectedAccountId !== -1;
-      if (isValidToSubmit) {
-        setTopupState('loading');
-      }
-      setTopupState('fail');
-    } else onDismiss();
-  };
-  return (
-    <PromptModal
-      enabled={enabled}
-      onDismiss={() => {
-        onDismiss();
-      }}
-      modalName="topup-modal"
-      title="Top up customer account"
-      content={(
-        <TopupContainer
-          accountData={accountData}
-          selectedAccount={selectedAccount}
-          setSelectedAccount={setSelectedAccount}
-          topupState={topupState}
-          amount={amount}
-          setAmount={setAmount}
-        />
-      )}
-      onAccept={() => {
-        onSubmitTopup();
-      }}
-    />
-  );
-};
-
-const VerifyModal = ({ enabled, onDismiss, accountData }) => {
-  const onSubmitVerification = () => {
-    console.log('verified!');
-  };
-
-  return (
-    <PromptModal
-      enabled={enabled}
-      onDismiss={() => {
-        onDismiss();
-      }}
-      modalName="topup-modal"
-      title="Verify customer"
-      content={<VerifyContainer accountData={accountData} />}
-      onAccept={() => {
-        onSubmitVerification();
-      }}
-    />
-  );
-};
-
-const LockModal = ({ enabled, onDismiss, accountData }) => {
-  const onSubmitLock = () => {
-    console.log('locked!');
-  };
-
-  return (
-    <PromptModal
-      enabled={enabled}
-      onDismiss={() => {
-        onDismiss();
-      }}
-      modalName="topup-modal"
-      title="Lock customer"
-      content={<div>Are you sure locking this customer? </div>}
-      onAccept={() => {
-        onSubmitLock();
-      }}
-    />
-  );
-};
+import TopupModal from './TopupModal';
+import VerifyModal from './VerifyModal';
+import LockModal from './LockModal';
 
 const ContentContainer = props => {
   const { children } = props;
@@ -170,7 +71,7 @@ const AccountsTable = props => {
 
 const DetailComponent = props => {
   const [isTopupModalShown, setIsTopupModalShown] = useState(false);
-  const [isVerifyModalShown, setIsVerifyModalShown] = useState(true);
+  const [isVerifyModalShown, setIsVerifyModalShown] = useState(false);
   const [isLockModalShown, setIsLockModalShown] = useState(false);
 
   const { customerData, customerDetailData } = props;

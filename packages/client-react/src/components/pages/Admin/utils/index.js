@@ -10,4 +10,4 @@ export const checkLoginState = () => {
 
 export const checksfac = () => {
   return 0;
-}
+};

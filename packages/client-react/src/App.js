@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import routes from './routes';
 import { fetchSessionStorage } from './components/pages/Dashboard/slice/customerAuthSlice';
+import * as adminAuthActions from './components/pages/Admin/slice/adminAuthSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -10,6 +16,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchSessionStorage());
+    dispatch(adminAuthActions.fetchSessionStorage());
   }, [dispatch]);
 
   if (!isReady) {
@@ -30,6 +37,7 @@ const App = () => {
               />
             );
           })}
+          <Redirect from="*" to="/404" />
         </Switch>
       </Router>
     </div>

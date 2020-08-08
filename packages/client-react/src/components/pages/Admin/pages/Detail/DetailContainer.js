@@ -1,7 +1,21 @@
 import React from 'react';
+import { useLocation, withRouter } from 'react-router-dom';
 import DetailComponent from './DetailComponent';
+import { checkLoginState } from '../../utils';
 
-const DetailContainer = () => {
+const DetailContainer = ({ history }) => {
+  if (!checkLoginState()) {
+    history.push('/admin/login');
+  }
+  const location = useLocation();
+  const customerId = parseInt(
+    new URLSearchParams(location.search).get('cusId'),
+    0
+  );
+  if (!customerId) {
+    history.push('/404');
+  }
+  console.log(customerId);
   const customerDataString = `{
     "id": 1,
     "fullname": "Test customer 1",
@@ -57,4 +71,4 @@ const DetailContainer = () => {
   );
 };
 
-export default DetailContainer;
+export default withRouter(DetailContainer);
