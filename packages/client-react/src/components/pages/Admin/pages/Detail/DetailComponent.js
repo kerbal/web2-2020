@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import { formatCurrency } from '../../../../../utils';
 import TableView from '../../../../common/TableView';
 import TopupContainer from '../Topup/TopupContainer';
+import VerifyContainer from '../Verify/VerifyContainer';
 
 const TopupModal = props => {
   const { enabled, onDismiss, accountData } = props;
@@ -29,13 +30,15 @@ const TopupModal = props => {
     return -1;
   };
   const onSubmitTopup = () => {
-    const selectedAccountId = getAccountId();
-    const isValidToSubmit = amount !== 0 && typeof amount === 'number' && selectedAccountId !== -1;
-    debugger;
-    if (isValidToSubmit) {
-      setTopupState('loading');
-    }
-    setTopupState('fail');
+    if (selectedAccount) {
+      const selectedAccountId = getAccountId();
+      const isValidToSubmit =
+        amount !== 0 && typeof amount === 'number' && selectedAccountId !== -1;
+      if (isValidToSubmit) {
+        setTopupState('loading');
+      }
+      setTopupState('fail');
+    } else onDismiss();
   };
   return (
     <PromptModal
@@ -57,6 +60,48 @@ const TopupModal = props => {
       )}
       onAccept={() => {
         onSubmitTopup();
+      }}
+    />
+  );
+};
+
+const VerifyModal = ({ enabled, onDismiss, accountData }) => {
+  const onSubmitVerification = () => {
+    console.log('verified!');
+  };
+
+  return (
+    <PromptModal
+      enabled={enabled}
+      onDismiss={() => {
+        onDismiss();
+      }}
+      modalName="topup-modal"
+      title="Verify customer"
+      content={<VerifyContainer accountData={accountData} />}
+      onAccept={() => {
+        onSubmitVerification();
+      }}
+    />
+  );
+};
+
+const LockModal = ({ enabled, onDismiss, accountData }) => {
+  const onSubmitLock = () => {
+    console.log('locked!');
+  };
+
+  return (
+    <PromptModal
+      enabled={enabled}
+      onDismiss={() => {
+        onDismiss();
+      }}
+      modalName="topup-modal"
+      title="Lock customer"
+      content={<div>Are you sure locking this customer? </div>}
+      onAccept={() => {
+        onSubmitLock();
       }}
     />
   );
@@ -125,7 +170,8 @@ const AccountsTable = props => {
 
 const DetailComponent = props => {
   const [isTopupModalShown, setIsTopupModalShown] = useState(false);
-  const [isLockModalShown, setIsLockModalShown] = useState(true);
+  const [isVerifyModalShown, setIsVerifyModalShown] = useState(true);
+  const [isLockModalShown, setIsLockModalShown] = useState(false);
 
   const { customerData, customerDetailData } = props;
   const { fullname, email, birthday, phone_number, address } = customerData;
@@ -168,7 +214,7 @@ const DetailComponent = props => {
                 disabled={status === 'VERIFIED'}
                 label="Verify Customer"
                 onClick={() => {
-                  setIsLockModalShown(true);
+                  setIsVerifyModalShown(true);
                 }}
               />
             </ButtonContainer>
@@ -191,6 +237,20 @@ const DetailComponent = props => {
         <TopupModal
           enabled={isTopupModalShown}
           onDismiss={() => setIsTopupModalShown(false)}
+          accountData={account}
+        />
+      )}
+      {isVerifyModalShown && (
+        <VerifyModal
+          enabled={isTopupModalShown}
+          onDismiss={() => setIsVerifyModalShown(false)}
+          accountData={account}
+        />
+      )}
+      {isLockModalShown && (
+        <LockModal
+          enabled={isTopupModalShown}
+          onDismiss={() => setIsLockModalShown(false)}
           accountData={account}
         />
       )}

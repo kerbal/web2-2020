@@ -16,7 +16,7 @@ const DetailContainer = () => {
     "id": 4,
     "fullname": "Nguyen Hoang Thuc",
     "birthday": "1999-12-30T00:00:00.000Z",
-    "status": "VERIFIED",
+    "status": "UNVERIFIED",
     "phone_number": "0962123452",
     "account": [
         {
