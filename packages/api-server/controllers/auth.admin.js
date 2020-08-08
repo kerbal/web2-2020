@@ -5,6 +5,7 @@ import CUSTOMER_STATUS from '../constants/customerStatus';
 import AccountService from '../services/account';
 import LogService from '../services/log';
 import MailService from '../services/mail';
+import { verifyAccountFail as verifyAccountFailContent } from '../assets/mail-content/unverify-account';
 import { newAccount as newAccountMailContent } from '../assets/mail-content/new-account';
 
 const login = async (req, res) => {
@@ -52,7 +53,6 @@ const verifyCustomerAccount = async (req, res)=>{
         id: customer_id,
       },
     });
-
     if (user){
       user.status = CUSTOMER_STATUS.VERIFIED;
       await user.save();
@@ -90,4 +90,48 @@ const verifyCustomerAccount = async (req, res)=>{
     });
   }
 };
-export { login, verifyCustomerAccount };
+const unverifyCustomerAccount = async (req, res)=>{
+  const { customer_id } = req.body;
+  if (!customer_id){
+    return res.status(400).json({
+      message:'customer_id is required.',
+    });
+  }
+  try {
+    const user = await Customer.findOne({
+      where:{
+        id: customer_id,
+      },
+    });
+
+    if (user){
+      user.status = CUSTOMER_STATUS.UNVERIFIED;
+      await user.save();
+      await LogService.write({
+        adminId: req.auth.id,
+        action: `Admin unverify customer:${user.fullname}`,
+        customerId: customer_id,
+      });
+      await MailService.sendMail(
+        user.email,
+        'Piggy bank - Verify account fail ',
+        verifyAccountFailContent(user.fullname),
+      );
+
+      res.json({
+        message: 'Success',
+      });
+    }
+    else {
+      res.json({
+        message: 'Fail',
+      });
+    }
+  }
+  catch(error){
+    return res.status(400).json({
+      error: 'Something went wrong.',
+    });
+  }
+};
+export { login, verifyCustomerAccount, unverifyCustomerAccount };

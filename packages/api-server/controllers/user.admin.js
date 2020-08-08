@@ -1,4 +1,4 @@
-import { Customer, Account } from '../models';
+import { Customer, Account, Identity } from '../models';
 import fs from 'fs';
 
 export const getAllAccount = async (req, res) => {
@@ -23,10 +23,25 @@ export const getAllAccount = async (req, res) => {
   }
 };
 
-export const getIdentityImage = (req, res) => {
-  const { name } = req.params;
-  const filepath = `./public/${name}`;
+export const getIdentityImage = async (req, res) => {
+  const { userId } = req.params;
+  const { type } = req.query;
+  if (type != 'front_image' && type != 'back_image')
+    return res.json({
+      error: 'No image',
+    });
   try {
+    const identity = await Identity.findOne({
+      where: { customer_id: userId },
+      attributes: [type],
+    });
+    if (!identity)
+      return res.json({
+        error: 'No image',
+      });
+    const name = identity[type];
+    const filepath = `./public/${name}`;
+
     res.contentType('image/jpeg');
     // 1. Read your image as base 64
     fs.readFile(filepath, function (err, content) {
