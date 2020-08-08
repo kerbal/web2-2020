@@ -7,6 +7,7 @@ import TableView from '../../../../common/TableView';
 import TopupModal from './TopupModal';
 import VerifyModal from './VerifyModal';
 import LockModal from './LockModal';
+import Loading from '../../../../common/Loading';
 
 const ContentContainer = props => {
   const { children } = props;
@@ -74,9 +75,9 @@ const DetailComponent = props => {
   const [isVerifyModalShown, setIsVerifyModalShown] = useState(false);
   const [isLockModalShown, setIsLockModalShown] = useState(false);
 
-  const { customerData, customerDetailData } = props;
+  const { customerData, customerDetailData, loading } = props;
   const { fullname, email, birthday, phone_number, address } = customerData;
-  const { status, account = [] } = customerDetailData;
+  const { status, Accounts = [] } = customerDetailData;
 
   return (
     <>
@@ -131,30 +132,31 @@ const DetailComponent = props => {
         </div>
         <div className="flex flex-1 pl-6 flex-col">
           <FieldTitleContainer>Customer Accounts:</FieldTitleContainer>
-          <AccountsTable data={account} />
+          <AccountsTable data={Accounts} />
         </div>
       </ContentContainer>
       {isTopupModalShown && (
         <TopupModal
           enabled={isTopupModalShown}
           onDismiss={() => setIsTopupModalShown(false)}
-          accountData={account}
+          accountData={Accounts}
         />
       )}
       {isVerifyModalShown && (
         <VerifyModal
           enabled={isTopupModalShown}
           onDismiss={() => setIsVerifyModalShown(false)}
-          accountData={account}
+          accountData={Accounts}
         />
       )}
       {isLockModalShown && (
         <LockModal
           enabled={isTopupModalShown}
           onDismiss={() => setIsLockModalShown(false)}
-          accountData={account}
+          accountData={Accounts}
         />
       )}
+      {loading && <Loading />}
     </>
   );
 };

@@ -3,19 +3,18 @@ import { useSelector } from 'react-redux';
 import HomeComponent from './HomeComponent';
 import withAdminFrame from '../../withAdminFrame';
 import { formatDatetime } from '../../../../../utils';
-import { getAllCustomer } from '../../api/adminCustomer';
+import { getAllCustomers, searchCustomers } from '../../api/adminCustomer';
 
 let currentPage = 1;
 
 const HomeContainer = ({ history }) => {
   const [customersList, setCustomersList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchString, setSearchString] = useState('');
   const pageSize = 5;
   const token = useSelector(state => state.adminAuth.token);
 
-  const getCustomers = async () => {
-    const result = await getAllCustomer(currentPage, pageSize, token);
-    console.log(result.data);
+  const appendCustomersToList = result => {
     if (result && result.data) {
       try {
         const data = result.data.map(item => {
@@ -34,11 +33,34 @@ const HomeContainer = ({ history }) => {
     }
   };
 
+  const getCustomers = async () => {
+    const result = await getAllCustomers(currentPage, pageSize, token);
+    appendCustomersToList(result);
+  };
+
+  const getCustomersBySearching = async () => {
+    const result = await searchCustomers(
+      currentPage,
+      pageSize,
+      token,
+      searchString
+    );
+    appendCustomersToList(result);
+  };
+
   useEffect(() => {
-    // console.log(token);
     currentPage = 1;
     getCustomers();
   }, []);
+
+  useEffect(() => {
+    if (searchString) {
+      setLoading(true);
+      currentPage = 1;
+      setCustomersList([]);
+      getCustomersBySearching(searchString);
+    }
+  }, [searchString]);
 
   const name = 'admin-customer-table';
   const columns = [
@@ -54,10 +76,21 @@ const HomeContainer = ({ history }) => {
       history.replace(`/admin/detail?cusId=${item.id}`);
     }
   };
+
   const onLoadMore = () => {
     setLoading(true);
-    getCustomers();
+    if (searchString) {
+      getCustomersBySearching(searchString);
+    } else {
+      getCustomers();
+    }
   };
+
+  const onSearch = string => {
+    console.log('aaa', string);
+    setSearchString(string);
+  };
+
   console.log(customersList);
   return (
     <HomeComponent
@@ -67,6 +100,7 @@ const HomeContainer = ({ history }) => {
       onClick={onClick}
       onLoadMore={onLoadMore}
       loading={loading}
+      onSearch={onSearch}
     />
   );
 };

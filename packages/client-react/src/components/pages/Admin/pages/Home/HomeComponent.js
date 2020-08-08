@@ -38,7 +38,7 @@ const LoadMoreBtnContainer = props => {
 };
 
 const HomeComponent = props => {
-  const { name, columns, data, onClick, onLoadMore, loading } = props;
+  const { name, columns, data, onClick, onLoadMore, loading, onSearch } = props;
 
   return (
     <>
@@ -46,7 +46,10 @@ const HomeComponent = props => {
       <ContentContainer>
         <ToolbarContainer>
           <SearchbarContainer>
-            <SearchBar placeholder="Search customer username or email" />
+            <SearchBar
+              placeholder="Search customer username or email"
+              onSearch={onSearch}
+            />
           </SearchbarContainer>
           <TooltipContainer>
             Double click on a customer to view more details
