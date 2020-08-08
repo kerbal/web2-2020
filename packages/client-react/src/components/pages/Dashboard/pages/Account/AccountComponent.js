@@ -2,7 +2,7 @@ import React from 'react';
 
 import AccountNew from './AccountNew';
 import AccountDetails from './AccountDetails';
-import TableView from '../../components/TableView';
+import TableView from '../../../../common/TableView';
 import Input from '../../../../common/Input';
 
 const AccountComponent = props => {
