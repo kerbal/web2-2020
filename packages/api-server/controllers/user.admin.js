@@ -1,4 +1,4 @@
-import { Customer, Account } from '../models';
+import { Customer, Account, Identity } from '../models';
 import fs from 'fs';
 
 export const getAllAccount = async (req, res) => {
@@ -24,8 +24,22 @@ export const getAllAccount = async (req, res) => {
   }
 };
 
-export const getIdentityImage = (req, res) => {
-  const { name } = req.params;
+export const getIdentityImage = async (req, res) => {
+  const { userId } = req.params;
+  const { type } = req.query;
+  if (type != 'front_image' &&  type != 'back_image') return res.json({
+    error:'No image',
+  });
+
+  const identity = await Identity.findOne({
+    where: { customer_id: userId,
+    },
+    attributes: [type],
+  });
+  if (!identity) return res.json({
+    error:'No image',
+  });
+  const name = identity[type];
   const filepath = `./public/${name}`;
   try {
     res.contentType('image/jpeg');

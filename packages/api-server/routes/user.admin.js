@@ -7,6 +7,6 @@ import isAdmin from '../middleware/verifyAdmin';
 const router = express.Router();
 
 router.get('/:id', requireSignIn, isAdmin, getAllAccount);
-router.get('/pid/:name', requireSignIn, isAdmin, getIdentityImage);
+router.get('/pid/:userId', requireSignIn, isAdmin, getIdentityImage);
 
 export default router;
