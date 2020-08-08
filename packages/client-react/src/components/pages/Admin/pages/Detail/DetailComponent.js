@@ -73,7 +73,7 @@ const AccountsTable = props => {
 const DetailComponent = props => {
   const [isTopupModalShown, setIsTopupModalShown] = useState(false);
   const [isVerifyModalShown, setIsVerifyModalShown] = useState(false);
-  const [isLockModalShown, setIsLockModalShown] = useState(false);
+  // const [isLockModalShown, setIsLockModalShown] = useState(false);
 
   const { customerData, customerDetailData, loading } = props;
   const { fullname, email, birthday, phone_number, address } = customerData;
@@ -120,14 +120,14 @@ const DetailComponent = props => {
                 }}
               />
             </ButtonContainer>
-            <ButtonContainer>
+            {/* <ButtonContainer>
               <FunctionButtom
                 label="Lock Customer"
                 onClick={() => {
                   setIsLockModalShown(true);
                 }}
               />
-            </ButtonContainer>
+            </ButtonContainer> */}
           </ActionButtonsContainer>
         </div>
         <div className="flex flex-1 pl-6 flex-col">
@@ -138,7 +138,10 @@ const DetailComponent = props => {
       {isTopupModalShown && (
         <TopupModal
           enabled={isTopupModalShown}
-          onDismiss={() => setIsTopupModalShown(false)}
+          onDismiss={() => {
+            setIsTopupModalShown(false);
+            window.location.reload();
+          }}
           accountData={Accounts}
         />
       )}
@@ -149,13 +152,13 @@ const DetailComponent = props => {
           accountData={Accounts}
         />
       )}
-      {isLockModalShown && (
+      {/* {isLockModalShown && (
         <LockModal
           enabled={isTopupModalShown}
           onDismiss={() => setIsLockModalShown(false)}
           accountData={Accounts}
         />
-      )}
+      )} */}
       {loading && <Loading />}
     </>
   );

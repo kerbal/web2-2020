@@ -50,20 +50,6 @@ const TopupComponent = props => {
             </div>
           </FieldContent>
         </FieldContainer>
-        <FieldContainer>
-          <div className="pt-4">
-            <FieldText>Amount:</FieldText>
-          </div>
-          <FieldContent>
-            <div className="pt-6">
-              <Input
-                type="text"
-                value={amount}
-                onValueChange={value => setAmount(value)}
-              />
-            </div>
-          </FieldContent>
-        </FieldContainer>
         {loading && <Loading />}
       </div>
     );
