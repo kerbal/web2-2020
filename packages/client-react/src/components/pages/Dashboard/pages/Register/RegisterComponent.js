@@ -1,22 +1,24 @@
-import React, { memo } from 'react';
+import React from 'react';
 import Input from '../../../../common/Input';
 import Button from '../../../../common/Button';
-import { images, icons } from '../../../../../assets';
+import Loading from '../../../../common/Loading';
+import { images } from '../../../../../assets';
 
-export default memo(function RegisterComponent({
+export default ({
   registerForm,
   formValidator,
   onFormChange,
   onRegister,
-}) {
+  loadingForm,
+}) => {
   return (
-    <div className="bg-white font-family-karla h-screen">
-      <div className="w-full flex flex-wrap">
-        <div className="w-full md:w-1/2 flex flex-col">
-          <div className="flex justify-center md:justify-start pt-12 md:pl-12 md:-mb-24">
-            <img src={icons.logo} alt="" width={80} height="auto" />
-          </div>
-          <div className="flex flex-col justify-center md:justify-start my-auto pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
+    <div
+      className="font-family-karla h-full bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${images.background1})` }}
+    >
+      <div className="container mx-auto flex flex-wrap justify-end">
+        <div className="relative overflow-y-auto h-screen md:w-1/2 justify-center flex flex-col bg-white">
+          <div className=" flex flex-col pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
             <p className="text-center text-3xl font-light">Open an account</p>
             <div className="flex flex-col py-3 pb-12 md:py-8">
               {Object.entries(registerForm).map(
@@ -41,21 +43,12 @@ export default memo(function RegisterComponent({
                   );
                 }
               )}
-              <Button
-                onClick={() => onRegister && onRegister()}
-                label="Register"
-              />
+              <Button onClick={onRegister} label="Register" />
+              {loadingForm && <Loading />}
             </div>
           </div>
-        </div>
-        <div className="w-1/2 shadow-2xl">
-          <img
-            alt=""
-            className="object-cover w-full h-screen hidden md:block"
-            src={images.background1}
-          />
         </div>
       </div>
     </div>
   );
-});
+};

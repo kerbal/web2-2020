@@ -1,48 +1,47 @@
 import React from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import useCustomerCheck from '../../utils/useCustomerCheck';
 import RegisterComponent from './RegisterComponent';
-import { useForm } from '../../../../../utils/hooks';
+import useForm from '../../../../../utils/useForm';
 import { registerFormSetup } from '../../../../../utils/formSetup';
-// import withProtected from '../../withProtected';
-import { connect } from 'react-redux';
 
-const RegisterContainer = ({ customer }) => {
+const RegisterContainer = () => {
   const history = useHistory();
   const [
     registerForm,
     getRegisterData,
     { onFormChange, formValidator, setTouched, checkFormValidity },
-  ] = useForm(registerFormSetup);
+    [loading, setLoading],
+  ] = useForm(registerFormSetup, true);
+
   const onRegister = () => {
     setTouched();
     if (checkFormValidity()) {
+      setLoading(true);
       const url = 'https://piggy-bank-api.herokuapp.com/api/auth/register';
       axios
         .post(url, getRegisterData())
         .then(() => {
-          history.push('/dashboard/login');
+          history.replace('/dashboard/login');
+          setLoading(false);
         })
         .catch(({ response }) => {
           console.log(response);
+          setLoading(false);
         });
     }
   };
-
-  if (customer) {
-    return <Redirect to="/dashboard/overview" />;
-  }
-
+  useCustomerCheck(customer => customer, '/dashboard/overview');
   return (
     <RegisterComponent
       onRegister={onRegister}
       registerForm={registerForm}
       formValidator={formValidator}
       onFormChange={onFormChange}
+      loadingForm={loading}
     />
   );
 };
 
-export default connect(state => ({
-  customer: state.customerAuth.user,
-}))(RegisterContainer);
+export default RegisterContainer;

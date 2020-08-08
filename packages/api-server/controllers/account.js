@@ -34,8 +34,11 @@ export const customerCreate = async (req, res, next) => {
 export const customerGetAll = async (req, res, next) => {
   try {
     const { id: customer_id } = req.auth;
-    const { page, status, all, account_number } = req.query;
-    const where = { customer_id };
+    const { page, status, all, account_number, other } = req.query;
+    let where = { customer_id };
+    if(account_number && other === 'true') {
+      where = {};
+    }
     if (status) {
       where.status = status.toUpperCase();
     }
@@ -79,6 +82,94 @@ export const customerToggleStatus = async (req, res, next) => {
   }
 };
 
+export const customerConfirmDeposit = async (req, res, next) => {
+  try {
+    const { id: customerId } = req.auth;
+    const { account_id } = req.params;
+    const account = await AccountService.customerConfirmDeposit(
+      customerId,
+      account_id,
+    );
+    return res.status(200).json(account);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const customerCloseAccount = async (req, res, next) => {
+  const t = await sequelize.transaction({
+    isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+  });
+  try {
+    const { id: customerId } = req.auth;
+    const { account_id } = req.params;
+    const account = await AccountService.findOne({
+      id: account_id,
+      customer_id: customerId,
+    });
+    await account.update({ closed_date: new Date() }, { t });
+
+    if (!account)
+      throw new Error('Account not found');
+    if (account.type === ACCOUNT_TYPE.DEFAULT)
+      throw new Error('Account is DEFAULT');
+    if (account.status === ACCOUNT_STATUS.CLOSED)
+      throw new Error('Account is CLOSED');
+
+    if (account.balance === 0) {
+      await account.update({ status: ACCOUNT_STATUS.CLOSED }, { t });
+      await t.commit();
+      return res.status(200).json(account);
+    }
+
+    const defaultAccount = await AccountService.findOne({
+      customer_id: customerId,
+      type: ACCOUNT_TYPE.DEFAULT,
+    });
+
+    if (!defaultAccount)
+      throw new Error('Default account not found');
+
+    if (account.depositAccountDetail && account.depositAccountDetail.deposit_date)
+      throw new Error('Account is deposited');
+
+    const oldStatus = account.status;
+    const bank_id = 'PIGGY';
+    const transaction = (await TransactionService.create({
+      source_bank_id: bank_id,
+      destination_bank_id: bank_id,
+      source_account_id: account.id,
+      destination_account_id: defaultAccount.id,
+      amount: account.balance,
+      note: `Admin ${req.auth.id} closed ${account.id}`,
+    })).transaction;
+    await TransactionService.execute(transaction);
+
+    await account.update({ status: ACCOUNT_STATUS.CLOSED }, { t });
+    await t.commit();
+
+    MailService.sendMail(
+      account.Customer.email,
+      'Piggy bank - Your account status has been closed',
+      adminChangeAccountStatusContent(
+        account.Customer.fullname,
+        {
+          account_number: account.account_number,
+          oldStatus,
+          newStatus: ACCOUNT_STATUS.CLOSED,
+          created_date: account.updatedAt,
+        },
+        null,
+        transaction ? transaction.id : null,
+      ),
+    );
+    return res.status(200).json(account);
+  } catch (error) {
+    await t.rollback();
+    next(error);
+  }
+};
+
 export const adminGetAll = async (req, res, next) => {
   try {
     const { customerId, page, status, account_number } = req.query;
@@ -115,7 +206,7 @@ export const adminGetOne = async (req, res, next) => {
 };
 
 export const adminChangeStatus = async (req, res, next) => {
-  const transaction = await sequelize.transaction({
+  const t = await sequelize.transaction({
     isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
   });
   try {
@@ -153,10 +244,11 @@ export const adminChangeStatus = async (req, res, next) => {
         note: `Admin ${req.auth.id} closed ${account.id}`,
       })).transaction;
       await TransactionService.execute(transaction);
+      await account.update({ closed_date: new Date() }, { t });
     }
 
-    await account.update({ status: newStatus }, { transaction });
-    await transaction.commit();
+    await account.update({ status: newStatus }, { t });
+    await t.commit();
     const { id: logId, createAt } = await LogService.write({
       adminId: req.auth.id,
       action: 'adminChangeStatus',
@@ -182,7 +274,7 @@ export const adminChangeStatus = async (req, res, next) => {
     );
     return res.status(200).json(account);
   } catch (error) {
-    await transaction.rollback();
+    await t.rollback();
     next(error);
   }
 };

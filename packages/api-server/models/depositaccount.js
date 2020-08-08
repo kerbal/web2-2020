@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     DepositAccount.belongsTo(models.Account, {
       foreignKey: 'account_id',
+      as: 'depositAccountDetail',
     });
   };
   return DepositAccount;

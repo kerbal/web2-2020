@@ -1,18 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Loading from '../../common/Loading';
 import { icons } from '../../../assets';
-
-const Container = props => {
-  const { children } = props;
-  return <div className="w-screen">{children}</div>;
-};
-
-const ContentContainer = props => {
-  const { children } = props;
-  return <div className="flex flex-row flex-1">{children}</div>;
-};
+import useCustomerCheck from './utils/useCustomerCheck';
 
 const sidebarItems = [
   {
@@ -34,8 +26,14 @@ const sidebarItems = [
     path: '/dashboard/transfer',
   },
   {
+    id: 20,
+    name: 'Transaction',
+    icon: icons.sidebar_transactions,
+    path: '/dashboard/transaction',
+  },
+  {
     id: 6,
-    name: 'Seperator',
+    name: 'Separator',
   },
   {
     id: 7,
@@ -52,18 +50,20 @@ const sidebarItems = [
 ];
 
 const withDashboardFrame = ContentComponent => {
-  return () => {
-    const [loading, setLoading] = useState(false);
+  return ({ checkCustomer }) => {
+    if (checkCustomer)
+      useCustomerCheck(checkCustomer?.check, checkCustomer?.to);
+    const loading = useSelector(state => state.customerAccounts.loading);
     return (
       <>
-        <Container>
+        <div className="mx-auto" style={{ maxWidth: '1600px' }}>
           <Header />
-          <ContentContainer>
+          <div className="flex flex-row flex-1 p-6">
             <Sidebar sidebarItems={sidebarItems} />
-            <ContentComponent setLoading={setLoading} />
-          </ContentContainer>
-        </Container>
-        {loading && <Loading />}
+            <ContentComponent />
+          </div>
+          {loading && <Loading />}
+        </div>
       </>
     );
   };

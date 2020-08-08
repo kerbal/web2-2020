@@ -109,6 +109,7 @@ const generateProfit = async () => {
         include: [
           {
             model: DepositType,
+            as: 'depositType',
           },
         ],
       },

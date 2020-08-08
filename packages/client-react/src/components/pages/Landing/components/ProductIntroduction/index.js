@@ -3,7 +3,7 @@ import { icons } from '../../../../../assets';
 
 const Container = ({ children }) => {
   return (
-    <div className="container mx-auto justify-center content-center items-center w-full p-12 flex flex-col">
+    <div className="container px-12 mx-auto justify-center content-center items-center w-full flex flex-col">
       {children}
     </div>
   );
@@ -11,7 +11,10 @@ const Container = ({ children }) => {
 
 const PersonalAccountIcons = () => {
   return (
-    <div id="personal-account" className="flex flex-row w-1/3 justify-center sm:justify-between opacity-50">
+    <div
+      id="personal-account"
+      className="flex flex-row w-1/3 justify-center sm:justify-between opacity-50"
+    >
       <img width={64} height="auto" alt="" src={icons.landing_cc_visa_brands} />
       <img
         width={64}

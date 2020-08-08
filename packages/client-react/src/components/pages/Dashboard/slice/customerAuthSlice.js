@@ -9,18 +9,18 @@ const initialState = {
   ready: false,
 };
 
-export const customerAuthSlice = createSlice({
-  name: 'lading',
+const customerAuthSlice = createSlice({
+  name: 'customerAuthSlice',
   initialState,
   reducers: {
-    setStatus: (state, status) => ({
+    setStatus: (state, { payload: status }) => ({
       ...state,
       user: {
         ...state.user,
         status,
       },
     }),
-    setLoading: (state, loading) => ({
+    setLoading: (state, { payload: loading }) => ({
       ...state,
       loading,
     }),
@@ -39,6 +39,10 @@ export const customerAuthSlice = createSlice({
       ...state,
       ready: true,
     }),
+    setToken: (state, { payload: token }) => ({
+      ...state,
+      token,
+    }),
   },
 });
 
@@ -48,7 +52,31 @@ export const {
   clearAuth,
   setLoading,
   setStatus,
+  setToken,
 } = customerAuthSlice.actions;
+
+export const updatePassword = (
+  token,
+  newPassword,
+  reject
+) => async dispatch => {
+  const url = '/auth/updatePassword';
+  try {
+    dispatch(setLoading(true));
+    const res = await axios.post(
+      url,
+      { newPassword },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    dispatch(setToken(res.data.token));
+  } catch (error) {
+    reject(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
 
 export const signIn = (loginData, resolve, reject) => async dispatch => {
   const url = '/auth/login';
@@ -58,8 +86,31 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
     dispatch(setAuth({ ...res.data }));
     sessionStorage.setItem('customerAuth', JSON.stringify({ ...res.data }));
     resolve();
-  } catch ({ response }) {
-    reject(response);
+  } catch (error) {
+    reject(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+export const uploadPID = (
+  { fileData, token },
+  resolve,
+  reject
+) => async dispatch => {
+  const url = '/auth/updateIdentity';
+  try {
+    dispatch(setLoading(true));
+    const res = await axios.post(url, fileData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    dispatch(setStatus('WAITING'));
+    resolve(res);
+  } catch (error) {
+    reject(error);
   } finally {
     dispatch(setLoading(false));
   }
@@ -80,5 +131,10 @@ export const signOut = () => dispatch => {
   sessionStorage.setItem('customerAuth', '');
   dispatch(clearAuth());
 };
+
+export const customerSelector = state => [
+  state.customerAuth.token,
+  state.customerAuth.user,
+];
 
 export default customerAuthSlice.reducer;

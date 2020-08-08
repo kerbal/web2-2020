@@ -25,6 +25,7 @@ class AccountService {
           model: DepositType,
           as: 'depositType',
         }],
+        required: false,
       }, {
         model: Customer,
         attributes: ['email', 'fullname', 'phone_number', 'id'],
@@ -89,13 +90,39 @@ class AccountService {
         include: [{
           model: DepositAccount,
           as: 'depositAccountDetail',
+          include: [{
+            model: DepositType,
+            as: 'depositType',
+          }],
         }],
         transaction,
       });
+
+      account.depositAccountDetail.setDataValue('depositType', await account.depositAccountDetail.getDepositType());
       await transaction.commit();
       return account;
     } catch(error) {
       await transaction.rollback();
+      console.log('Service Error');
+      throw error;
+    }
+  }
+
+  static async customerConfirmDeposit(customer_id, accountId) {
+    try {
+      const account = await AccountService.findOne({
+        id: accountId,
+        customer_id,
+        type: ACCOUNT_TYPE.DEPOSIT,
+      });
+      if (!account) throw new Error('Account not found');
+      if (account.balance === 0) throw new Error('Account balance is 0');
+      if (account.depositAccountDetail.deposit_date) throw new Error('Account already deposited');
+      await account.depositAccountDetail.update({
+        deposit_date: new Date(),
+      });
+      return account;
+    } catch (error) {
       console.log('Service Error');
       throw error;
     }

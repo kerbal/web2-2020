@@ -3,7 +3,7 @@ import React from 'react';
 const Container = props => {
   const { children } = props;
   return (
-    <div id="about-us" className="p-12 bg-black text-white">
+    <div id="about-us" className="bg-black text-white">
       {children}
     </div>
   );
@@ -19,7 +19,11 @@ const Copyright = () => {
 
 const ContentContainer = props => {
   const { children } = props;
-  return <div className="flex flex-row justify-between">{children}</div>;
+  return (
+    <div className="container p-12 mx-auto flex flex-col md:flex-row justify-between">
+      {children}
+    </div>
+  );
 };
 
 const AboutUsParagraph = () => {

@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { checkValidity } from './index';
 
-export const useForm = initialState => {
+export default (initialState, useLoading) => {
   const [form, setForm] = useState(initialState);
-
+  let loading;
+  let setLoading;
+  if (useLoading) {
+    [loading, setLoading] = useState(false);
+  }
   const setTouched = () => {
     const touchedForm = Object.entries(form)
       .map(([key, data]) => {
@@ -65,9 +69,6 @@ export const useForm = initialState => {
     form,
     getFormData,
     { onFormChange, formValidator, setTouched, checkFormValidity },
+    useLoading ? [loading, setLoading] : null,
   ];
-};
-
-export default {
-  useForm,
 };

@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 export const images = {
   background1: require('./images/background1.jpg'),
 };
