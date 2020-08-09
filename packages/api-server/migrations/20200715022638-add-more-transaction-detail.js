@@ -14,14 +14,14 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.dropColumn('Transactions', 'source_bank_id', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'source_bank_name', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'destination_bank_id', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'destination_bank_name', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'source_account_name', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'destination_account_name', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'source_account_number', { type: Sequelize.STRING }),
-      queryInterface.dropColumn('Transactions', 'destination_account_number', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'source_bank_id', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'source_bank_name', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'destination_bank_id', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'destination_bank_name', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'source_account_name', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'destination_account_name', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'source_account_number', { type: Sequelize.STRING }),
+      queryInterface.removeColumn('Transactions', 'destination_account_number', { type: Sequelize.STRING }),
     ]);
   },
 };
