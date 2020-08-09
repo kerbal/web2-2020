@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
 import HomeContainer from './pages/Home/HomeContainer';
 import LoginContainer from './pages/Login/LoginContainer';
-import Logout from '../Dashboard/pages/Logout';
+import Logout from './pages/Logout';
 import DetailContainer from './pages/Detail/DetailContainer';
 
 const AdminContainer = () => {
