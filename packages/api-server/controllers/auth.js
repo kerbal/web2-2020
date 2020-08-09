@@ -5,8 +5,8 @@ import { Customer, Identity } from '../models';
 import { comparePassword, getHashedPassword } from '../utils/password';
 import multer from 'multer';
 import MailService from '../services/mail';
-import AccountService from '../services/account';
 import CUSTOMER_STATUS from '../constants/customerStatus';
+
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -70,7 +70,6 @@ const register = async (req, res) => {
     });
 
     if (newCustomer) {
-      await AccountService.create(newCustomer.id);
       res.status(200).json({ message: 'Success' });
     } else {
       res.status(400).json({ error: 'Fail' });
@@ -103,17 +102,8 @@ const login = async (req, res) => {
       { id: user.id },
       process.env.JWT_SECRET,
     );
-    const { id,  fullname, address } = user;
-    let { status } = user;
+    const { id,  fullname, address, status } = user;
     //check user is update identity
-    const identity = await Identity.findOne({
-      where:{
-        customer_id:id,
-      },
-    });
-    if (identity && status == CUSTOMER_STATUS.UNVERIFIED){
-      status='WAITING';
-    }
     return res.json({
       token,
       user: { id, email, fullname, address, status },
@@ -191,6 +181,8 @@ const updateIdentity = async (req, res)=>{
     });
   }
   try{
+    const user = await Customer.findOne({ where:{ id: customer_id } });
+    if (!(user.status == CUSTOMER_STATUS.UNVERIFIED)) return res.json({ error:'Fail.' });
     const newIdentity = await Identity.create({
       customer_id,
       pid,
@@ -200,6 +192,9 @@ const updateIdentity = async (req, res)=>{
       back_image: req.body.back_image[0].filename,
       status: 'PENDING',
     });
+    user.status = CUSTOMER_STATUS.WAITING;
+    await user.save();
+
     if (newIdentity){
       return res.json({ message: 'Success' });
     }
