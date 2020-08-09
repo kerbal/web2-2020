@@ -55,11 +55,14 @@ export const {
   setToken,
 } = customerAuthSlice.actions;
 
-export const updatePassword = (
-  token,
-  newPassword,
-  reject
-) => async dispatch => {
+const saveSessionStorage = ({ token, user }) => {
+  sessionStorage.setItem('customerAuth', JSON.stringify({ token, user }));
+};
+
+export const updatePassword = (token, newPassword, reject) => async (
+  dispatch,
+  getState
+) => {
   const url = '/auth/updatePassword';
   try {
     dispatch(setLoading(true));
@@ -71,6 +74,7 @@ export const updatePassword = (
       }
     );
     dispatch(setToken(res.data.token));
+    saveSessionStorage(getState().customerAuth);
   } catch (error) {
     reject(error);
   } finally {
@@ -78,13 +82,16 @@ export const updatePassword = (
   }
 };
 
-export const signIn = (loginData, resolve, reject) => async dispatch => {
+export const signIn = (loginData, resolve, reject) => async (
+  dispatch,
+  getState
+) => {
   const url = '/auth/login';
   try {
     dispatch(setLoading(true));
     const res = await axios.post(url, loginData);
     dispatch(setAuth({ ...res.data }));
-    sessionStorage.setItem('customerAuth', JSON.stringify({ ...res.data }));
+    saveSessionStorage(getState().customerAuth);
     resolve();
   } catch (error) {
     reject(error);
@@ -93,11 +100,10 @@ export const signIn = (loginData, resolve, reject) => async dispatch => {
   }
 };
 
-export const uploadPID = (
-  { fileData, token },
-  resolve,
-  reject
-) => async dispatch => {
+export const uploadPID = ({ fileData, token }, resolve, reject) => async (
+  dispatch,
+  getState
+) => {
   const url = '/auth/updateIdentity';
   try {
     dispatch(setLoading(true));
@@ -108,6 +114,7 @@ export const uploadPID = (
       },
     });
     dispatch(setStatus('WAITING'));
+    saveSessionStorage(getState().customerAuth);
     resolve(res);
   } catch (error) {
     reject(error);
