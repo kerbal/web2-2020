@@ -5,8 +5,8 @@ import { Customer, Identity } from '../models';
 import { comparePassword, getHashedPassword } from '../utils/password';
 import multer from 'multer';
 import MailService from '../services/mail';
-import AccountService from '../services/account';
 import CUSTOMER_STATUS from '../constants/customerStatus';
+
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -70,7 +70,6 @@ const register = async (req, res) => {
     });
 
     if (newCustomer) {
-      await AccountService.create(newCustomer.id);
       res.status(200).json({ message: 'Success' });
     } else {
       res.status(400).json({ error: 'Fail' });
@@ -182,8 +181,8 @@ const updateIdentity = async (req, res)=>{
     });
   }
   try{
-    const user = await Customer.findOne({ id: customer_id });
-    if (!user.status == CUSTOMER_STATUS.UNVERIFIED) return res.json({ error:'Fail.' });
+    const user = await Customer.findOne({ where:{ id: customer_id } });
+    if (!(user.status == CUSTOMER_STATUS.UNVERIFIED)) return res.json({ error:'Fail.' });
     const newIdentity = await Identity.create({
       customer_id,
       pid,
@@ -195,6 +194,7 @@ const updateIdentity = async (req, res)=>{
     });
     user.status = CUSTOMER_STATUS.WAITING;
     await user.save();
+
     if (newIdentity){
       return res.json({ message: 'Success' });
     }

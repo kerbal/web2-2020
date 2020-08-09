@@ -41,8 +41,6 @@ export const getIdentityImage = async (req, res) => {
       });
     const name = identity[type];
     const filepath = `./public/${name}`;
-
-    res.contentType('image/jpeg');
     // 1. Read your image as base 64
     fs.readFile(filepath, function (err, content) {
       if (err) {
@@ -51,8 +49,8 @@ export const getIdentityImage = async (req, res) => {
         res.end('No such image');
       } else {
         //specify the content type in the response will be an image
-        res.writeHead(200, { 'Content-type': 'image/jpg' });
-        res.end(content);
+        const img = content.toString('base64');
+        res.end(img);
       }
     });
   } catch (error) {
