@@ -11,7 +11,6 @@ const TopupContainer = props => {
     amount,
     setAmount,
   } = props;
-  console.log(topupState);
   if (topupState === 'done') return <TopupDoneContainer />;
   if (topupState === 'fail') return <TopupFailContainer />;
   return (

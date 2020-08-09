@@ -7,7 +7,7 @@ const Container = props => {
   return (
     <div
       id={modalName}
-      className="absolute top-0 bottom-0 left-0 right-0 items-center justify-center flex modal-show"
+      className="absolute top-0 bottom-0 left-0 right-0 items-center h-screen justify-center flex modal-show"
     >
       <div className="bg-gray-700 absolute top-0 bottom-0 left-0 right-0 opacity-50" />
       {children}
@@ -59,7 +59,15 @@ const CloseButton = ({ onClick }) => {
 };
 
 const PromptFunction = props => {
-  const { title, content, onAccept, onDismiss, enabled, modalName } = props;
+  const {
+    title,
+    content,
+    onAccept,
+    onDismiss,
+    enabled,
+    modalName,
+    disableOkButton,
+  } = props;
 
   return (
     <Container modalName={modalName}>
@@ -70,7 +78,9 @@ const PromptFunction = props => {
         </div>
         <Content>{content}</Content>
         <div className="flex flex-row justify-end">
-          <OKButton onClick={() => onAccept && onAccept()} />
+          {!disableOkButton && (
+            <OKButton onClick={() => onAccept && onAccept()} />
+          )}
           <CancelButton onClick={() => onDismiss && onDismiss()} />
         </div>
       </ModalContainer>

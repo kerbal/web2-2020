@@ -8,8 +8,8 @@ const TransactionItem = ({ t, accountId }) => {
         {t.destination_account_id === accountId ? (
           <span className="text-green-400 font-semibold">+</span>
         ) : (
-            <span className="text-red-400 font-semibold">-</span>
-          )}
+          <span className="text-red-400 font-semibold">-</span>
+        )}
       </div>
       <div>
         <p>
@@ -49,7 +49,7 @@ const TransactionItem = ({ t, accountId }) => {
         <p
           className={`font-semibold ${
             t.status === 'SUCCESS' ? 'text-green-500' : 'text-red-500'
-            }`}
+          }`}
         >
           {t.status}
         </p>
@@ -58,13 +58,18 @@ const TransactionItem = ({ t, accountId }) => {
   );
 };
 
-const TransactionsView = ({ accountId, transactionsList }) => {
-  return (
-    <div>
+const TransactionsView = ({ accountId, transactionsList, loading }) => {
+  return transactionsList && transactionsList.length > 0 && !loading ? (
+    <div
+      className="overflow-scroll mt-6"
+      style={{ height: '500px', width: '600px' }}
+    >
       {transactionsList.map(t => (
         <TransactionItem t={t} accountId={accountId} />
       ))}
     </div>
+  ) : (
+    <p className="mt-6">This account hasn't made any transactions.</p>
   );
 };
 

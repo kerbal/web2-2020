@@ -5,7 +5,7 @@ import { getPIDImages } from '../../api/adminCustomer';
 
 const VerifyContainer = ({ customerId }) => {
   const token = useSelector(state => state.adminAuth.token);
-
+  console.log(token);
   const [imgSrc, setImgSrc] = useState({
     rearImgSrc: '',
     frontImgSrc: '',

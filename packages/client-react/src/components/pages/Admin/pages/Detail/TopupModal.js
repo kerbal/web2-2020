@@ -4,6 +4,7 @@ import PromptModal from '../../../../common/PromptModal';
 import TopupContainer from '../Topup/TopupContainer';
 import Input from '../../../../common/Input';
 import { topupAnAccount } from '../../api/adminCustomer';
+import { checkValidity } from '../../../../../utils';
 
 const FieldContainer = props => {
   const { children } = props;
@@ -46,18 +47,27 @@ const TopupModal = props => {
 
   const validateInputs = () => {
     const selectedAccountId = selectedAccount ? getAccountId() : -1;
-    if (selectedAccountId === -1 && !amount) {
-      setError('Please choose an account and set an amount');
-      return false;
-    }
+    // if (selectedAccountId === -1 && !amount) {
+    //   setError('Please choose an account and set an amount');
+    //   return false;
+    // }
+    // if (selectedAccountId === -1) {
+    //   setError('Please choose an account');
+    //   return false;
+    // }
+    // if (!amount || amount === 0 || typeof amount !== 'number') {
+    //   setError('Please set a valid amount');
+    //   return false;
+    // }
     if (selectedAccountId === -1) {
       setError('Please choose an account');
       return false;
     }
-    if (!amount || amount === 0 || typeof amount !== 'number') {
-      setError('Please set a valid amount');
+    if (!checkValidity(amount, { isNumeric: true })) {
+      setError('Please enter a valid amount');
       return false;
     }
+    debugger;
     return true;
   };
 
@@ -68,20 +78,28 @@ const TopupModal = props => {
       onDismiss();
       return;
     }
-    if (validateInputs()) {
+    const isValidToSubmit = validateInputs();
+    if (isValidToSubmit) {
       setTopupState('loading');
       const selectedAccountId = selectedAccount ? getAccountId() : -1;
-      console.log(selectedAccountId, amount);
       const result = await topupAnAccount(selectedAccountId, amount, token);
       if (result && result.data) {
-        console.log(result.data);
         if (result.data.message === 'successful') {
           setTopupState('done');
           return;
         }
       }
+      setTopupState('fail');
     }
-    setTopupState('fail');
+  };
+
+  const onAmountValueChange = value => {
+    if (checkValidity(value, { isNumeric: true }) || value === '') {
+      if (value === '') {
+        return setAmount('');
+      }
+      return setAmount(+value);
+    }
   };
 
   return (
@@ -110,11 +128,10 @@ const TopupModal = props => {
                   <FieldText>Amount:</FieldText>
                 </div>
                 <FieldContent>
-                  <div className="pt-4">
+                  <div className="pt-4" style={{ width: '300px' }}>
                     <Input
                       value={amount}
-                      type="number"
-                      onValueChange={value => setAmount(+value)}
+                      onValueChange={value => onAmountValueChange(value)}
                     />
                   </div>
                 </FieldContent>

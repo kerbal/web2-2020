@@ -90,3 +90,14 @@ export const verifyCustomer = async (id, token) => {
   }
   return 1;
 };
+
+export const getTransactionsByAccountId = async (accountId, token) => {
+  try {
+    const path = `/admin/account/${accountId}/transaction?page=1`;
+    const result = await apiCaller('GET', path, {}, token);
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+  return 1;
+};
