@@ -12,6 +12,7 @@ const DetailContainer = ({ history }) => {
   const [customerData, setCustomerData] = useState({});
   const [customerDetailData, setCustomerDetailData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [selectedAccountToViewTrans, setselectedAccountToViewTrans] = useState(null);
 
   if (!checkLoginState()) {
     history.push('/admin/login');
@@ -52,6 +53,9 @@ const DetailContainer = ({ history }) => {
       customerData={customerData}
       customerDetailData={customerDetailData}
       loading={loading}
+      customerId={customerId}
+      selectedAccountToViewTrans={selectedAccountToViewTrans}
+      setselectedAccountToViewTrans={setselectedAccountToViewTrans}
     />
   );
 };

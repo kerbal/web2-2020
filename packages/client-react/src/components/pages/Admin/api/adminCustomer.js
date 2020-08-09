@@ -65,15 +65,11 @@ export const topupAnAccount = async (accountId, amount, token) => {
   return 1;
 };
 
-export const getPIDImages = async (accountId, amount, token) => {
+export const getPIDImages = async (id, type, token) => {
   try {
-    const path = `/admin/transaction`;
-    const data = {
-      account_id: accountId,
-      amount,
-      note: 'chuyen tien vao tai khoan',
-    };
-    const result = await apiCaller('GET', path, JSON.stringify(data), token);
+    // https://piggy-bank-api.herokuapp.com/api/admin/user/pid/3?type=back_image
+    const path = `/admin/user/pid/${id}?type=${type}`;
+    const result = await apiCaller('GET', path, {}, token);
     return result;
   } catch (e) {
     console.log(e);

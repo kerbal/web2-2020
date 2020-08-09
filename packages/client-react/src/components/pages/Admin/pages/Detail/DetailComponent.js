@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import PromptModal from '../../../../common/PromptModal';
 import FunctionButtom from '../../../../common/FunctionButton';
 import Header from '../../components/Header';
-import { formatCurrency } from '../../../../../utils';
-import TableView from '../../../../common/TableView';
+import AccountsTable from './AccountsTable';
 import TopupModal from './TopupModal';
 import VerifyModal from './VerifyModal';
-import LockModal from './LockModal';
+import TransactionModal from './TransactionModal';
 import Loading from '../../../../common/Loading';
 
 const ContentContainer = props => {
@@ -39,43 +37,19 @@ const ButtonContainer = props => {
   return <div className="pt-6 w-2/3">{children}</div>;
 };
 
-const AccountsTable = props => {
-  const { data = [] } = props;
-  const name = 'dashboard-transaction-table';
-  const columns = ['Account Number', 'Balance', 'Currency Unit', 'Status'];
-
-  const formattedData = data.map(item => {
-    if (item) {
-      return {
-        id: item.id,
-        accountNumber: item.account_number,
-        balance: formatCurrency(item.balance),
-        currencyUnit: item.currency_unit,
-        status: item.status,
-      };
-    }
-    return {};
-  });
-  const onClick = () => {
-    console.log('clicked');
-  };
-
-  return (
-    <TableView
-      name={name}
-      columns={columns}
-      data={formattedData}
-      onClick={onClick}
-    />
-  );
-};
-
 const DetailComponent = props => {
   const [isTopupModalShown, setIsTopupModalShown] = useState(false);
   const [isVerifyModalShown, setIsVerifyModalShown] = useState(false);
-  // const [isLockModalShown, setIsLockModalShown] = useState(false);
+  const [isTransactionModalShown, setIsTransactionModalShown] = useState(false);
 
-  const { customerData, customerDetailData, loading } = props;
+  const {
+    customerData,
+    customerDetailData,
+    loading,
+    customerId,
+    selectedAccountToViewTrans,
+    setselectedAccountToViewTrans,
+  } = props;
   const { fullname, email, birthday, phone_number, address } = customerData;
   const { status, Accounts = [] } = customerDetailData;
 
@@ -120,19 +94,15 @@ const DetailComponent = props => {
                 }}
               />
             </ButtonContainer>
-            {/* <ButtonContainer>
-              <FunctionButtom
-                label="Lock Customer"
-                onClick={() => {
-                  setIsLockModalShown(true);
-                }}
-              />
-            </ButtonContainer> */}
           </ActionButtonsContainer>
         </div>
         <div className="flex flex-1 pl-6 flex-col">
           <FieldTitleContainer>Customer Accounts:</FieldTitleContainer>
-          <AccountsTable data={Accounts} />
+          <AccountsTable
+            data={Accounts}
+            setselectedAccountToViewTrans={setselectedAccountToViewTrans}
+            setIsTransactionModalShown={setIsTransactionModalShown}
+          />
         </div>
       </ContentContainer>
       {isTopupModalShown && (
@@ -150,15 +120,17 @@ const DetailComponent = props => {
           enabled={isTopupModalShown}
           onDismiss={() => setIsVerifyModalShown(false)}
           accountData={Accounts}
+          customerId={customerId}
         />
       )}
-      {/* {isLockModalShown && (
-        <LockModal
-          enabled={isTopupModalShown}
-          onDismiss={() => setIsLockModalShown(false)}
+      {isTransactionModalShown && (
+        <TransactionModal
+          enabled={isTransactionModalShown}
+          onDismiss={() => setIsTransactionModalShown(false)}
           accountData={Accounts}
+          selectedAccountToViewTrans={selectedAccountToViewTrans}
         />
-      )} */}
+      )}
       {loading && <Loading />}
     </>
   );

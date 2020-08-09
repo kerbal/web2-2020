@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PromptModal from '../../../../common/PromptModal';
 import VerifyContainer from '../Verify/VerifyContainer';
+import { verifyCustomer } from '../../api/adminCustomer';
 
-const VerifyModal = ({ enabled, onDismiss, accountData }) => {
-  const onSubmitVerification = () => {
-    console.log('verified!');
+const VerifyModal = ({ enabled, onDismiss, customerId }) => {
+  const token = useSelector(state => state.adminAuth.token);
+
+  const onSubmitVerification = async () => {
+    const result = await verifyCustomer(customerId, token);
+    onDismiss();
+    window.location.reload();
   };
 
   return (
@@ -15,7 +21,7 @@ const VerifyModal = ({ enabled, onDismiss, accountData }) => {
       }}
       modalName="topup-modal"
       title="Verify customer"
-      content={<VerifyContainer accountData={accountData} />}
+      content={<VerifyContainer customerId={customerId} />}
       onAccept={() => {
         onSubmitVerification();
       }}
