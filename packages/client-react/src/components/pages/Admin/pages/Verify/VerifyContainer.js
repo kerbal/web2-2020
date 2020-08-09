@@ -5,7 +5,6 @@ import { getPIDImages } from '../../api/adminCustomer';
 
 const VerifyContainer = ({ customerId }) => {
   const token = useSelector(state => state.adminAuth.token);
-  console.log(token);
   const [imgSrc, setImgSrc] = useState({
     rearImgSrc: '',
     frontImgSrc: '',
@@ -22,15 +21,12 @@ const VerifyContainer = ({ customerId }) => {
         'front_image',
         token
       );
-      console.log(frontImgScrFromApi);
       if (
         frontImgScrFromApi &&
         frontImgScrFromApi.data &&
         !frontImgScrFromApi.data.error
       ) {
-        result.frontImgSrc = `data:image/jpg;base64,${window.btoa(
-          frontImgScrFromApi.data
-        )}`;
+        result.frontImgSrc = `data:image/jpg;base64,${frontImgScrFromApi.data}`;
       }
     } catch (e) {
       console.log('front_image fetch error', e);
@@ -47,7 +43,7 @@ const VerifyContainer = ({ customerId }) => {
         rearImgScrFromApi.data &&
         !rearImgScrFromApi.data.error
       ) {
-        result.rearImgSrc = rearImgScrFromApi.data;
+        result.rearImgSrc = `data:image/jpg;base64,${rearImgScrFromApi.data}`;
       }
     } catch (e) {
       console.log('rear_image fetch error', e);

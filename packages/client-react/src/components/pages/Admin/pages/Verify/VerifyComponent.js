@@ -68,14 +68,14 @@ const RearImg = ({ img }) => {
 const VerifyComponent = ({ frontImg, rearImg }) => {
   return (
     <div>
-      Make sure that the PID photos updated are valid.
-      <br />
-      If they indeed are, click OK to verify this customer. Otherwise, click
-      Cancel.
+      Make sure that the PID photos updated are valid. In case there are no
+      photos, ask your customer to upload them.
       <div className="flex flex-row py-6">
         <FrontImg img={frontImg} />
         <RearImg img={rearImg} />
       </div>
+      If they indeed are, click OK to verify this customer. Otherwise, click
+      Cancel.
     </div>
   );
 };
