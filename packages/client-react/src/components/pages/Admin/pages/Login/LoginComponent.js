@@ -23,8 +23,8 @@ const LogoContainer = props => {
 };
 
 const FormContainer = props => {
-  const { children } = props;
-  return <div className="flex flex-col w-1/4 mt-6">{children}</div>;
+  const { children, onKeyPress } = props;
+  return <div className="flex flex-col w-1/4 mt-6" onKeyPress={(e) => onKeyPress && onKeyPress(e)}>{children}</div>;
 };
 
 const LoginComponent = props => {
@@ -35,6 +35,7 @@ const LoginComponent = props => {
     setEmailInput,
     passwordInput,
     setPasswordInput,
+    onEnter
   } = props;
   return (
     <>
@@ -43,7 +44,7 @@ const LoginComponent = props => {
           <Logo />
           Admin Portal
         </LogoContainer>
-        <FormContainer>
+        <FormContainer onKeyPress={onEnter}>
           <Input
             label="Username"
             value={emailInput}

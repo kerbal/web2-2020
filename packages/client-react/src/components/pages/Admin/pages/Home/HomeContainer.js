@@ -87,11 +87,9 @@ const HomeContainer = ({ history }) => {
   };
 
   const onSearch = string => {
-    console.log('aaa', string);
     setSearchString(string);
   };
 
-  console.log(customersList);
   return (
     <HomeComponent
       name={name}

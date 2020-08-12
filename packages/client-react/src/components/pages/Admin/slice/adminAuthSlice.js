@@ -20,9 +20,9 @@ export const adminAuthSlice = createSlice({
         status,
       },
     }),
-    setLoading: (state, loading) => ({
+    setLoading: (state, { payload }) => ({
       ...state,
-      loading,
+      loading: payload,
     }),
     setAuth: (state, { payload: { token, user } }) => ({
       ...state,
@@ -56,9 +56,9 @@ export const signIn = (username, password) => async dispatch => {
     const res = await CallSignInApi(username, password);
     sessionStorage.setItem('adminAuth', JSON.stringify({ ...res.data }));
     dispatch(setAuth({ ...res.data }));
+    dispatch(setLoading(false));
   } catch ({ response }) {
     console.log(response);
-  } finally {
     dispatch(setLoading(false));
   }
 };

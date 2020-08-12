@@ -61,7 +61,7 @@ const TransactionItem = ({ t, accountId }) => {
 const TransactionsView = ({ accountId, transactionsList, loading }) => {
   return transactionsList && transactionsList.length > 0 && !loading ? (
     <div
-      className="overflow-scroll mt-6"
+      className="mt-6 overflow-y-scroll"
       style={{ height: '500px', width: '600px' }}
     >
       {transactionsList.map(t => (

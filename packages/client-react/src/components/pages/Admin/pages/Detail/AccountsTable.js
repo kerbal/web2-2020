@@ -9,7 +9,7 @@ const AccountsTable = props => {
     setIsTransactionModalShown,
   } = props;
   const name = 'dashboard-transaction-table';
-  const columns = ['Account Number', 'Balance', 'Currency Unit', 'Status'];
+  const columns = ['Account Number', 'Balance', 'Currency Unit', 'Account Type', 'Status'];
 
   const formattedData = data.map(item => {
     if (item) {
@@ -18,6 +18,7 @@ const AccountsTable = props => {
         accountNumber: item.account_number,
         balance: formatCurrency(item.balance),
         currencyUnit: item.currency_unit,
+        accountType: item.type,
         status: item.status,
       };
     }
