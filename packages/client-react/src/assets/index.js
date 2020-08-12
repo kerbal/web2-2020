@@ -19,4 +19,6 @@ export const icons = {
   combobox_arrowdown: require('./icons/combobox_arrowdown.svg'),
   imageuploader_placeholder: require('./icons/imageuploader_placeholder.svg'),
   done_tick: require('./icons/done_tick.svg'),
+  searchbar_search: require('./icons/searchbar_search.svg'),
+  modal_close: require('./icons/modal_close.svg')
 };

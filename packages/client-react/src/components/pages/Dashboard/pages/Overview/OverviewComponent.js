@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectorOverviewAccounts } from '../../slice/customerAccountSlice';
-import TableView from '../../components/TableView';
+import TableView from '../../../../common/TableView';
 
 const Container = props => {
   const { children } = props;

@@ -3,7 +3,8 @@ import Landing from './components/pages/Landing';
 import DashboardContainer from './components/pages/Dashboard/DashboardContainer';
 import LoginContainer from './components/pages/Dashboard/pages/Login/LoginContainer';
 import RegisterContainer from './components/pages/Dashboard/pages/Register/RegisterContainer';
-import Admin from './components/pages/Admin';
+import AdminContainer from './components/pages/Admin/AdminContainer';
+import Error from './components/pages/Error';
 
 const routes = [
   {
@@ -28,8 +29,13 @@ const routes = [
   },
   {
     path: '/admin',
-    exact: true,
-    main: () => <Admin />,
+    exact: false,
+    main: () => <AdminContainer />,
+  },
+  {
+    path: '/404',
+    exact: false,
+    main: () => <Error />,
   },
 ];
 
