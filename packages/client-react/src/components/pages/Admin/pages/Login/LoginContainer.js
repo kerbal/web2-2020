@@ -24,9 +24,16 @@ const LoginContainer = props => {
   };
 
   const onSignIn = () => {
-    console.log(emailInput, passwordInput, composeLoginData());
     dispatch(signIn(emailInput, passwordInput));
   };
+
+  const onEnter = (e) => {
+    if (e.key === 'Enter') {
+      if (emailInput && passwordInput) {
+        onSignIn();
+      }
+    }
+  }
   return (
     <LoginComponent
       emailInput={emailInput}
@@ -35,6 +42,7 @@ const LoginContainer = props => {
       setPasswordInput={setPasswordInput}
       onSignIn={onSignIn}
       loading={loading}
+      onEnter={onEnter}
     />
   );
 };

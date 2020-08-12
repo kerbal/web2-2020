@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatDatetime } from '../../../../../utils/'
 import FunctionButtom from '../../../../common/FunctionButton';
 import Header from '../../components/Header';
 import AccountsTable from './AccountsTable';
@@ -70,7 +71,7 @@ const DetailComponent = props => {
             <div className="flex flex-col pl-12">
               <FieldContentContainer>{fullname}</FieldContentContainer>
               <FieldContentContainer>{email}</FieldContentContainer>
-              <FieldContentContainer>{birthday}</FieldContentContainer>
+              <FieldContentContainer>{formatDatetime(birthday)}</FieldContentContainer>
               <FieldContentContainer>{phone_number}</FieldContentContainer>
               <FieldContentContainer>{address}</FieldContentContainer>
               <FieldContentContainer>{status}</FieldContentContainer>
