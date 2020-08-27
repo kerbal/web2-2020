@@ -18,7 +18,7 @@ class UserService {
         where:{
           id,
         },
-        attributes: ['id', 'fullname',  'email', 'birthday', 'phone_number', 'address'],
+        attributes: ['id', 'fullname',  'email', 'birthday', 'phone_number', 'address', 'status'],
       });
       if (!user) return {};
       return user;
