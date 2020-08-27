@@ -10,7 +10,7 @@ let currentPage = 1;
 const HomeContainer = ({ history }) => {
   const [customersList, setCustomersList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState(null);
   const pageSize = 5;
   const token = useSelector(state => state.adminAuth.token);
 
@@ -54,7 +54,7 @@ const HomeContainer = ({ history }) => {
   }, []);
 
   useEffect(() => {
-    if (searchString) {
+    if (searchString !== null) {
       setLoading(true);
       currentPage = 1;
       setCustomersList([]);
