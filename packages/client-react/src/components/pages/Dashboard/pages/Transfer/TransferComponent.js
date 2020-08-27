@@ -233,5 +233,10 @@ const Transfer = props => {
 };
 
 export default connect(state => ({
-  accounts: state.customerAccounts.accounts,
+  accounts: state.customerAccounts.accounts.filter(ac => {
+    if(ac.type === 'DEPOSIT') {
+      if(ac && ac.depositAccountDetail.deposit_date) return false
+    }
+    return true
+  }),
 }))(Transfer);

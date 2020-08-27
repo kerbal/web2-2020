@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Input from '../../../../common/Input';
 import axios from '../../../../../utils/axios';
 import Loading from '../../../../common/Loading';
 
+import { fetchAccounts } from '../../slice/customerAccountSlice';
 const VerifyTransaction = props => {
   const { transactionId, refresh } = props;
   const [verifying, setVerifying] = useState(false);
@@ -13,6 +14,8 @@ const VerifyTransaction = props => {
   const [otp, setOTP] = useState(null);
   const token = useSelector(state => state.customerAuth.token);
   const [loading, setLoading] = useState(false);
+  
+  const dispatch = useDispatch();
 
   const verifyTransaction = async () => {
     setLoading(true);
@@ -29,6 +32,11 @@ const VerifyTransaction = props => {
         }
       );
       setSuccess(true);
+      dispatch(
+        fetchAccounts(token, error => {
+          console.log(error);
+        })
+      );
     } catch (err) {
       setVerifying(false);
       setError(_.get(err, 'response.data.message') || err.message);
