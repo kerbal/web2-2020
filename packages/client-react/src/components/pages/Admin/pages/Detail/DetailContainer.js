@@ -12,7 +12,9 @@ const DetailContainer = ({ history }) => {
   const [customerData, setCustomerData] = useState({});
   const [customerDetailData, setCustomerDetailData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [selectedAccountToViewTrans, setselectedAccountToViewTrans] = useState(null);
+  const [selectedAccountToViewTrans, setselectedAccountToViewTrans] = useState(
+    null
+  );
 
   if (!checkLoginState()) {
     history.push('/admin/login');
@@ -28,22 +30,21 @@ const DetailContainer = ({ history }) => {
 
   const token = useSelector(state => state.adminAuth.token);
 
-  const getCustomer = async () => {
-    const result = await getCustomerById(customerId, token);
-    if (result && result.data) {
-      setCustomerData(result.data);
-    }
-  };
-
-  const getCustomerDetail = async () => {
-    const result = await getCustomerDetailById(customerId, token);
-    if (result && result.data) {
-      setCustomerDetailData(result.data);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const getCustomer = async () => {
+      const result = await getCustomerById(customerId, token);
+      if (result && result.data) {
+        setCustomerData(result.data);
+      }
+    };
+
+    const getCustomerDetail = async () => {
+      const result = await getCustomerDetailById(customerId, token);
+      if (result && result.data) {
+        setCustomerDetailData(result.data);
+        setLoading(false);
+      }
+    };
     getCustomer();
     getCustomerDetail();
   }, []);
