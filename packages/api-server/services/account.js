@@ -97,8 +97,9 @@ class AccountService {
         }],
         transaction,
       });
-
-      account.depositAccountDetail.setDataValue('depositType', await account.depositAccountDetail.getDepositType());
+      if(account.depositAccountDetail) {
+        account.depositAccountDetail.setDataValue('depositType', await account.depositAccountDetail.getDepositType());
+      }
       await transaction.commit();
       return account;
     } catch(error) {
