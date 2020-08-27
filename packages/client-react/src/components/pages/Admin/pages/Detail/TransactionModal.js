@@ -48,7 +48,6 @@ const TransactionModal = ({
     getTransactions();
   }, []);
 
-  console.log(selectedAccountToViewTrans);
   return (
     <>
       <PromptModal

@@ -158,7 +158,6 @@ export const createAccount = (token, data, reject) => async dispatch => {
     const res = await axios.post(url, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(res.data);
     dispatch(addAccount(res.data));
     dispatch(setSelectedAccount(res.data.id));
   } catch (error) {

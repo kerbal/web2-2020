@@ -12,7 +12,6 @@ const TransferContainer = () => {
   return (
     <TransferComponent
       refresh={async () => {
-        console.log('ble');
         await setRefresh(true);
         await setRefresh(false);
       }}

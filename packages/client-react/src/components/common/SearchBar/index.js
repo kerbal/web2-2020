@@ -17,7 +17,6 @@ const SearchBar = props => {
   const inputRef = register();
 
   const onSubmit = data => {
-    console.log('aaaaaaa');
     if (data && data.searchinput) {
       if (onSearch) onSearch(data.searchinput);
     }
