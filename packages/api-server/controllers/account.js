@@ -240,11 +240,11 @@ export const adminChangeStatus = async (req, res, next) => {
       transaction = (await TransactionService.create({
         source_bank_id: bank_id,
         destination_bank_id: bank_id,
-        source_account_id: account.id,
-        destination_account_id: defaultAccount.id,
+        source_account: account,
+        destination_account: defaultAccount,
         amount: account.balance,
         note: `Admin ${req.auth.id} closed ${account.id}`,
-      })).transaction;
+      }));
       await TransactionService.execute(transaction);
       await account.update({ closed_date: new Date() }, { t });
     }
