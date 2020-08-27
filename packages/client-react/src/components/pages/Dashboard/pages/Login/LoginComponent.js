@@ -12,6 +12,7 @@ const LoginComponent = props => {
     loginForm,
     formValidator,
     loadingForm,
+    errorMessage,
   } = props;
   return (
     <div
@@ -27,6 +28,7 @@ const LoginComponent = props => {
             <p className="text-center text-3xl font-light">
               Sign in to Internet Banking.
             </p>
+            {errorMessage}
             <form className="flex flex-col pt-3 md:pt-8">
               {Object.entries(loginForm).map(
                 ([

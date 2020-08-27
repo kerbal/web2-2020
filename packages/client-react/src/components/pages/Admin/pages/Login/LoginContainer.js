@@ -3,6 +3,7 @@ import { useDispatch, connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { signIn } from '../../slice/adminAuthSlice';
 import LoginComponent from './LoginComponent';
+import useError from '../../../../../utils/useError';
 
 const LoginContainer = props => {
   const { history, adminState } = props;
@@ -10,21 +11,13 @@ const LoginContainer = props => {
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const dispatch = useDispatch();
-
+  const [errorMessage, setError] = useError();
   if (user) {
     history.push('/admin');
   }
 
-  const composeLoginData = () => {
-    const obj = {
-      email: emailInput,
-      password: passwordInput,
-    };
-    return JSON.stringify(obj);
-  };
-
   const onSignIn = () => {
-    dispatch(signIn(emailInput, passwordInput));
+    dispatch(signIn(emailInput, passwordInput, setError));
   };
 
   const onEnter = (e) => {
@@ -43,6 +36,7 @@ const LoginContainer = props => {
       onSignIn={onSignIn}
       loading={loading}
       onEnter={onEnter}
+      errorMessage={errorMessage}
     />
   );
 };

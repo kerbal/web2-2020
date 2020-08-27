@@ -10,6 +10,7 @@ import ProductIntroduction from './components/ProductIntroduction';
 import AboutUs from './components/AboutUs';
 import useForm from '../../../utils/useForm';
 import { loginFormSetup } from '../../../utils/formSetup';
+import useError from '../../../utils/useError';
 
 const Landing = () => {
   const dispatch = useDispatch();
@@ -20,13 +21,15 @@ const Landing = () => {
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ] = useForm(loginFormSetup);
   const loadingLogin = useSelector(state => state.customerAuth.loading);
-
+  const [errorMessage, setError] = useError();
   const onRegisterAccount = () => {
     history.push('/dashboard/register');
   };
 
-  const onSignIn = () => {
+  const onSignIn = e => {
+    e.preventDefault();
     setTouched();
+    setError(null);
     if (checkFormValidity()) {
       dispatch(
         signIn(
@@ -35,7 +38,7 @@ const Landing = () => {
             history.push('/dashboard');
           },
           error => {
-            console.log(error);
+            setError(error.response.data.error);
           }
         )
       );
@@ -48,10 +51,14 @@ const Landing = () => {
       <SplashCarousel />
       <Introduction
         onSignIn={onSignIn}
-        onLoginFormChange={onFormChange}
+        onLoginFormChange={key => e => {
+          setError(null);
+          onFormChange(key)(e);
+        }}
         formValidator={formValidator}
         loginForm={loginForm}
         loadingFrom={loadingLogin}
+        errorMessage={errorMessage}
       />
       <ProductIntroduction onRegisterAccount={onRegisterAccount} />
       <AboutUs />

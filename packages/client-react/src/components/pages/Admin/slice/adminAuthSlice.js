@@ -50,15 +50,22 @@ export const {
   setStatus,
 } = adminAuthSlice.actions;
 
-export const signIn = (username, password) => async dispatch => {
+export const signIn = (
+  username,
+  password,
+  setError = () => {}
+) => async dispatch => {
   try {
+    setError(null);
     dispatch(setLoading(true));
     const res = await CallSignInApi(username, password);
     sessionStorage.setItem('adminAuth', JSON.stringify({ ...res.data }));
     dispatch(setAuth({ ...res.data }));
-    dispatch(setLoading(false));
   } catch ({ response }) {
-    console.log(response);
+    setError(
+      'The credentials you supplied were not correct or did not grant access to this resource'
+    );
+  } finally {
     dispatch(setLoading(false));
   }
 };

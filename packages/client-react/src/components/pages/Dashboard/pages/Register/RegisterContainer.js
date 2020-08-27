@@ -4,6 +4,7 @@ import axios from 'axios';
 import useCustomerCheck from '../../utils/useCustomerCheck';
 import RegisterComponent from './RegisterComponent';
 import useForm from '../../../../../utils/useForm';
+import useError from '../../../../../utils/useError';
 import { registerFormSetup } from '../../../../../utils/formSetup';
 
 const RegisterContainer = () => {
@@ -14,9 +15,11 @@ const RegisterContainer = () => {
     { onFormChange, formValidator, setTouched, checkFormValidity },
     [loading, setLoading],
   ] = useForm(registerFormSetup, true);
-
-  const onRegister = () => {
+  const [errorMessage, setError] = useError();
+  const onRegister = e => {
+    e.preventDefault();
     setTouched();
+    setError(null);
     if (checkFormValidity()) {
       setLoading(true);
       const url = 'https://piggy-bank-api.herokuapp.com/api/auth/register';
@@ -27,7 +30,7 @@ const RegisterContainer = () => {
           setLoading(false);
         })
         .catch(({ response }) => {
-          console.log(response);
+          setError(response.data.error);
           setLoading(false);
         });
     }
@@ -38,8 +41,12 @@ const RegisterContainer = () => {
       onRegister={onRegister}
       registerForm={registerForm}
       formValidator={formValidator}
-      onFormChange={onFormChange}
+      onFormChange={key => e => {
+          setError(null);
+          onFormChange(key)(e);
+        }}
       loadingForm={loading}
+      errorMessage={errorMessage}
     />
   );
 };

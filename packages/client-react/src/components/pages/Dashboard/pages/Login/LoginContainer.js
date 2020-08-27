@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import LoginComponent from './LoginComponent';
 import { signIn } from '../../slice/customerAuthSlice';
 import useForm from '../../../../../utils/useForm';
+import useError from '../../../../../utils/useError';
 import { loginFormSetup } from '../../../../../utils/formSetup';
 import useCustomerCheck from '../../utils/useCustomerCheck';
 
@@ -16,10 +17,11 @@ const LoginContainer = () => {
     { onFormChange, formValidator, setTouched, checkFormValidity },
   ] = useForm(loginFormSetup);
   const loadingLogin = useSelector(state => state.customerAuth.loading);
-
+  const [errorMessage, setError] = useError();
   const onSignIn = e => {
     e.preventDefault();
     setTouched();
+    setError(null);
     if (checkFormValidity()) {
       dispatch(
         signIn(
@@ -28,7 +30,7 @@ const LoginContainer = () => {
             history.push('/dashboard');
           },
           error => {
-            console.log(error);
+            setError(error.response.data.error);
           }
         )
       );
@@ -41,10 +43,14 @@ const LoginContainer = () => {
     <>
       <LoginComponent
         onSignIn={onSignIn}
-        onLoginFormChange={onFormChange}
+        onLoginFormChange={key => e => {
+          setError(null);
+          onFormChange(key)(e);
+        }}
         formValidator={formValidator}
         loginForm={loginForm}
         loadingForm={loadingLogin}
+        errorMessage={errorMessage}
       />
     </>
   );
