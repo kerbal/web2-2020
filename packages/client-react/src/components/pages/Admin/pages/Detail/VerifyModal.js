@@ -6,8 +6,9 @@ import { verifyCustomer } from '../../api/adminCustomer';
 
 const VerifyModal = ({ enabled, onDismiss, customerId }) => {
   const token = useSelector(state => state.adminAuth.token);
-
+  const [loading,setLoading] = useState(false)
   const onSubmitVerification = async () => {
+    setLoading(true)
     const result = await verifyCustomer(customerId, token);
     onDismiss();
     window.location.reload();
@@ -25,6 +26,7 @@ const VerifyModal = ({ enabled, onDismiss, customerId }) => {
       onAccept={() => {
         onSubmitVerification();
       }}
+      disableOkButton={loading}
     />
   );
 };

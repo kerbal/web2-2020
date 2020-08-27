@@ -52,7 +52,7 @@ const VerifyPIDComponentDone = () => {
           <ButtonContainer>
             <Link
               to="/"
-              className="my-6 block text-red-300 underline font-semibold cursor-pointer"
+              className="my-6 block text-red-300 underline font-semibold cursor-pointer text-center"
             >
               Back to home
             </Link>

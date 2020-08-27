@@ -15,7 +15,6 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
     createdAt,
     updatedAt,
   } = account;
-  console.log(account);
   const history = useHistory();
   let details = null;
   if (type === 'CHECKING') {

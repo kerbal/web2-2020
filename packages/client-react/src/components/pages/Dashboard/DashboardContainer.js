@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchAccounts } from './slice/customerAccountSlice';
+import { fetchUserStatus } from './slice/customerAuthSlice';
 import OverviewContainer from './pages/Overview/OverviewContainer';
 import AccountContainer from './pages/Account/AccountContainer';
 import SettingContainer from './pages/Setting/SettingContainer';
@@ -64,6 +65,13 @@ const DashboardContainer = () => {
           console.log(error);
         })
       );
+    if(token && status !== 'VERIFIED') {
+      dispatch(
+        fetchUserStatus(token, () => {} , error => {
+          console.log(error);
+        })
+      );
+    }
   }, [dispatch, token, status]);
   return (
     <Switch>

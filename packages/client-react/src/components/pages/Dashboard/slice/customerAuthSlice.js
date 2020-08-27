@@ -82,6 +82,29 @@ export const updatePassword = (token, newPassword, reject) => async (
   }
 };
 
+export const fetchUserStatus = (token, resolve, reject) => async (
+  dispatch,
+  getState
+) => {
+  const url = `/user/${getState().customerAuth.user.id}`;
+  try {
+    dispatch(setLoading(true));
+    const res = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    dispatch(setStatus(res.data.status));
+    saveSessionStorage(getState().customerAuth);
+    resolve(res);
+  } catch (error) {
+    reject(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 export const signIn = (loginData, resolve, reject) => async (
   dispatch,
   getState
