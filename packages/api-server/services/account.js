@@ -63,6 +63,8 @@ class AccountService {
           model: DepositType,
           as: 'depositType',
         }],
+      }, {
+        model: Customer,
       }],
     });
     return account;

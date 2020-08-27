@@ -138,11 +138,11 @@ export const customerCloseAccount = async (req, res, next) => {
     const transaction = (await TransactionService.create({
       source_bank_id: bank_id,
       destination_bank_id: bank_id,
-      source_account_id: account.id,
-      destination_account_id: defaultAccount.id,
+      source_account: account,
+      destination_account: defaultAccount,
       amount: account.balance,
       note: `Admin ${req.auth.id} closed ${account.id}`,
-    })).transaction;
+    }));
     await TransactionService.execute(transaction);
 
     await account.update({ status: ACCOUNT_STATUS.CLOSED }, { t });
@@ -166,6 +166,8 @@ export const customerCloseAccount = async (req, res, next) => {
     return res.status(200).json(account);
   } catch (error) {
     await t.rollback();
+    console.log(error.message);
+    console.log(error);
     next(error);
   }
 };

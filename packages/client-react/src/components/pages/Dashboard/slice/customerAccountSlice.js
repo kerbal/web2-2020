@@ -113,7 +113,7 @@ export const changeStatus = (token, id, reject) => async dispatch => {
     const res = await axios.put(url, null, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    dispatch(setAccount(res.data));
+    await dispatch(setAccount(res.data));
   } catch (error) {
     reject(error);
   } finally {
@@ -121,7 +121,11 @@ export const changeStatus = (token, id, reject) => async dispatch => {
   }
 };
 
-export const confirmDeposit = (token, id, reject) => async dispatch => {
+export const confirmDeposit = (
+  token,
+  id,
+  reject
+) => async dispatch => {
   const url = `customer/account/${id}/confirm-deposit`;
   try {
     dispatch(setLoading(true));
@@ -144,6 +148,11 @@ export const closed = (token, id, reject) => async dispatch => {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(setAccount(res.data));
+    dispatch(
+      fetchAccounts(token, error => {
+        console.log(error);
+      })
+    );
   } catch (error) {
     reject(error);
   } finally {

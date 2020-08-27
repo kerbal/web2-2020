@@ -56,7 +56,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
           <Button label="Transaction" />
         </Link>
         {status !== 'CLOSED' && (
-          <Button label="Closed" secondary onClick={onClosed} />
+          <Button label="Close" secondary onClick={onClosed} />
         )}
       </>
     );
@@ -79,15 +79,15 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
           disabled
           value={formatDatetime(depositDate) || 'Add funds to begin deposit'}
         />
+        {status === 'CLOSED' && (
+          <Input label="Closed at" disabled value={closedAt || ''} />
+        )}
         {!depositDate && balance !== 0 && (
           <Button label="Complete your deposit" onClick={onConfirmDeposit} />
         )}
         <Link to={`/dashboard/transaction?account_number=${accountNumber}`}>
           <Button label="Transaction" />
         </Link>
-        {status === 'CLOSED' && (
-          <Input label="Closed at" disabled value={closedAt || ''} />
-        )}
         {status !== 'CLOSED' && balance === 0 && (
           <Button
             label="Transfer to this"
@@ -99,7 +99,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
           />
         )}
         {!depositDate && status !== 'CLOSED' && (
-          <Button label="Closed" secondary onClick={onClosed} />
+          <Button label="Close" secondary onClick={onClosed} />
         )}
       </>
     );

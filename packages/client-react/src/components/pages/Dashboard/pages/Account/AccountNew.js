@@ -19,7 +19,7 @@ export default ({ onConfirm }) => {
 
   const createForm = (
     <>
-      <div className="px-2" style={{ flex: '1 1 33.33%', maxWidth: '33.33%' }}>
+      <div className="px-2" style={{ flex: '1 1 33.33%', maxWidth: '33.33%', flexWrap: "warp" }}>
         <ComboBox
           label="Type"
           onValueChange={typeDeposit => {
@@ -67,7 +67,7 @@ export default ({ onConfirm }) => {
       </div>
       <div
         className="px-2 flex pb-4"
-        style={{ flex: '1 1 25%', maxWidth: '25%' }}
+        style={{ flex: '1 1 25%' }}
       >
         <div className="flex-1 mt-auto pr-4">
           <button
