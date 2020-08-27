@@ -98,7 +98,8 @@ class AccountService {
         transaction,
       });
 
-      account.depositAccountDetail.setDataValue('depositType', await account.depositAccountDetail.getDepositType());
+      account.depositAccountDetail.depositType = await account.depositAccountDetail.getDepositType()
+      account.depositAccountDetail.save()
       await transaction.commit();
       return account;
     } catch(error) {
