@@ -4,6 +4,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropColumn('Transactions', 'otp_id', Sequelize.UUID);
+    return queryInterface.removeColumn('Transactions', 'otp_id', Sequelize.UUID);
   },
 };
