@@ -18,10 +18,36 @@ const createProfit = async (account) => {
     if (account.status !== ACCOUNT_STATUS.NORMAL) {
       return;
     }
-    if (moment(new Date(account.depositAccountDetail.deposit_date).getTime()).isAfter(moment())) {
+    if (!account.depositAccountDetail.deposit_date) {
       return;
     }
-    const rate = account.depositAccountDetail.DepositType.interest_rate;
+    const depositDate = new Date(
+      account.depositAccountDetail.deposit_date,
+    );
+    // console.log(depositDate);
+    if (moment(depositDate.getTime()).isAfter(moment())) {
+      return;
+    }
+
+    const {
+      interest_rate,
+      expiry_time,
+    } = account.depositAccountDetail.depositType;
+    const currentDate = new Date();
+    const closedDate = new Date(depositDate);
+    closedDate.setDate(closedDate.getDate() + expiry_time * 30);
+
+    if (
+      closedDate.getDate() !== currentDate.getDate() ||
+			closedDate.getMonth() !== currentDate.getMonth() ||
+			closedDate.getFullYear() !== currentDate.getFullYear()
+    ) {
+      return;
+    }
+
+    // console.log('begin finalization', account.id, currentDate);
+
+    const rate = Math.pow(1 + interest_rate, expiry_time) - 1;
     const balance = account.balance;
     const profit = parseInt(balance * rate);
 
@@ -61,46 +87,58 @@ const createProfit = async (account) => {
       note: 'Close saving account',
     });
 
-    const { destinationAccount } = await TransactionService.execute(transaction2);
+    const { destinationAccount } = await TransactionService.execute(
+      transaction2,
+    );
 
     account.status = ACCOUNT_STATUS.CLOSED;
     account.closed_date = new Date();
     await account.save();
 
-    const receiveProfitEmai = receiveProfitEmail(transaction, account.balance);
+    const _receiveProfitEmail = receiveProfitEmail(
+      transaction,
+      account.balance,
+    );
     await MailService.sendMail(
       account.Customer.email,
-      receiveProfitEmai.subject,
-      receiveProfitEmai.content,
+      _receiveProfitEmail.subject,
+      _receiveProfitEmail.content,
     );
 
-    const _receiveMoneyEmail = receiveMoneyEmail(transaction2, destinationAccount.balance);
+    const _receiveMoneyEmail = receiveMoneyEmail(
+      transaction2,
+      destinationAccount.balance,
+    );
     await MailService.sendMail(
       destinationAccount.Customer.email,
       _receiveMoneyEmail.subject,
       _receiveMoneyEmail.content,
     );
 
-    const closeAccountEmail = adminChangeAccountStatus(destinationAccount.Customer.fullname, {
-      account_number: account.account_number,
-      oldStatus: ACCOUNT_STATUS.NORMAL,
-      newStatus: ACCOUNT_STATUS.CLOSED,
-      created_date: new Date(),
-    }, null, transaction2.id);
+    const closeAccountEmail = adminChangeAccountStatus(
+      destinationAccount.Customer.fullname,
+      {
+        account_number: account.account_number,
+        oldStatus: ACCOUNT_STATUS.NORMAL,
+        newStatus: ACCOUNT_STATUS.CLOSED,
+        created_date: new Date(),
+      },
+      null,
+      transaction2.id,
+    );
 
     await MailService.sendMail(
       destinationAccount.Customer.email,
       'PIGGY BANK - Close saving account',
       closeAccountEmail,
     );
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
   }
 };
 
 const generateProfit = async () => {
-  const despositeAccounts = await Account.findAll({
+  const depositAccounts = await Account.findAll({
     include: [
       {
         model: DepositAccount,
@@ -118,11 +156,13 @@ const generateProfit = async () => {
       },
     ],
   });
-
-  await Promise.all(despositeAccounts.map(async account => {
-    await createProfit(account);
-  }));
+  await Promise.all(
+    depositAccounts.map(async (account) => {
+      await createProfit(account);
+    }),
+  );
 };
 
+generateProfit();
 const job = new Cron.CronJob('00 9 11 * * *', generateProfit);
 job.start();

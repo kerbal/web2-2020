@@ -98,7 +98,7 @@ export default ({ account, onChangeStatus, onClosed, onConfirmDeposit }) => {
             }}
           />
         )}
-        {!depositDate && status !== 'CLOSED' && (
+        {status !== 'CLOSED' && (
           <Button label="Close" secondary onClick={onClosed} />
         )}
       </>
